@@ -1,4 +1,12 @@
 Wpbdc::Application.routes.draw do
+  resources :teams, :except => [ :show ]
+  resources :members, :except => [ :show, :destroy ]
+  resource :certification, :only => [ :new, :create ]
+  resource :home, :only => [ :edit, :update ]
+  resource :session, :only => [ :new, :create, :destroy ]
+ 
+  match '/' => 'sessions#new'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
