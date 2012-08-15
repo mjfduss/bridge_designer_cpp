@@ -1,2 +1,41 @@
-%h1 Teams#new
-%p Find me in app/views/teams/new.html.haml
+.row
+  .span6.offset3
+    = form_for(:team, :url => teams_path) do |f|
+      = f.label 'Team Name:'
+      = f.text_field :name
+      %ul
+        %li Type a Team Name (up to 15 characters). Do not use anyone's last name!
+        %li Remember your Team Name! You will need it later.
+        %li Be careful! Team Names judged to be inappropriate will be disqualified.
+      %h4 Contest selection:
+      %p
+        Your team may enter either the national contest sponsored by West Point or a local contest sponsored by an organization in your community. Select one below.
+      = f.radio_button :contest, :national
+      = f.label :national_contest, 'The national West Point Bridge Design Contest only.'
+      .row
+        = f.radio_button :contest, :local
+        = f.label :local_contest, 'A local bridge design contest with Local Contest Code: '
+        = f.text_field :local_contest_name
+      %h4 Team Captain
+
+      = f.fields_for(:member) do |g|
+
+        = f.label 'First Name'
+        = f.text_field :first_name
+
+        = f.label 'MI'
+        = f.text_field :middle_initial
+
+        = f.label 'Last Name'
+        = f.text_field :last_name
+
+        = f.radio_button :catagory, :us
+        = f.label 'I am a student, age 13 through grade 12, currently enrolled in a U.S. school or am legally home-schooled.'
+        = f.radio_button :catagory, :out_us
+        = f.label 'I am a U.S. citizen, age 13 through grade 12 (or equivalent), currently attending a school outside the U.S.'
+
+        = f.radio_button :catagory, :open
+        = f.label 'I am not in one of the two categories above, so I am not eligible for national recognition.'
+
+      = f.submit 'Accept and Continue >>'
+

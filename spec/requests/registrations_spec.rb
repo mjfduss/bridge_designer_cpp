@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe "Registrations" do
 
+  subject { page }
+
   describe "Login/Register Page" do
-    it "should have content" do
-      
-      visit new_session_path
-      page.should have_content('Register and Log In')
-    end
+    before { visit new_session_path }
+
+    it { should have_selector('h1', :text => 'Register and Log In') }
   end
 
 end

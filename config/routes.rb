@@ -5,7 +5,7 @@ Wpbdc::Application.routes.draw do
   resource :home, :only => [ :edit, :update ]
   resource :session, :only => [ :new, :create, :destroy ]
  
-  match '/' => 'sessions#new'
+  root :to => 'sessions#new'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
