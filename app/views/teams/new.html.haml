@@ -7,7 +7,7 @@
       .box
         .big
           Team Name:
-          = f.text_field :name
+          = f.text_field :name, { :size => 16 }
         .para.small.subdued
           \-- Type a Team Name (up to 15 characters). Do not use anyone's last name! 
           %br
@@ -27,7 +27,7 @@
         .para
           = f.radio_button :contest, :local
           = f.label :local_contest, 'A local bridge design contest with Local Contest Code: '
-          = f.text_field :local_contest_name
+          = f.text_field :local_contest_name, { :size => 6 }
       .box
         .big
           Team Captain
