@@ -1,3 +1,9 @@
+$dialog_bg: #efefb5;
+$dialog_head_bg: #999944;
+$box_border: #999944;
+$btn_bg: lighten($box_border, 20%);
+$hr_color: $box_border;
+
 body { 
     background-color: #fff; 
     font-family: arial, sans-serif;
@@ -10,15 +16,13 @@ div.loginwidth {
     display: inline-block;
 }
 div.dialog {
-    background-color: #efefb5;
+    background-color: $dialog_bg;
     margin: 6px auto 0 8px;
-    border: 2px solid #ccc;
-    border-right-color: #999;
-    border-bottom-color: #999;
+    border: 2px solid $box_border;
 }
 div.dialoghead {
     width: 100%;
-    background-color: #666633;
+    background-color: $dialog_head_bg;
 }
 div.dialogheadcontent {
     background-color: transparent;
@@ -44,18 +48,19 @@ div.alignright {
 div.box {
     padding: 6px 9px;
     margin: 2px 2px 0px 2px;
-    border: 2px ridge #666633;
+    border: 2px ridge $box_border;
 }
 hr {
     width: 100%;
     height: 1px;
     border: 0;
-    background-color: #444;
-    color: #444;
+    background-color: $hr_color; 
+    color: $hr_color;
 }
 .btn {
-    background-color: #ccbb66;
+    background-color: $btn_bg; 
     font-weight: bold;
+    border-color: $box_border;
 }
 .bold {
     font-weight: bold;

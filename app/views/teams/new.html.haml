@@ -22,12 +22,12 @@
           West Point or a local contest sponsored by an organization in 
           your community. Select one below. 
         .para
-          = f.radio_button :contest, :national
-          = f.label :national_contest, 'The national West Point Bridge Design Contest only.'
+          = radio_button_tag 'contest', 'national'
+          = label_tag 'national', 'The national West Point Bridge Design Contest only.'
         .para
-          = f.radio_button :contest, :local
-          = f.label :local_contest, 'A local bridge design contest with Local Contest Code: '
-          = f.text_field :local_contest_name, { :size => 6 }
+          = radio_button_tag 'contest', 'local'
+          = label_tag 'local', 'A local bridge design contest with Local Contest Code: '
+          = text_field_tag 'local_contest', { :size => 6 }
       .box
         .big
           Team Captain
@@ -35,7 +35,7 @@
           Every team must have a captain. If you're competing alone,
           then you're it! Please enter the information requested below.
 
-        = f.fields_for(:member) do |g|
+        = f.fields_for(:captain) do |g|
           %table
             %tr
               %td.tiny.shr First Name
@@ -43,11 +43,11 @@
               %td.tiny.shr Last Name
             %tr
               %td
-                = f.text_field :first_name, { :size => 24 }
+                = g.text_field :first_name, { :size => 24 }
               %td
-                = f.text_field :middle_initial, { :size => 1 }
+                = g.text_field :middle_initial, { :size => 1 }
               %td
-                = f.text_field :last_name, { :size => 24 }
+                = g.text_field :last_name, { :size => 24 }
           .para.small.subdued
             Please indicate your eligibility by selecting one of the
             three statements below. If you choose either of the first
@@ -55,27 +55,26 @@
             corresponding list.
           %hr
           .para
-            = f.radio_button :catagory, :us
-            = f.label 'I am a student, age 13 through grade 12, currently enrolled in' |
+            = g.radio_button :catagory, 'u'
+            = g.label 'I am a student, age 13 through grade 12, currently enrolled in' |
                     + ' a U.S. school or am legally home-schooled.' |
           .para.small.alignright
             My school is located in:
-            = ApplicationHelper.state_select(f, :school_state)
+            = ApplicationHelper.state_select(g, :school_state)
           %hr
           .para
-            = f.radio_button :catagory, :out_us
-            = f.label 'I am a U.S. citizen, age 13 through grade 12 (or equivalent),' |
+            = g.radio_button :catagory, 'n'
+            = g.label 'I am a U.S. citizen, age 13 through grade 12 (or equivalent),' |
               + ' currently attending a school outside the U.S.' |
           .para.small.alignright
             My permanent residence is in:
-            = ApplicationHelper.state_select(f, :school_state)
+            = ApplicationHelper.state_select(g, :school_state)
           %hr
           .para
-            = f.radio_button :catagory, :open
-            = f.label 'I am not in one of the two categories above, so I am not' |
+            = g.radio_button :catagory, 'o'
+            = g.label 'I am not in one of the two categories above, so I am not' |
               + ' eligible for national recognition.' |
           .para.small.alignright
             I would still like to submit a design in the Open Competition.
       .para.alignright
         = f.submit 'Accept and Continue >>', { :class => 'btn' }
-

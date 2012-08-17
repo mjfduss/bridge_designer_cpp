@@ -1,9 +1,11 @@
 .para.hi.big 
   Welcome Bridge Designer! 
 .para.hi 
-  We're open for individuals who want to test their skill and for unofficial local contests.
+  We're open for individuals who want to test 
+  their skill and for unofficial local contests.
 .para
-  If you've already registered, then log in by typing your Team Name and Password below.
+  If you've already registered, then log in by 
+  typing your Team Name and Password below.
 
 .dialog.loginwidth
   .dialoghead
@@ -21,11 +23,12 @@
           %td
             = f.label 'Password:'
           %td
-            = f.password_field :password, { :size => 17, :maxlength => 16 }
+            = f.password_field :password, { :size => 16, :maxlength => 16 }
       .alignright 
-        = f.submit 'Log In'
+        = f.submit 'Log In', { :class => 'btn' }
 %hr
 .para
   If you have not yet registered, then...
 .para
-  = button_to 'Start the Registration Wizard >>', new_team_path, :method => :get
+  = button_to 'Start the Registration Wizard >>',     |
+  new_team_path, { :method => :get, :class => 'btn' } |
