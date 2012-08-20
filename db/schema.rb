@@ -11,13 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120817044836) do
+ActiveRecord::Schema.define(:version => 20120820011417) do
 
   create_table "affiliations", :force => true do |t|
-    t.integer  "team"
-    t.integer  "local_contest"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.integer  "team_id"
+    t.integer  "local_contest_id"
   end
 
   create_table "designs", :force => true do |t|
@@ -29,6 +29,29 @@ ActiveRecord::Schema.define(:version => 20120817044836) do
     t.text     "bridge"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "groups", :force => true do |t|
+    t.string   "description", :limit => 40
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  create_table "local_contests", :force => true do |t|
+    t.string   "code",               :limit => 8
+    t.string   "description",        :limit => 40
+    t.string   "poc_first_name",     :limit => 40
+    t.string   "poc_middle_initial", :limit => 1
+    t.string   "poc_last_name",      :limit => 40
+    t.string   "poc_position",       :limit => 40
+    t.string   "organization",       :limit => 40
+    t.string   "city",               :limit => 40
+    t.string   "state",              :limit => 40
+    t.string   "zip",                :limit => 9
+    t.string   "phone",              :limit => 16
+    t.string   "link",               :limit => 40
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
   create_table "members", :force => true do |t|
@@ -54,16 +77,14 @@ ActiveRecord::Schema.define(:version => 20120817044836) do
   end
 
   create_table "teams", :force => true do |t|
-    t.string   "name",        :limit => 32
-    t.string   "name_key",    :limit => 32
-    t.string   "email",       :limit => 40
+    t.string   "name",       :limit => 32
+    t.string   "name_key",   :limit => 32
+    t.string   "email",      :limit => 40
     t.integer  "submits"
     t.integer  "improves"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "captain"
-    t.integer  "group"
-    t.integer  "affiliation"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+    t.integer  "captain_id"
   end
 
 end

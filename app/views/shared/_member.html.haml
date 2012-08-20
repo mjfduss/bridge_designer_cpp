@@ -1,0 +1,41 @@
+= form.fields_for(member) do |f|
+  %table
+    %tr
+      %td.tiny.shr First Name
+      %td.tiny.shr MI
+      %td.tiny.shr Last Name
+    %tr
+      %td
+        = f.text_field :first_name, { :size => 24 }
+      %td
+        = f.text_field :middle_initial, { :size => 1 }
+      %td
+        = f.text_field :last_name, { :size => 24 }
+  .para.small.subdued
+    Please indicate your eligibility by selecting one of the
+    three statements below. If you choose either of the first
+    two, also select the appropriate state from the
+    corresponding list.
+  %hr
+  .para
+    = f.radio_button :category, :u
+    = f.label :u, 'I am a student, age 13 through grade 12, currently enrolled' |
+      + ' in a U.S. school or am legally home-schooled.'                        |
+  .para.small.alignright
+    My school is located in:
+    = ApplicationHelper.state_select(f, :school_state)
+  %hr
+  .para
+    = f.radio_button :category, :n
+    = f.label :n, 'I am a U.S. citizen, age 13 through grade 12 (or equivalent),' |
+      + ' currently attending a school outside the U.S.'                          |
+  .para.small.alignright
+    My permanent residence is in:
+    = ApplicationHelper.state_select(f, :school_state)
+  %hr
+  .para
+    = f.radio_button :category, :o
+    = f.label :o, 'I am not in one of the two categories above, so I am not' |
+       + ' eligible for national recognition.'                               |
+  .para.small.alignright
+    I would still like to submit a design in the Open Competition.
