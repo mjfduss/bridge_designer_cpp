@@ -80,3 +80,10 @@ hr {
 .shr {
     padding: 0 0 0 4px;
 }
+.highlight {
+    background-color: lighten($dialog_bg, 10%)
+}
+.oops {
+    border-width: 0;
+    vertical-align: sub;
+}

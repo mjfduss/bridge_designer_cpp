@@ -4,6 +4,7 @@
       West Point Bridge Design Contest Registration
   .dialogbody
     = form_for(:team, :url => teams_path) do |f|
+      = render "shared/error_head"
       .box
         .big
           Team Name:

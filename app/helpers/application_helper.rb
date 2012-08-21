@@ -13,4 +13,7 @@ module ApplicationHelper
     return f.select id, @@options
   end
 
+  def oops(msg)
+    return '<img class="oops" alt="Oops icon" title="' + msg + '" src="/assets/oops.gif">'
+  end
 end
