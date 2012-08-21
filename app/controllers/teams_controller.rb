@@ -11,14 +11,14 @@ class TeamsController < ApplicationController
   def create
     @team = Team.new(params[:team])
     captain = Member.new(params[:team][:member])
-    begin
-      Team.transaction do
-        captain.save!
-        @team.captain = captain
-        @team.save!
-      end
+    captain_ok = captain.save
+    @team.captain = captain
+    team_ok = @team.save
+    if captain_ok && team_ok
       redirect_to :controller => :members, :action => :new
-    rescue ActiveRecord::RecordInvalid
+    else
+      captain.delete
+      @team.delete
       render 'new'
     end
   end

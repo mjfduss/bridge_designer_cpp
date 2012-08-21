@@ -1,9 +1,13 @@
 = form.fields_for(member) do |f|
   %table
     %tr
-      %td.tiny.shr First Name
+      %td.tiny.shr
+        First Name
+        != oops_on(member, :first_name)
       %td.tiny.shr MI
-      %td.tiny.shr Last Name
+      %td.tiny.shr 
+        Last Name
+        != oops_on(member, :last_name)
     %tr
       %td
         = f.text_field :first_name, { :size => 24 }
@@ -16,6 +20,7 @@
     three statements below. If you choose either of the first
     two, also select the appropriate state from the
     corresponding list.
+    = !oops_on(member, :category)
   %hr
   .para
     = f.radio_button :category, :u

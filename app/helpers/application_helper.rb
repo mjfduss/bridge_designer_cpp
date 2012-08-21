@@ -14,6 +14,15 @@ module ApplicationHelper
   end
 
   def oops(msg)
-    return '<img class="oops" alt="Oops icon" title="' + msg + '" src="/assets/oops.gif">'
+    return '<a onmouseout="return show(\'\')" href="javascript:alert(\'' + msg + \
+      '\')" onmouseover="return show(\'' + msg + \
+      '\')"><img class="oops" alt="Oops: ' + msg + \
+      '" title="' + msg + \
+      '" src="/assets/oops.gif"></a>'
   end
+
+  def oops_on(obj, tag)
+    return obj.errors.include?(tag) ? oops(obj.errors[tag][0]) : ''
+  end
+
 end

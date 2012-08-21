@@ -1,9 +1,7 @@
 class Team < ActiveRecord::Base
 
   before_validation(:on => :create) do
-    if !name.nil?
-      self.name_key = name.downcase.gsub!(/[^a-z0-9]/, '')
-    end
+    self.name_key = name.downcase.gsub!(/[^a-z0-9]/, '') if !name.nil?
   end
 
   attr_accessible :name, :email, :contest 

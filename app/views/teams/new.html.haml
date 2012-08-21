@@ -4,10 +4,11 @@
       West Point Bridge Design Contest Registration
   .dialogbody
     = form_for(:team, :url => teams_path) do |f|
-      = render "shared/error_head"
+      = render :partial => "shared/error_head", :locals => { :obj => @team }
       .box
         .big
           Team Name:
+          != oops_on(@team, :name)
           = f.text_field :name, { :size => 16 }
         .para.small.subdued
           \-- Type a Team Name (up to 15 characters). Do not use anyone's last name! 
@@ -28,6 +29,7 @@
         .para
           = f.radio_button :contest, :local
           = f.label :local, 'A local bridge design contest with Local Contest Code: '
+          = !oops_on(@team, :local_contest_code)
           = f.text_field :local_contest_code, { :size => 6 }
       .box
         .big
@@ -35,6 +37,7 @@
         .para.small.subdued
           Every team must have a captain. If you're competing alone,
           then you're it! Please enter the information requested below.
-        = render :partial => "shared/member", :locals => { :form => f, :member => :member } 
+        = render :partial => "shared/member", |
+                 :locals => { :form => f, :member => @team.captain } |
       .para.alignright
         = f.submit 'Accept and Continue >>', { :class => 'btn' }
