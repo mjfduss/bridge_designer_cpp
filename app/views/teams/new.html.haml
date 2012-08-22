@@ -8,7 +8,7 @@
       .box
         .big
           Team Name:
-          != oops_on(@team, :name)
+          != oops_on(@team, [:name, :name_key])
           = f.text_field :name, { :size => 16 }
         .para.small.subdued
           \-- Type a Team Name (up to 15 characters). Do not use anyone's last name! 
@@ -25,10 +25,10 @@
           your community. Select one below. 
         .para
           = f.radio_button :contest, :national
-          = f.label :national, 'The national West Point Bridge Design Contest only.'
+          = f.label :contest_national, 'The national West Point Bridge Design Contest only.'
         .para
           = f.radio_button :contest, :local
-          = f.label :local, 'A local bridge design contest with Local Contest Code: '
+          = f.label :contest_local, 'A local bridge design contest with Local Contest Code: '
           = !oops_on(@team, :local_contest_code)
           = f.text_field :local_contest_code, { :size => 6 }
       .box

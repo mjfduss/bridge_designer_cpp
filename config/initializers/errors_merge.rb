@@ -1,4 +1,4 @@
-# Monkeypatch adding merge! method the errors hash of all ActiveModel instances.
+# Monkeypatch adding merge! method to the errors hash of all ActiveModel instances.
 
 module ActiveModel
   class Errors

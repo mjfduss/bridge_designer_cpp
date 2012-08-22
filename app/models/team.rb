@@ -1,7 +1,7 @@
 class Team < ActiveRecord::Base
 
   before_validation(:on => :create) do
-    self.name_key = name.downcase.gsub!(/[^a-z0-9]/, '') if !name.nil?
+    self.name_key = name.downcase.gsub(/[^a-z0-9]/, '') if !name.nil?
   end
 
   attr_accessible :name, :email, :contest 
@@ -13,9 +13,8 @@ class Team < ActiveRecord::Base
   has_many :local_contests, :through => :affiliations
   belongs_to :captain, :class_name => 'Member', :dependent => :destroy
 
-  validates :captain, :presence => true
+  validates :name_key, :uniqueness => true
   validates :name, :presence => true, :length => { :maximum => 32 }
-  validates :name_key, :presence => true, :uniqueness => true
   #validates :email, :presence => true, :length => { :maximum => 40 }
 
   def member=(member_hash)
@@ -26,7 +25,7 @@ class Team < ActiveRecord::Base
   end
 
   def contest=(val)
-    
+
   end
 
   def local_contest_code
