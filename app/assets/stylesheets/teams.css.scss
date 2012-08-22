@@ -1,3 +1,5 @@
-// Place all the styles related to the Teams controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+/*
+  Validator puts a div with this class arround erroneous form fields. 
+  This purturbs the form layout unless we inline these divs.
+ */
+.field_with_errors { display: inline; }

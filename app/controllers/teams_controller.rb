@@ -17,6 +17,7 @@ class TeamsController < ApplicationController
     if captain_ok && team_ok
       redirect_to :controller => :members, :action => :new
     else
+      @team.errors.merge! captain.errors
       captain.delete
       @team.delete
       render 'new'
