@@ -10,3 +10,14 @@ popup = (loc) ->
 show = (msg) ->
   window.status = msg
   true
+
+selector_names = [ "school_state", "res_state" ]
+
+state_onchange = (doc, i) ->
+  this.form['team[member][category]'][i].checked = 1
+  doc.form['team[member][' + selector_names[1 - i] + ']'].selectedIndex = 0
+
+category_onclick = (doc) ->
+  for i in [0..1]
+    if doc.form['team[member][category]'][i].checked
+      doc.form['team[member][' + selector_names[i] + ']'].selectedIndex = 0
