@@ -29,7 +29,7 @@
         .para
           = f.radio_button :contest, :local
           = f.label :contest_local, 'A local bridge design contest with Local Contest Code: '
-          = !oops_on(@team, :local_contest_code)
+          != oops_on(@team, :local_contest_code)
           = f.text_field :local_contest_code, { :size => 6 }
       .box
         .big

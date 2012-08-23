@@ -1,6 +1,7 @@
-include ActionView::Helpers::FormOptionsHelper
 
 module ApplicationHelper
+  #include ActionView::Helpers::FormOptionsHelper
+  #include ActionView::Helpers::JavaScriptHelper
 
   @@pairs = 
     [
@@ -67,14 +68,20 @@ module ApplicationHelper
     ]
 
   @@options =  options_for_select(@@pairs, '--')
+  @@abbrevs = Hash[ @@pairs.map{ |p| p[1] }.zip([true] * @@pairs.length) ]
 
-  def self.state_select(f, id)
-    return f.select id, @@options
+  def self.state_select(f, id, i)
+    return f.select id, @@options, {}, { :onchange => "window.state_onchange(this, #{i})"  }
+  end
+
+  def self.valid_state? (s)
+    @@abbrevs[s] == true
   end
 
   def oops(msg)
-    return '<a onmouseout="return show(\'\')" href="javascript:alert(\'' + msg + \
-      '\')" onmouseover="return show(\'' + msg + \
+    js_msg = escape_javascript(msg)
+    return '<a onmouseout="return window.show(\'\')" href="javascript:alert(\'' + js_msg + \
+      '\')" onmouseover="return window.show(\'' + js_msg + \
       '\')"><img class="oops" alt="Oops: ' + msg + \
       '" title="' + msg + \
       '" src="/assets/oops.gif"></a>'

@@ -10,7 +10,7 @@ class Member < ActiveRecord::Base
 
   validates :first_name, :presence => true, :length => { :maximum => 40 }
   validates :last_name, :presence => true, :length => { :maximum => 40 }
-#  validates :category, :presence => true
+  validates :category, :presence => true, :length => { :maximum => 1 }
 
   def school_state
     return category == 'u' ? reg_state : '';
