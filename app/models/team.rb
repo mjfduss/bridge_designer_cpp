@@ -4,7 +4,7 @@ class Team < ActiveRecord::Base
     self.name_key = name.downcase.gsub(/[^a-z0-9]/, '') if !name.nil?
   end
 
-  attr_accessible :name, :email, :contest 
+  attr_accessible :name, :email, :contest
   attr_accessible :local_contest_code, :member
 
   has_many :members
@@ -15,6 +15,8 @@ class Team < ActiveRecord::Base
 
   validates :name_key, :uniqueness => true
   validates :name, :presence => true, :length => { :maximum => 32 }
+  validates :local_contest_code, :length => { :maximum => 6 }
+  validates :local_contest_code, :presence => true, :if => :local_selected?
   #validates :email, :presence => true, :length => { :maximum => 40 }
 
   def member=(member_hash)
@@ -34,5 +36,11 @@ class Team < ActiveRecord::Base
 
   def local_contest_code=(val)
     local_contest = LocalContest.find_by_code(val)
+  end
+
+  protected
+
+  def local_selected?
+    contest == 'local'
   end
 end

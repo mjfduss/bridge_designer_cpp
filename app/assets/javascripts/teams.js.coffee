@@ -24,3 +24,7 @@ window.category_onclick = (doc, i) ->
   for j in [0..1]
     doc.form["team[member][#{ selector_names[j] }]"].selectedIndex = 0
   true
+
+window.local_contest_code_focus = (doc) ->
+  doc.form['team[contest]'][0].checked = 0
+  doc.form['team[contest]'][1].checked = 1
