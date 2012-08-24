@@ -1,2 +1,23 @@
-%h1 Members#new
-%p Find me in app/views/members/new.html.haml
+= content_for :dialog do
+  .dialogbody
+    = render :partial => "shared/error_head", :locals => { :obj => @member }
+    .box
+      .big Second Team Member (optional):
+      .para.small.subdued.alignright
+        .inline
+          If you are competing alone, as a one-person team, click here to
+        .inline
+          = button_to 'Continue >>', new_certification_path, |
+                      { :method => :get, :class => 'btn' } |
+      %hr
+      .para.small.subdued
+        Otherwise, please enter the information requested below.
+      = form_for(:member, :url => members_path) do |f|
+        = render :partial => "shared/member", |
+                 :locals => { :form => f, :member => @member }
+        .para.alignright
+          .inline
+            = f.submit '<< Cancel and Go Back', { :name => 'cancel', :class => 'btn' }
+          .inline
+            = f.submit 'Accept and Continue >>', { :name => 'accept', :class => 'btn' }
+    

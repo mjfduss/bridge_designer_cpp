@@ -1,8 +1,6 @@
 class Team < ActiveRecord::Base
 
-  before_validation(:on => :create) do
-    self.name_key = name.downcase.gsub(/[^a-z0-9]/, '') if !name.nil?
-  end
+  before_validation :set_name_key, :on => :create
 
   attr_accessible :name, :email, :contest
   attr_accessible :local_contest_code, :member
@@ -18,6 +16,10 @@ class Team < ActiveRecord::Base
   validates :local_contest_code, :length => { :maximum => 6 }
   validates :local_contest_code, :presence => true, :if => :local_selected?
   #validates :email, :presence => true, :length => { :maximum => 40 }
+
+  def set_name_key
+    self.name_key = name.downcase.gsub(/[^a-z0-9]/, '') unless name.nil?
+  end
 
   def member=(member_hash)
   end

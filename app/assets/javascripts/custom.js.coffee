@@ -1,7 +1,3 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
-
 # Pop up a new window on the URL given by loc.
 window.popup = (loc) -> 
   window.open(loc,'','width=640,height=500,scrollbars=yes,resizable=yes,status=no,location=no,menubar=no')
@@ -25,6 +21,8 @@ window.category_onclick = (doc, i) ->
     doc.form["team[member][#{ selector_names[j] }]"].selectedIndex = 0
   true
 
+# Handler for gain focus of local contest code text field.
 window.local_contest_code_focus = (doc) ->
-  doc.form['team[contest]'][0].checked = 0
-  doc.form['team[contest]'][1].checked = 1
+  checks = doc.form['team[contest]']
+  checks[0].checked = 0
+  checks[1].checked = 1

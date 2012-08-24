@@ -28,7 +28,7 @@
       + ' in a U.S. school or am legally home-schooled.' |
   .para.small.alignright
     My school is located in:
-    = ApplicationHelper.state_select(f, :school_state, 0)
+    = ApplicationHelper.state_select(f, member, :school_state, 0)
   %hr
   .para
     = f.radio_button :category, :n, { :onclick => 'window.category_onclick(this, 0)' }
@@ -36,7 +36,7 @@
       + ' currently attending a school outside the U.S.' |
   .para.small.alignright
     My permanent residence is in:
-    = ApplicationHelper.state_select(f, :res_state, 1)
+    = ApplicationHelper.state_select(f, member, :res_state, 1)
   %hr
   .para
     = f.radio_button :category, :o, { :onclick => 'window.category_onclick(this, 2)' }

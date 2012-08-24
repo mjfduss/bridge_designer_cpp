@@ -1,9 +1,6 @@
-.dialog.stdwidth
-  .dialoghead
-    .dialogheadcontent
-      West Point Bridge Design Contest Registration
+= content_for :dialog do
   .dialogbody
-    = form_for(:team, :url => teams_path) do |f|
+    = form_for(@team) do |f|
       = render :partial => "shared/error_head", :locals => { :obj => @team }
       .box
         .big
@@ -17,8 +14,7 @@
           %br 
           \-- Be careful! Team Names judged to be inappropriate will be disqualified.
       .box
-        .big
-          Contest selection:
+        .big Contest selection:
         .para.small.subdued
           Your team may enter either the national contest sponsored by 
           West Point or a local contest sponsored by an organization in 

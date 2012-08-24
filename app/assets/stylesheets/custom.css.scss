@@ -67,6 +67,7 @@ hr {
 }
 .big {
     font-size: 110%;
+    font-weight: bold;
 }
 .small {
     font-size: 90%;
@@ -86,4 +87,10 @@ hr {
 .oops {
     border-width: 0;
     vertical-align: sub;
+}
+.inline {
+    display: inline-block
+}
+.field_with_errors {
+    display: inline-block
 }

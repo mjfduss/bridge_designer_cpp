@@ -33,6 +33,13 @@ class TeamsController < ApplicationController
   end
 
   def update
+    @team = Team.new(params[:team])
+    @team.set_name_key
+    if @team.name_key == 
+
+    if @team.
+    captain = Member.new(params[:team][:member])
+    
   end
 
   def destroy

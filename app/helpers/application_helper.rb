@@ -67,11 +67,11 @@ module ApplicationHelper
      ["Wyoming", "WY"],
     ]
 
-  @@options =  options_for_select(@@pairs, '--')
-  @@abbrevs = Hash[ @@pairs.map{ |p| p[1] }.zip([true] * @@pairs.length) ]
+  @@abbrevs = Hash[ @@pairs.map{ |p| [p[1], true] } ]
 
-  def self.state_select(f, id, i)
-    return f.select id, @@options, {}, { :onchange => "window.state_onchange(this, #{i})"  }
+  def self.state_select(f, m, id, i)
+    sel = (i == 0 && m.category == 'u') || (i == 1 && m.category == 'n') ? m.reg_state : '--'
+    return f.select id, options_for_select(@@pairs, sel), {}, { :onchange => "window.state_onchange(this, #{i})"  }
   end
 
   def self.valid_state? (s)

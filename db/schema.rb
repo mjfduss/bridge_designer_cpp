@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120820011417) do
+ActiveRecord::Schema.define(:version => 20120823020853) do
 
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",       :null => false
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(:version => 20120820011417) do
     t.string   "race",           :limit => 1
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
-    t.string   "school_state"
+    t.string   "reg_state",      :limit => 2
   end
 
   create_table "teams", :force => true do |t|
