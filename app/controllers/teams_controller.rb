@@ -28,11 +28,13 @@ class TeamsController < ApplicationController
   def edit
     logger.debug "Team edit '#{params[:id]}' and '#{session[:id]}'"
     @team = Team.find(params[:id])
-    @team.captain
     render 'new'
   end
 
   def update
+    @team = Team.new(params[:team])
+    @team.set_name_key
+
   end
 
   def destroy
