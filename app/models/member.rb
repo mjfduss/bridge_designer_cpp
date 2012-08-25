@@ -10,7 +10,7 @@ class Member < ActiveRecord::Base
 
   validates :first_name, :presence => true, :length => { :maximum => 40 }
   validates :last_name, :presence => true, :length => { :maximum => 40 }
-  validates :category, :presence => true, :length => { :maximum => 1 }
+  validates :category, :presence => { :message => 'must be selected with one of the buttons below.' }, :length => { :maximum => 1 }
 
   def school_state
     s = category == 'u' ? reg_state : '--';

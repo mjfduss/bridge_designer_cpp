@@ -9,7 +9,7 @@ class TeamsController < ApplicationController
   end
 
   def create
-    @team = Team.new(params[:team])
+    @team ||= Team.new(params[:team])
     captain = Member.new(params[:team][:member])
     captain_ok = captain.save
     @team.captain = captain
@@ -26,13 +26,19 @@ class TeamsController < ApplicationController
   end
 
   def edit
-    logger.debug "Team edit '#{params[:id]}' and '#{session[:id]}'"
     @team = Team.find(params[:id])
-    @team.captain
     render 'new'
   end
 
   def update
+    @team = Team.find(params[:id])
+    captain_ok = @team.captain.update_attributes(params[:team][:member])
+    team_ok = @team.update_attributes(params[:team])
+    if captain_ok && team_ok
+      redirect_to :controller => :members, :action => :new      
+    else
+      render 'edit'
+    end
   end
 
   def destroy
