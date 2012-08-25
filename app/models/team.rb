@@ -14,11 +14,20 @@ class Team < ActiveRecord::Base
   validates :name_key, :uniqueness => true
   validates :name, :presence => true, :length => { :maximum => 32 }
   validates :local_contest_code, :length => { :maximum => 6 }
-  validates :local_contest_code, :presence => true, :if => :local_selected?
+  validates :local_contest_code, :length => { :minimum => 4 }, 
+            :if => :local_selected?
+  # The ActiveRecord for a team tries to put a record in the
+  # affiliation table, but will fail if there is no target
+  # local contest.  This detects such a condition.
+  validates_each :local_contest_code do |record, attr, value|
+    record.errors.add(attr, ' is not for an active local contest.') \
+      if record.local_selected? && LocalContest.find_by_code(value).nil?
+  end
+
   #validates :email, :presence => true, :length => { :maximum => 40 }
 
   def set_name_key
-    self.name_key = name.downcase.gsub(/[^a-z0-9]/, '') unless name.nil?
+    self.name_key = to_name_key(name) unless name.nil?
   end
 
   def member=(member_hash)
@@ -29,20 +38,30 @@ class Team < ActiveRecord::Base
   end
 
   def contest=(val)
-
+    if val == 'national'&& !local_contests.empty?
+      Affiliations.delete_all("team_id = #{_id}");
+    else # :local
+      contest = LocalContest.find_by_code(local_contest_code)
+      local_contests << contest unless contest.nil?
+     end
   end
 
   def local_contest_code
     return local_contests.empty? ? '' : local_contests.first.code
   end
 
+  # all the work is done in contest=
   def local_contest_code=(val)
-    local_contest = LocalContest.find_by_code(val)
+  end
+
+  def local_selected?
+    return contest == 'local'
   end
 
   protected
 
-  def local_selected?
-    contest == 'local'
+  def to_name_key (name)
+    return name.downcase.gsub(/[^a-z0-9]/, '')
   end
+
 end
