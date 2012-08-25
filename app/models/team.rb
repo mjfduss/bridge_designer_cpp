@@ -43,15 +43,15 @@ class Team < ActiveRecord::Base
     else # :local
       contest = LocalContest.find_by_code(local_contest_code)
       local_contests << contest unless contest.nil?
-    end
+     end
   end
 
   def local_contest_code
     return local_contests.empty? ? '' : local_contests.first.code
   end
 
+  # all the work is done in contest=
   def local_contest_code=(val)
-    local_contest = LocalContest.find_by_code(val)
   end
 
   def local_selected?
