@@ -41,7 +41,7 @@ class TeamsController < ApplicationController
         redirect_to :controller => :members, :action => :new
       end
     else
-      render 'edit'
+      render 'new'
     end
   end
 
