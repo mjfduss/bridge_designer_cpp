@@ -26,7 +26,6 @@
           = f.radio_button :contest, :local
           = f.label :contest_local, 'A local bridge design contest with Local Contest Code: '
           = f.text_field :local_contest_code, { :size => 6, |
-            :style => 'text-transform: uppercase', |
             :onfocus => 'local_contest_code_focus(this)' } |
           != oops_on(@team, :local_contest_code)
       .box
