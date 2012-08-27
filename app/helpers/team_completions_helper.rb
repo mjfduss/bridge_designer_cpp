@@ -1,0 +1,2 @@
+module TeamCompletionsHelper
+end

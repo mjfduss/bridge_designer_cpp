@@ -1,4 +1,6 @@
 class Member < ActiveRecord::Base
+  include TablesHelper
+
   attr_accessible :first_name, :middle_initial, :last_name
   attr_accessible :category, :age, :grade, :phone
   attr_accessible :street, :city, :state, :zip
@@ -9,31 +11,35 @@ class Member < ActiveRecord::Base
   belongs_to :team
 
   validates :first_name, :presence => true, :length => { :maximum => 40 }
+  validates :middle_initial, :length => { :maximum => 1 }
   validates :last_name, :presence => true, :length => { :maximum => 40 }
-  validates :category, :presence => { :message => 'must be selected with one of the buttons below.' }, :length => { :maximum => 1 }
+  validates :category, 
+            :presence => { :message => 'must be selected with one of the buttons below' }, 
+            :length => { :maximum => 1 }
+  validates_inclusion_of :school_state, :in => TablesHelper::STATES, :message => "is invalid."
+  validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid."
+ 
+  def full_name
+    return first_name.nil? || last_name.nil? ? '' :
+      (middle_initial && middle_initial.length > 0) ? 
+      "#{first_name} #{middle_initial}. #{last_name}" : 
+      "#{first_name} #{last_name}"
+  end
 
   def school_state
-    s = category == 'u' ? reg_state : '--';
-    logger.debug "school_state is #{s}"
-    return s
+    return category == 'u' ? reg_state : '--';
   end
 
   def school_state=(val)
-    logger.debug "setting school_state w/ val #{val}, cat #{category}"
     self.reg_state = val if category == 'u'
-    logger.debug "reg_state is now #{reg_state}"
   end
 
   def res_state
-    s = category == 'n' ? reg_state : '--';
-    logger.debug "res_state is #{s}"
-    return s
+    return category == 'n' ? reg_state : '--';
   end
 
   def res_state=(val)
-    logger.debug "setting reg_state w/ val #{val}, cat #{category}"
     self.reg_state = val if category == 'n'
-    logger.debug "reg_state is now #{reg_state}"
   end
 
 end

@@ -1,81 +1,29 @@
-
 module ApplicationHelper
-  #include ActionView::Helpers::FormOptionsHelper
-  #include ActionView::Helpers::JavaScriptHelper
-
-  @@pairs = 
-    [
-     ['--------Select Here--------', '--'],
-     ["Alabama", "AL"],
-     ["Alaska", "AK"],
-     ["American Samoa", "AS"],
-     ["Arizona", "AZ"],
-     ["Arkansas", "AR"],
-     ["California", "CA"],
-     ["Colorado", "CO"],
-     ["Connecticut", "CT"],
-     ["Delaware", "DE"],
-     ["District of Columbia", "DC"],
-     ["Fed Sts of Micronesia", "FM"],
-     ["Florida", "FL"],
-     ["Georgia", "GA"],
-     ["Guam", "GU"],
-     ["Hawaii", "HI"],
-     ["Idaho", "ID"],
-     ["Illinois", "IL"],
-     ["Indiana", "IN"],
-     ["Iowa", "IA"],
-     ["Kansas", "KS"],
-     ["Kentucky", "KY"],
-     ["Louisiana", "LA"],
-     ["Maine", "ME"],
-     ["Marshall Islands", "MH"],
-     ["Maryland", "MD"],
-     ["Massachusetts", "MA"],
-     ["Michigan", "MI"],
-     ["Minnesota", "MN"],
-     ["Mississippi", "MS"],
-     ["Missouri", "MO"],
-     ["Montana", "MT"],
-     ["Nebraska", "NE"],
-     ["Nevada", "NV"],
-     ["New Hampshire", "NH"],
-     ["New Jersey", "NJ"],
-     ["New Mexico", "NM"],
-     ["New York", "NY"],
-     ["North Carolina", "NC"],
-     ["North Dakota", "ND"],
-     ["Northern Mariana Is", "MP"],
-     ["Ohio", "OH"],
-     ["Oklahoma", "OK"],
-     ["Oregon", "OR"],
-     ["Palau", "PW"],
-     ["Pennsylvania", "PA"],
-     ["Puerto Rico", "PR"],
-     ["Rhode Island", "RI"],
-     ["South Carolina", "SC"],
-     ["South Dakota", "SD"],
-     ["Tennessee", "TN"],
-     ["Texas", "TX"],
-     ["Utah", "UT"],
-     ["Vermont", "VT"],
-     ["Virgin Islands", "VI"],
-     ["Virginia", "VA"],
-     ["Washington", "WA"],
-     ["West Virginia", "WV"],
-     ["Wisconsin", "WI"],
-     ["Wyoming", "WY"],
-    ]
-
-  @@abbrevs = Hash[ @@pairs.map{ |p| [p[1], true] } ]
+  include TablesHelper
 
   def self.state_select(f, m, id, i)
     sel = (i == 0 && m.category == 'u') || (i == 1 && m.category == 'n') ? m.reg_state : '--'
-    return f.select id, options_for_select(@@pairs, sel), {}, { :onchange => "window.state_onchange(this, #{i})"  }
+    return f.select id, options_for_select(TablesHelper::STATE_PAIRS, sel), {}, { :onchange => "window.state_onchange(this, #{i})"  }
   end
 
-  def self.valid_state? (s)
-    @@abbrevs[s] == true
+  def self.age_select(f, sel)
+    return f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel)
+  end
+
+  def self.grade_select(f, sel)
+    return f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel)
+  end
+
+  def self.sex_select(f, sel)
+    return f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel)
+  end
+
+  def self.hispanic_select(f, sel)
+    return f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel)
+  end
+
+  def self.race_select(f, sel)
+    return f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel)
   end
 
   def oops(msg)

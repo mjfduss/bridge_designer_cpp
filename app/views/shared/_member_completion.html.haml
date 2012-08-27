@@ -1,0 +1,26 @@
+%span.tiny
+  Age
+!= oops_on(member, :age)
+  %table
+    %tr
+      %td.tiny.shr
+        First Name
+        != oops_on(member, :first_name)
+      %td.tiny.shr MI
+      %td.tiny.shr 
+        Last Name
+        != oops_on(member, :last_name)
+    %tr
+      %td
+        = f.text_field :first_name, { :size => 24 }
+      %td
+        = f.text_field :middle_initial, { :size => 1 }
+      %td
+        = f.text_field :last_name, { :size => 24 }
+  .para.small.subdued
+    Please indicate your eligibility by selecting one of the
+    three statements below. If you choose either of the first
+    two, also select the appropriate state from the
+    corresponding list.
+    != oops_on(member, :category)
+

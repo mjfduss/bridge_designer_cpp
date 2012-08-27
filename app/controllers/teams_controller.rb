@@ -9,13 +9,13 @@ class TeamsController < ApplicationController
   end
 
   def create
-    @team ||= Team.new(params[:team])
+    @team = Team.new(params[:team])
     captain = Member.new(params[:team][:member])
     captain_ok = captain.save
     @team.captain = captain
     team_ok = @team.save
     if captain_ok && team_ok
-      session[:id] = @team._id
+      session[:team_id] = @team._id
       redirect_to :controller => :members, :action => :new
     else
       @team.errors.merge! captain.errors
@@ -35,7 +35,11 @@ class TeamsController < ApplicationController
     captain_ok = @team.captain.update_attributes(params[:team][:member])
     team_ok = @team.update_attributes(params[:team])
     if captain_ok && team_ok
-      redirect_to :controller => :members, :action => :new      
+      if session[:member_id]
+        redirect_to :controller => :members, :action => :edit, :id => session[:member_id]
+      else
+        redirect_to :controller => :members, :action => :new
+      end
     else
       render 'edit'
     end

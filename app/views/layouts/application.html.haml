@@ -5,6 +5,8 @@
     = stylesheet_link_tag 'application'
     = javascript_include_tag 'application'
     = csrf_meta_tags
+    /[if lt IE 9]
+      = javascript_include_tag 'layout/html5shiv.js'
   %body
     - if content_for?(:dialog)
       .dialog.stdwidth

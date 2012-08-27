@@ -26,3 +26,6 @@ window.local_contest_code_focus = (doc) ->
   checks = doc.form['team[contest]']
   checks[0].checked = 0
   checks[1].checked = 1
+
+window.national_onclick = (doc) ->
+  doc.form['team[local_contest_code]'].value=''

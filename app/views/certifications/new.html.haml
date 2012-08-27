@@ -1,2 +1,61 @@
-%h1 Certifications#new
-%p Find me in app/views/certifications/new.html.haml
+= content_for :dialog do
+  .dialogbody
+    = form_tag(certification_path) do 
+      .big
+        Certify Your Team's Eligiblity
+      .para.small.subdued
+        Please check that the information below is true and correct. 
+        Be careful. Your eligiblity for national recognition depends 
+        on it, and the information cannot be changed after you click the 
+        %span.normalfont.bold I Certify 
+        button below!
+      .box
+        %table.fullwidth
+          %tr
+            %td.bold.shrink Team Name:
+            %td
+              = "#{@team.name}"
+          - if @local_contest
+            %tr
+              %td.bold.shrink Local Contest:
+              %td 
+                = @local_contest.code
+          %tr
+            %td{:colspan => 2}
+              %hr
+          %tr
+            %td.bold.shrink Team Captain:
+            %td
+              = @captain.full_name
+          %tr
+            %td.bold Category:
+            %td
+              x
+          %tr
+            %td{:colspan => 2}
+              %hr
+          - if @member
+            %tr
+              %td.bold.shrink Second Team Member:
+              %td
+                = @member.full_name
+            %tr
+              %td.bold.shrink Category:
+              %td
+                x
+          %tr
+            %td{:colspan => 2}
+              %hr
+          %tr
+            %td.bold.shrink Competing in:
+            %td
+              x
+          %tr
+            %td.bold.shrink Team eligibility:
+            %td
+              x
+      .para.alignright
+        .inline
+          = submit_tag '<< Go Back to Make Changes', { :name => 'cancel', :class => 'btn' }
+        .inline
+          = submit_tag 'I Certify the Information Above is True and Correct >>', { :name => 'accept', :class => 'btn' }

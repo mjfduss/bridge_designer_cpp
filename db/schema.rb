@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120823020853) do
+ActiveRecord::Schema.define(:version => 20120827011808) do
 
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",       :null => false
@@ -74,17 +74,19 @@ ActiveRecord::Schema.define(:version => 20120823020853) do
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
     t.string   "reg_state",      :limit => 2
+    t.integer  "team_id"
   end
 
   create_table "teams", :force => true do |t|
-    t.string   "name",       :limit => 32
-    t.string   "name_key",   :limit => 32
-    t.string   "email",      :limit => 40
+    t.string   "name",            :limit => 32
+    t.string   "name_key",        :limit => 32
+    t.string   "email",           :limit => 40
     t.integer  "submits"
     t.integer  "improves"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.integer  "captain_id"
+    t.string   "password_digest", :limit => 60
   end
 
 end
