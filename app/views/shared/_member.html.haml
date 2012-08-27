@@ -27,6 +27,7 @@
     = f.label :category_u, 'I am a student, age 13 through grade 12, currently enrolled' |
       + ' in a U.S. school or am legally home-schooled.' |
   .para.small.alignright
+    != oops_on(member, :school_state)
     My school is located in:
     = ApplicationHelper.state_select(f, member, :school_state, 0)
   %hr
@@ -35,6 +36,7 @@
     = f.label :category_n, 'I am a U.S. citizen, age 13 through grade 12 (or equivalent),' |
       + ' currently attending a school outside the U.S.' |
   .para.small.alignright
+    != oops_on(member, :res_state)
     My permanent residence is in:
     = ApplicationHelper.state_select(f, member, :res_state, 1)
   %hr

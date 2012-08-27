@@ -85,7 +85,7 @@ class Team < ActiveRecord::Base
   end
 
   def fix_local_contest_code
-    self.local_contest_code = local_contest_code.upcase!
+    self.local_contest_code = local_contest_code.upcase unless local_contest_code.nil?
   end
 
   def adjust_local_contests

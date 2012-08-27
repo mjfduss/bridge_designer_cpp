@@ -16,8 +16,16 @@ class Member < ActiveRecord::Base
   validates :category, 
             :presence => { :message => 'must be selected with one of the buttons below' }, 
             :length => { :maximum => 1 }
-  validates_inclusion_of :school_state, :in => TablesHelper::STATES, :message => "is invalid."
-  validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid."
+  validates_inclusion_of :school_state, :in => TablesHelper::STATES, :message => "is invalid"
+  validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid"
+  validates_each :school_state do |record, attr, value|
+    logger.debug "***school_state saw #{record.category}"
+    record.errors.add(attr, "must be selected") if record.category == 'u' && value == '--';
+  end
+  validates_each :res_state do |record, attr, value|
+    logger.debug "***res_state saw #{record.category}"
+    record.errors.add(attr, "must be selected") if record.category == 'n' && value == '--';
+  end
  
   def full_name
     return first_name.nil? || last_name.nil? ? '' :

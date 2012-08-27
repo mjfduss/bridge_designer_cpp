@@ -41,6 +41,7 @@ class TeamsController < ApplicationController
         redirect_to :controller => :members, :action => :new
       end
     else
+      @team.errors.merge! @team.captain.errors
       render 'new'
     end
   end
