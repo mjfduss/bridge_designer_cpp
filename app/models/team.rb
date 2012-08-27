@@ -13,7 +13,8 @@ class Team < ActiveRecord::Base
   has_many :local_contests, :through => :affiliations
   belongs_to :captain, :class_name => 'Member', :dependent => :destroy
 
-  before_validation :tweak, :on => :create
+  before_validation :tweak_on_create, :on => :create
+  before_validation :fix_local_contest_code
   before_save :adjust_local_contests, :downcase_email
   
   validates :name_key, :uniqueness => true
@@ -78,9 +79,13 @@ class Team < ActiveRecord::Base
 
   # Set the name key from the raw name string.
   # Set a dummy password to suppress empty digest message.
-  def tweak
+  def tweak_on_create
     self.name_key = to_name_key(name) unless name.nil?
     self.password_confirmation = self.password = 'temporary'
+  end
+
+  def fix_local_contest_code
+    self.local_contest_code = local_contest_code.upcase!
   end
 
   def adjust_local_contests
@@ -93,7 +98,7 @@ class Team < ActiveRecord::Base
   end
 
   def downcase_email
-    email.downcase! unless email.nil?
+    self.email = email.downcase unless email.nil?
   end
 
 end
