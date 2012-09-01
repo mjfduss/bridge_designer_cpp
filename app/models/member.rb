@@ -19,15 +19,7 @@ class Member < ActiveRecord::Base
             :length => { :maximum => 1 }
   validates_inclusion_of :school_state, :in => TablesHelper::STATES, :message => "is invalid"
   validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid"
-  validates_each :school_state do |record, attr, value|
-    logger.debug "***school_state saw #{record.category}"
-    record.errors.add(attr, "must be selected") if record.category == 'u' && value == '--';
-  end
-  validates_each :res_state do |record, attr, value|
-    logger.debug "***res_state saw #{record.category}"
-    record.errors.add(attr, "must be selected") if record.category == 'n' && value == '--';
-  end
- 
+
   validates_each :school_state, :res_state do |record, attr, value|
     record.errors.add(attr, 'must be selected.') \
       if value == '--' && attr == ValidationHelper.to_state(record.category)

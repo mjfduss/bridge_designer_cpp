@@ -36,8 +36,6 @@ class Team < ActiveRecord::Base
       if record.local_selected? && LocalContest.find_by_code(record.local_contest_code).nil?
   end
 
-  #validates :email, :presence => true, :length => { :maximum => 40 }
-
   def contest
     @contest || :national
   end
