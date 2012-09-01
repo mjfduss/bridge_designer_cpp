@@ -15,7 +15,7 @@ class TeamsController < ApplicationController
     @team.captain = captain
     team_ok = @team.save
     if captain_ok && team_ok
-      session[:team_id] = @team._id
+      session[:team_id] = @team.id
       redirect_to :controller => :members, :action => :new
     else
       @team.errors.merge! captain.errors

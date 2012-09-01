@@ -4,3 +4,5 @@ en:
       team:
         name: "Team name"
         name_key: "Team name"
+      member:
+        res_state: "State of residence"

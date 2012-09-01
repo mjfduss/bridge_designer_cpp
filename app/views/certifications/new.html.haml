@@ -28,9 +28,9 @@
             %td
               = @captain.full_name
           %tr
-            %td.bold Category:
-            %td
-              x
+            %td.bold.shrink Category:
+            %td{ :id => 'captain_category' }
+              = render 'member_category', { :category => @captain.category }
           %tr
             %td{:colspan => 2}
               %hr
@@ -41,19 +41,22 @@
                 = @member.full_name
             %tr
               %td.bold.shrink Category:
-              %td
-                x
-          %tr
-            %td{:colspan => 2}
-              %hr
-          %tr
-            %td.bold.shrink Competing in:
-            %td
-              x
-          %tr
-            %td.bold.shrink Team eligibility:
-            %td
-              x
+              %td{ :id => 'member_category' }
+                = render 'member_category', { :category => @member.category }
+            %tr
+              %td{:colspan => 2}
+                %hr
+          - case eligibility(@captain, @member)
+          - when :eligible
+            = render 'team_category', { |
+                :competing_in => 'US/PR Student Competition.', |
+                :eligibility => 'Your team is eligible to compete for national recognition by submitting designs.' } |
+          - when :ineligible
+            = render 'team_category', { |
+                :competing_in => 'Open Competition.', |
+                :eligibility => 'At least one of your team members is not eligible for national' + |
+                                'recognition. Therefore the team is not eligible. We encourage' + |
+                                'you to submit designs in Open Competition!' } |
       .para.alignright
         .inline
           = submit_tag '<< Go Back to Make Changes', { :name => 'cancel', :class => 'btn' }

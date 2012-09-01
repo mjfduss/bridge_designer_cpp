@@ -16,7 +16,7 @@ class MembersController < ApplicationController
       @member = Member.new(params[:team][:member])
       @member.team = Team.find(session[:team_id])
       if @member.save 
-        session[:member_id] = @member._id;
+        session[:member_id] = @member.id;
         redirect_to :controller => :certifications, :action => :new
       else
         render 'new'

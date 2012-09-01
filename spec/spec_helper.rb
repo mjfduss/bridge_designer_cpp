@@ -3,6 +3,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
+require 'capybara/rspec'
+require 'capybara/rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -30,3 +32,79 @@ RSpec.configure do |config|
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
 end
+
+def goto_team_registration_page
+  visit root_path
+  click_button "Start the Registration Wizard >>"
+end
+
+def fill_in_member_partial(cat_string = 'u')
+  fill_in('team_member_first_name', :with => 'Zoom')
+  fill_in('team_member_last_name', :with => 'Farr')
+  choose('team_member_category_' + cat_string)
+  select('Pennsylvania', :from => 'team_member_school_state')
+end
+
+def goto_member_registration_page(captain_cat_string = 'u')
+  goto_team_registration_page
+  fill_in('team_name', :with => 'Beat Air Force!')
+  fill_in_member_partial(captain_cat_string)
+  click_button 'Accept and Continue >>'
+end
+
+def goto_certification_page(captain_cat_string = 'u', member_cat_string = nil)
+  goto_member_registration_page(captain_cat_string)
+  if member_cat_string.nil?
+    click_button "Continue >>"
+  else
+    click_button "Accept and Continue >>"
+    fill_in_member_partial(member_cat_string)
+    click_button "Accept and Continue >>"
+  end
+end
+
+def it_should_have_standard_title
+  it { should have_selector('title', :text => 'West Point Bridge Design Contest') }
+end
+
+def it_should_have_member_partial
+  it { should have_selector('td', :text => 'First Name') }
+  it { should have_selector('td', :text => 'MI') }
+  it { should have_selector('td', :text => 'Last Name') }
+  it { should have_selector('div', :text => 'My school is located in:') }    
+  it { should have_selector('div', :text => 'My permanent residence is in:') }
+end
+
+def it_should_have_member_errors
+  it { html.should match /Reason for error appears here!/ }
+  it { html.should match /First name can't be blank/ }
+  it { html.should match /Last name can't be blank/ }
+  it { html.should match /Category must be selected with one of the buttons below/ }
+end
+
+def it_should_have_certification_tags
+  it { should have_selector('div', :text => "Certify Your Team's Eligiblity") }
+  it { should have_selector('td', :text => "Team Name:") }
+  it { should have_selector('td', :text => "Team Captain:") }
+  it { should have_selector('td', :text => "Category:") }
+  it { should have_selector('td', :text => "Competing in:") }
+  it { should have_selector('td', :text => "Team eligibility:") }
+end
+
+US_SCHOOL = 'Student, age 13 through grade 12, currently enrolled in a U.S. ' +
+  'school or legally home-schooled. Eligible for national recognition.'
+
+NON_US_SCHOOL = 'U.S. citizen, age 13 through grade 12 (or equivalent), currently ' + 
+  'attending a school outside the U.S. Eligible for national recognition.'
+
+OPEN = 'Open Competitor. Not eligible for national recognition.'
+
+ELIGIBLE = 'Your team is eligible to compete for national recognition by submitting designs.'
+
+INELIGIBLE = 'At least one of your team members is not eligible for ' +
+  'nationalrecognition. Therefore the team is not eligible. We encourageyou ' +
+  'to submit designs in Open Competition!'
+
+IN_US = 'US/PR Student Competition.'
+
+IN_OPEN = 'Open Competition.'

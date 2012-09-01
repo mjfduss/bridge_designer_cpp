@@ -1,5 +1,6 @@
 class Member < ActiveRecord::Base
   include TablesHelper
+  include ValidationHelper
 
   attr_accessible :first_name, :middle_initial, :last_name
   attr_accessible :category, :age, :grade, :phone
@@ -19,6 +20,11 @@ class Member < ActiveRecord::Base
   validates_inclusion_of :school_state, :in => TablesHelper::STATES, :message => "is invalid."
   validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid."
  
+  validates_each :school_state, :res_state do |record, attr, value|
+    record.errors.add(attr, 'must be selected.') \
+      if value == '--' && attr == ValidationHelper.to_state(record.category)
+  end
+
   def full_name
     return first_name.nil? || last_name.nil? ? '' :
       (middle_initial && middle_initial.length > 0) ? 

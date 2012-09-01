@@ -1,3 +1,4 @@
+include ActionView::Helpers::FormOptionsHelper
 module ApplicationHelper
   include TablesHelper
 
@@ -38,8 +39,7 @@ module ApplicationHelper
   def oops_on(obj, tags)
     tags = [tags] unless tags.is_a?(Array)
     tags.each{ |tag| 
-      return oops(obj.errors.full_message(tag, obj.errors[tag][0])) \
-        if obj.errors.include?(tag) 
+      return oops(obj.errors.full_message(tag, obj.errors[tag][0])) if obj.errors.include?(tag) 
     }
     return ''
   end
