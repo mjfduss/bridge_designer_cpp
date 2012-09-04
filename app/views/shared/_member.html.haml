@@ -1,11 +1,11 @@
 = form.fields_for(member) do |f| 
   %table
-    %tr
-      %td.tiny.shr
+    %tr.tiny
+      %td.shr
         First Name
         != oops_on(member, :first_name)
-      %td.tiny.shr MI
-      %td.tiny.shr 
+      %td.shr MI
+      %td.shr 
         Last Name
         != oops_on(member, :last_name)
     %tr
@@ -24,25 +24,22 @@
   %hr
   .para
     = f.radio_button :category, :u, { :onclick => 'category_onclick(this)' }
-    = f.label :category_u, 'I am a student, age 13 through grade 12, currently enrolled' |
-      + ' in a U.S. school or am legally home-schooled.' |
+    = f.label :category_u, MembersHelper::US_STUDENT
   .para.small.alignright
     != oops_on(member, :school_state)
     My school is located in:
-    = ApplicationHelper.state_select(f, member, :school_state, 0)
+    = school_state_select(f, member)
   %hr
   .para
     = f.radio_button :category, :n, { :onclick => 'window.category_onclick(this, 0)' }
-    = f.label :category_n, 'I am a U.S. citizen, age 13 through grade 12 (or equivalent),' |
-      + ' currently attending a school outside the U.S.' |
+    = f.label :category_n, MembersHelper::US_CITIZEN
   .para.small.alignright
     != oops_on(member, :res_state)
     My permanent residence is in:
-    = ApplicationHelper.state_select(f, member, :res_state, 1)
+    = res_state_select(f, member)
   %hr
   .para
     = f.radio_button :category, :o, { :onclick => 'window.category_onclick(this, 2)' }
-    = f.label :category_o, 'I am not in one of the two categories above, so I am not' |
-       + ' eligible for national recognition.' |
+    = f.label :category_o, MembersHelper::OTHER
   .para.small.alignright
     I would still like to submit a design in the Open Competition.

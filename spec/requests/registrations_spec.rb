@@ -76,4 +76,12 @@ describe "Registration" do
     }
     it { html.should match /State of residence must be selected\./ }
   end
+
+  describe "at Captain completion after Accept with no inputs" do
+    before {
+      goto_certification_page 
+      click_button I_CERTIFY
+    }
+    it { should have_selector('div', :text => 'Personal info for Team Captain') }
+  end
 end

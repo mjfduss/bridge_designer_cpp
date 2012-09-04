@@ -1,11 +1,11 @@
 = content_for :dialog do
   .dialogbody
     = render :partial => "shared/error_head", :locals => { :obj => @member }
-    .box
-      = form_for(@member) do |f|
+    = form_for(@member) do |f|
+      .box
         .big 
           Personal Info for Team Captain 
-          = "#{@member.first_name} #{@member.last_name}"
+          = @member.full_name
         .para.small.subdued
           Please enter the information requested below. Note carefully:
           %br
@@ -13,7 +13,7 @@
           %br
           \-- Entering erroneous information may result in disqualification from the contest.
         = render :partial => "shared/member_completion", |
-                 :locals => { :form => f, :member => @member }
-        .para.alignright
-          .inline
-            = f.submit 'Accept and Continue >>', { :class => 'btn' }
+                 :locals => { :f => f, :member => @member }
+      .para.alignright
+        .inline
+          = f.submit 'Accept and Continue >>', { :class => 'btn' }

@@ -5,6 +5,7 @@ class CaptainCompletionsController < ApplicationController
   end
 
   def create
+    @member = Team.find(session[:team_id]).captain
   end
 
   def edit

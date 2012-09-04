@@ -1,26 +1,56 @@
-%span.tiny
-  Age
-!= oops_on(member, :age)
-  %table
-    %tr
-      %td.tiny.shr
-        First Name
-        != oops_on(member, :first_name)
-      %td.tiny.shr MI
-      %td.tiny.shr 
-        Last Name
-        != oops_on(member, :last_name)
-    %tr
-      %td
-        = f.text_field :first_name, { :size => 24 }
-      %td
-        = f.text_field :middle_initial, { :size => 1 }
-      %td
-        = f.text_field :last_name, { :size => 24 }
-  .para.small.subdued
-    Please indicate your eligibility by selecting one of the
-    three statements below. If you choose either of the first
-    two, also select the appropriate state from the
-    corresponding list.
-    != oops_on(member, :category)
-
+.para
+  %span.tiny
+    Age
+  != oops_on(member, :age)
+  != age_select(f, member.age)
+  %span.tiny
+    &nbsp;&nbsp;&nbsp;Grade
+  != oops_on(member, :grade)
+  != grade_select(f, member.grade)
+%table
+  %tr.tiny
+    %td.shr Mailing Address
+    %td.shr{ :colspan => 3 } Phone Number
+  %tr
+    %td
+      = f.text_field :street, { :size => 32 }
+    %td{ :colspan => 3 }
+      = f.text_field :phone,  { :size => 16 }
+  %tr.tiny
+    %td.shr City
+    %td.shr State/Province
+    %td.shr Zip/Postal Code
+    %td.shr Country
+  %tr
+    %td
+      = f.text_field :city, { :size => 32 }
+    %td
+      = f.text_field :state, { :size => 16 }
+    %td
+      = f.text_field :zip, { :size => 16 }
+    %td
+      = f.text_field :country, { :size => 16 }
+  %tr.tiny
+    %td.shr Full Name of School
+    %td.shr{ :colspan => 3 } School City
+  %tr
+    %td
+      = f.text_field :school, { :size => 32 }
+    %td{ :colspan => 3 }
+      = f.text_field :school_city, { :size => 16 }
+%hr
+.para.small.subdued
+  The following items are optional and confidential.
+%table
+  %tr
+    %td.tiny Sex:
+    %td
+      = sex_select(f, member.sex)
+  %tr
+    %td.tiny Spanish/Hispanic/Latino?
+    %td
+      = hispanic_select(f, member.hispanic)
+  %tr
+    %td.tiny Race:
+    %td
+      = race_select(f, member.race)

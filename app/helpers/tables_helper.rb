@@ -109,6 +109,7 @@ module TablesHelper
 
   RACE_PAIRS = 
     [
+     ['-- Select here --', '--'],
      ["White", "W"],
      ["Black or African American", "B"],
      ["Native American or Alaska Native", "A"],

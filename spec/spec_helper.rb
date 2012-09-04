@@ -108,3 +108,7 @@ INELIGIBLE = 'At least one of your team members is not eligible for ' +
 IN_US = 'US/PR Student Competition.'
 
 IN_OPEN = 'Open Competition.'
+
+I_CERTIFY = 'I Certify the Information Above is True and Correct >>'
+
+GO_BACK = 'Go Back to Make Changes'

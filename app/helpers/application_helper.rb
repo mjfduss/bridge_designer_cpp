@@ -2,29 +2,38 @@ include ActionView::Helpers::FormOptionsHelper
 module ApplicationHelper
   include TablesHelper
 
-  def self.state_select(f, m, id, i)
-    sel = (i == 0 && m.category == 'u') || (i == 1 && m.category == 'n') ? m.reg_state : '--'
-    return f.select id, options_for_select(TablesHelper::STATE_PAIRS, sel), {}, { :onchange => "window.state_onchange(this, #{i})"  }
+  def school_selected(m, ch)
+    return (m.category == ch) ? m.reg_state : '--'
   end
 
-  def self.age_select(f, sel)
-    return f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel)
+  def school_state_select(f, m)
+    return f.select :school_state, options_for_select(TablesHelper::STATE_PAIRS, school_selected(m, 'u')), 
+      {}, { :onchange => "window.state_onchange(this, 0)"  }
   end
 
-  def self.grade_select(f, sel)
-    return f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel)
+  def res_state_select(f, m)
+    return f.select :res_state, options_for_select(TablesHelper::STATE_PAIRS, school_selected(m, 'n')), 
+      {}, { :onchange => "window.state_onchange(this, 1)"  }
   end
 
-  def self.sex_select(f, sel)
-    return f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel)
+  def age_select(f, sel)
+    return f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel || '--')
   end
 
-  def self.hispanic_select(f, sel)
-    return f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel)
+  def grade_select(f, sel)
+    return f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel || '--')
   end
 
-  def self.race_select(f, sel)
-    return f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel)
+  def sex_select(f, sel)
+    return f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel || '--')
+  end
+
+  def hispanic_select(f, sel)
+    return f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel || '--')
+  end
+
+  def race_select(f, sel)
+    return f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel || '--')
   end
 
   def oops(msg)
