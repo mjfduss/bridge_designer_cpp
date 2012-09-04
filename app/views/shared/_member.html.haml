@@ -1,45 +1,44 @@
-= form.fields_for(member) do |f| 
-  %table
-    %tr.tiny
-      %td.shr
-        First Name
-        != oops_on(member, :first_name)
-      %td.shr MI
-      %td.shr 
-        Last Name
-        != oops_on(member, :last_name)
-    %tr
-      %td
-        = f.text_field :first_name, { :size => 24 }
-      %td
-        = f.text_field :middle_initial, { :size => 1 }
-      %td
-        = f.text_field :last_name, { :size => 24 }
-  .para.small.subdued
-    Please indicate your eligibility by selecting one of the
-    three statements below. If you choose either of the first
-    two, also select the appropriate state from the
-    corresponding list.
-    != oops_on(member, :category)
-  %hr
-  .para
-    = f.radio_button :category, :u, { :onclick => 'category_onclick(this)' }
-    = f.label :category_u, MembersHelper::US_STUDENT
-  .para.small.alignright
-    != oops_on(member, :school_state)
-    My school is located in:
-    = school_state_select(f, member)
-  %hr
-  .para
-    = f.radio_button :category, :n, { :onclick => 'window.category_onclick(this, 0)' }
-    = f.label :category_n, MembersHelper::US_CITIZEN
-  .para.small.alignright
-    != oops_on(member, :res_state)
-    My permanent residence is in:
-    = res_state_select(f, member)
-  %hr
-  .para
-    = f.radio_button :category, :o, { :onclick => 'window.category_onclick(this, 2)' }
-    = f.label :category_o, MembersHelper::OTHER
-  .para.small.alignright
-    I would still like to submit a design in the Open Competition.
+%table
+  %tr.tiny
+    %td.shr
+      First Name
+      != oops_on(member, :first_name)
+    %td.shr MI
+    %td.shr 
+      Last Name
+      != oops_on(member, :last_name)
+  %tr
+    %td
+      = mf.text_field :first_name, { :size => 24 }
+    %td
+      = mf.text_field :middle_initial, { :size => 1 }
+    %td
+      = mf.text_field :last_name, { :size => 24 }
+.para.small.subdued
+  Please indicate your eligibility by selecting one of the
+  three statements below. If you choose either of the first
+  two, also select the appropriate state from the
+  corresponding list.
+  != oops_on(member, :category)
+%hr
+.para
+  = mf.radio_button :category, :u, { :onclick => 'category_onclick(this)' }
+  = mf.label :category_u, MembersHelper::US_STUDENT
+.para.small.alignright
+  != oops_on(member, :school_state)
+  My school is located in:
+  = school_state_select(mf, member)
+%hr
+.para
+  = mf.radio_button :category, :n, { :onclick => 'window.category_onclick(this, 0)' }
+  = mf.label :category_n, MembersHelper::US_CITIZEN
+.para.small.alignright
+  != oops_on(member, :res_state)
+  My permanent residence is in:
+  = res_state_select(mf, member)
+%hr
+.para
+  = mf.radio_button :category, :o, { :onclick => 'window.category_onclick(this, 2)' }
+  = mf.label :category_o, MembersHelper::OTHER
+.para.small.alignright
+  I would still like to submit a design in the Open Competition.

@@ -14,7 +14,7 @@ doc/
 *.bat
 *.cmd
 *~
-#*#
+\#*#
 .project
 .DS_Store
 .idea

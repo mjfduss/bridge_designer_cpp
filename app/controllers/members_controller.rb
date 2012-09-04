@@ -1,10 +1,10 @@
 class MembersController < ApplicationController
+
   def index
   end
 
   def new
     @member = Member.new
-    @member.team = Team.new
   end
 
   def create
@@ -13,7 +13,7 @@ class MembersController < ApplicationController
     elsif params.has_key? :skip
       redirect_to :controller => :certifications, :action => :new
     else
-      @member = Member.new(params[:team][:member])
+      @member = Member.new(params[:member])
       @member.team = Team.find(session[:team_id])
       if @member.save 
         session[:member_id] = @member.id;
@@ -38,7 +38,7 @@ class MembersController < ApplicationController
       redirect_to :controller => :certifications, :action => :new
     else
       @member = Member.find(params[:id])
-      if @member.update_attributes(params[:team][:member])
+      if @member.update_attributes(params[:member])
         redirect_to :controller => :certifications, :action => :new      
       else
         render 'edit'

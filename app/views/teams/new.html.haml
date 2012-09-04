@@ -34,7 +34,8 @@
         .para.small.subdued
           Every team must have a captain. If you're competing alone,
           then you're it! Please enter the information requested below.
-        = render :partial => "shared/member", |
-                 :locals => { :form => f, :member => @team.captain } |
+        = f.fields_for :members, @team.captain do |mf| 
+          = render :partial => "shared/member", |
+                   :locals => { :mf => mf, :member => @team.captain } |
       .para.alignright
         = f.submit 'Accept and Continue >>', { :class => 'btn' }

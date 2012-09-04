@@ -1,7 +1,9 @@
 class Team < ActiveRecord::Base
 
+  VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+
   attr_accessible :name, :email, :contest
-  attr_accessible :local_contest_code, :member
+  attr_accessible :local_contest_code, :members_attributes
   attr_accessible :password, :password_confirmation
   attr_accessor :local_contest_code, :completed
 
@@ -13,16 +15,17 @@ class Team < ActiveRecord::Base
   has_many :local_contests, :through => :affiliations
   belongs_to :captain, :class_name => 'Member', :dependent => :destroy
 
+  accepts_nested_attributes_for :members
+
   before_validation :tweak_on_create, :on => :create
   before_validation :fix_local_contest_code
   before_save :adjust_local_contests, :downcase_email
+  after_find :set_non_db_fields
   
   validates :name_key, :uniqueness => true
   validates :name, :presence => true, :length => { :maximum => 32 }
   validates :local_contest_code, :length => { :maximum => 6 }
   validates :local_contest_code, :length => { :minimum => 4 }, :if => :local_selected?
-
-  VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   validates :email, :presence => true, :format => { :with => VALID_EMAIL_ADDRESS }, :if => :completed
   validates :password, :presence => true, :length => { :minimum => 6 }, :if => :completed
@@ -42,27 +45,6 @@ class Team < ActiveRecord::Base
 
   def contest=(val)
     @contest = val.to_sym
-  end
-
-  def self.find(*args)
-    return super(*args).set_virtual_fields
-  end
-
-  # This lazily sets the non-database backed fields.
-  def set_virtual_fields
-    lc = local_contests.first
-    if lc 
-      self.local_contest_code = lc.code
-      self.contest = :local
-    else
-      self.contest = :national
-    end
-    return self
-  end
-
-  # This ignores the nested member in the team form. The member
-  # fields are handled in the team and member controllers.
-  def member=(member_hash)
   end
 
   def local_selected?
@@ -97,6 +79,17 @@ class Team < ActiveRecord::Base
 
   def downcase_email
     self.email = email.downcase unless email.nil?
+  end
+
+  def set_non_db_fields
+    lc = local_contests.first
+    if lc 
+      self.local_contest_code = lc.code
+      self.contest = :local
+    else
+      self.contest = :national
+    end
+    return self
   end
 
 end

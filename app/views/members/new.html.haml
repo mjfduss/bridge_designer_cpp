@@ -2,9 +2,7 @@
   .dialogbody
     = render :partial => "shared/error_head", :locals => { :obj => @member }
     .box
-      = form_for(@member.team, |
-                 :method => @member.new_record? ? 'post' : 'put', |
-                 :url => @member.new_record? ? members_path : member_path(@member)) do |f|
+      = form_for(@member) do |f|
         .big Second Team Member (optional):
         .para.small.subdued.alignright
           .inline
@@ -15,7 +13,7 @@
         .para.small.subdued
           Otherwise, please enter the information requested below.
         = render :partial => "shared/member", |
-                 :locals => { :form => f, :member => @member } |
+                 :locals => { :mf => f, :member => @member } |
         .para.alignright
           .inline
             = f.submit '<< Cancel and Go Back', { :name => 'cancel', :class => 'btn' }
