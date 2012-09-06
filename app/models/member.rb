@@ -4,10 +4,11 @@ class Member < ActiveRecord::Base
 
   attr_accessible :first_name, :middle_initial, :last_name
   attr_accessible :category, :age, :grade, :phone
-  attr_accessible :street, :city, :state, :zip
+  attr_accessible :street, :city, :state, :zip, :country
   attr_accessible :school, :school_city
   attr_accessible :school_state, :res_state
   attr_accessible :sex, :hispanic, :race
+  attr_accessor :completed
   
   belongs_to :team
 
@@ -21,15 +22,26 @@ class Member < ActiveRecord::Base
   validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid"
 
   validates_each :school_state, :res_state do |record, attr, value|
-    record.errors.add(attr, 'must be selected.') \
-      if value == '--' && attr == ValidationHelper.to_state(record.category)
+    record.errors.add(attr, 'must be selected.') if value == '--' && attr == ValidationHelper.to_state(record.category)
   end
 
+  validates_inclusion_of :age, :in => TablesHelper::VALID_AGES, :message => "must be selected", :if => :completed
+  validates_inclusion_of :grade, :in => TablesHelper::VALID_GRADES, :message => "must be selected", :if => :completed
+  validates :street, :presence => true, :length => { :maximum => 40 }, :if => :completed
+  validates :phone, :presence => true, :length => { :maximum => 16 }, :if => :completed
+  validates :city, :presence => true, :length => { :maximum => 40 }, :if => :completed
+  validates :state,  :presence => true, :length => { :maximum => 2 }, :if => :completed
+  validates :zip,  :presence => true, :length => { :maximum => 9 }, :if => :completed
+  validates :school,  :presence => true, :length => { :maximum => 40 }, :if => :completed
+  validates :school_city,  :presence => true, :length => { :maximum => 40 }, :if => :completed
+  validates_inclusion_of :sex, :in => TablesHelper::SEXES, :message => "is invalid", :if => :completed
+  validates_inclusion_of :hispanic, :in => TablesHelper::HISPANICS, :message => "is invalid", :if => :completed
+  validates_inclusion_of :race, :in => TablesHelper::RACES, :message => "is invalid", :if => :completed
+  
   def full_name
-    return first_name.nil? || last_name.nil? ? '' :
-      (middle_initial && middle_initial.length > 0) ? 
-      "#{first_name} #{middle_initial}. #{last_name}" : 
-      "#{first_name} #{last_name}"
+    return first_name.nil? || last_name.nil? ? '' 
+    : (middle_initial && middle_initial.length > 0) ? "#{first_name} #{middle_initial}. #{last_name}" 
+    : "#{first_name} #{last_name}"
   end
 
   def school_state

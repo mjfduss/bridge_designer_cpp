@@ -39,10 +39,10 @@ def goto_team_registration_page
 end
 
 def fill_in_member_partial(cat_string = 'u')
-  fill_in('team_member_first_name', :with => 'Zoom')
-  fill_in('team_member_last_name', :with => 'Farr')
-  choose('team_member_category_' + cat_string)
-  select('Pennsylvania', :from => 'team_member_school_state')
+  fill_in("first_name", :with => 'Zoom')
+  fill_in("last_name", :with => 'Farr')
+  choose("category_#{cat_string}")
+  select('Pennsylvania', :from => "school_state")
 end
 
 def goto_member_registration_page(captain_cat_string = 'u')

@@ -8,12 +8,12 @@ module ApplicationHelper
 
   def school_state_select(f, m)
     return f.select :school_state, options_for_select(TablesHelper::STATE_PAIRS, school_selected(m, 'u')), 
-      {}, { :onchange => "window.state_onchange(this, 0)"  }
+      {}, { :id => "school_state", :onchange => "window.school_state_change(this)"  }
   end
 
   def res_state_select(f, m)
     return f.select :res_state, options_for_select(TablesHelper::STATE_PAIRS, school_selected(m, 'n')), 
-      {}, { :onchange => "window.state_onchange(this, 1)"  }
+      {}, {  :id => "res_state", :onchange => "window.res_state_change(this)"  }
   end
 
   def age_select(f, sel)

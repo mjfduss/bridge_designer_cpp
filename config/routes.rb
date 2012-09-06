@@ -3,9 +3,9 @@ Wpbdc::Application.routes.draw do
   resources :teams, :except => [ :show ]
   resources :members, :except => [ :show, :destroy ]
   resource :certification, :only => [ :new, :create ]
-  resources :captain_completions, :only => [:new, :create, :edit, :update ]
-  resources :member_completions, :only => [ :new, :create, :edit, :update ]
-  resources :team_completions, :only => [ :new, :create, :edit, :update ]
+  resources :captain_completions, :only => [ :edit, :update ]
+  resources :member_completions, :only => [ :edit, :update ]
+  resources :team_completions, :only => [ :edit, :update ]
   resource :home, :only => [ :edit, :update ]
   resource :session, :only => [ :new, :create, :destroy ]
  

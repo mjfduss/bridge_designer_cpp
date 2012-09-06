@@ -1,2 +1,19 @@
-%h1 CaptainCompletions#edit
-%p Find me in app/views/captain_completions/edit.html.haml
+= content_for :dialog do
+  .dialogbody
+    = render :partial => "shared/error_head", :locals => { :obj => @member }
+    = form_for(@member, :url => captain_completion_path(@member.id)) do |f|
+      .box
+        .big 
+          Personal Info for Team Captain 
+          = @member.full_name
+        .para.small.subdued
+          Please enter the information requested below. Note carefully:
+          %br
+          \-- Your answers are confidential.
+          %br
+          \-- Entering erroneous information may result in disqualification from the contest.
+        = render :partial => "shared/member_completion", |
+                 :locals => { :f => f, :member => @member }
+      .para.alignright
+        .inline
+          = f.submit 'Accept and Continue >>', { :class => 'btn' }

@@ -62,7 +62,7 @@ describe "Registration" do
   describe "at Member, school state not selected" do
     before { 
       goto_member_registration_page 
-      choose('team_member_category_u')
+      choose('category_u')
       click_button "Accept and Continue >>"
     }
     it { html.should match /School state must be selected\./ }
@@ -71,7 +71,7 @@ describe "Registration" do
   describe "at Member, state of residence not selected" do
     before { 
       goto_member_registration_page 
-      choose('team_member_category_n')
+      choose('category_n')
       click_button "Accept and Continue >>"
     }
     it { html.should match /State of residence must be selected\./ }

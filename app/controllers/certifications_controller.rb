@@ -11,7 +11,8 @@ class CertificationsController < ApplicationController
     if params.has_key? :cancel
       redirect_to :controller => :teams, :action => :edit, :id => session[:team_id]
     else
-      redirect_to :controller => :captain_completions, :action => :new
+      team = Team.find(session[:team_id])
+      redirect_to :controller => :captain_completions, :action => :edit, :id => team.captain.id
     end
   end
 end

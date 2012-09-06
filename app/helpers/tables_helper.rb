@@ -127,11 +127,13 @@ module TablesHelper
      ["Other race", "O"],
     ]
 
-  STATES    = Hash[ STATE_PAIRS.map{    |p| [p[1], true] } ]
-  AGES      = Hash[ AGE_PAIRS.map{      |p| [p[1], true] } ]
-  GRADES    = Hash[ GRADE_PAIRS.map{    |p| [p[1], true] } ]
-  SEXES     = Hash[ SEX_PAIRS.map{      |p| [p[1], true] } ]
-  HISPANICS = Hash[ HISPANIC_PAIRS.map{ |p| [p[1], true] } ]
-  RACES     = Hash[ RACE_PAIRS.map{     |p| [p[1], true] } ]
+  STATES       = Hash[ STATE_PAIRS.map{         |p| [p[1], true] } ]
+  AGES         = Hash[ AGE_PAIRS.map{           |p| [p[1], true] } ]
+  VALID_AGES   = Hash[ AGE_PAIRS[1..-1].map{    |p| [p[1], true] } ]
+  GRADES       = Hash[ GRADE_PAIRS.map{         |p| [p[1], true] } ]
+  VALID_GRADES = Hash[ GRADE_PAIRS[1..-1].map { |p| [p[1], true] } ]
+  SEXES        = Hash[ SEX_PAIRS.map{           |p| [p[1], true] } ]
+  HISPANICS    = Hash[ HISPANIC_PAIRS.map{      |p| [p[1], true] } ]
+  RACES        = Hash[ RACE_PAIRS.map{          |p| [p[1], true] } ]
 
 end

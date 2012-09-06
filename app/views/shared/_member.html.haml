@@ -9,11 +9,11 @@
       != oops_on(member, :last_name)
   %tr
     %td
-      = mf.text_field :first_name, { :size => 24 }
+      = mf.text_field :first_name, { :size => 24, :id => 'first_name' }
     %td
-      = mf.text_field :middle_initial, { :size => 1 }
+      = mf.text_field :middle_initial, { :size => 1, :id => 'middle_initial' }
     %td
-      = mf.text_field :last_name, { :size => 24 }
+      = mf.text_field :last_name, { :size => 24, :id => 'last_name' }
 .para.small.subdued
   Please indicate your eligibility by selecting one of the
   three statements below. If you choose either of the first
@@ -22,23 +22,23 @@
   != oops_on(member, :category)
 %hr
 .para
-  = mf.radio_button :category, :u, { :onclick => 'category_onclick(this)' }
-  = mf.label :category_u, MembersHelper::US_STUDENT
+  = mf.radio_button :category, :u, { :id => 'category_u', :onclick => 'window.category_onclick(this)' }
+  = mf.label :category, MembersHelper::US_STUDENT, :for => 'category_u'
 .para.small.alignright
   != oops_on(member, :school_state)
   My school is located in:
   = school_state_select(mf, member)
 %hr
 .para
-  = mf.radio_button :category, :n, { :onclick => 'window.category_onclick(this, 0)' }
-  = mf.label :category_n, MembersHelper::US_CITIZEN
+  = mf.radio_button :category, :n, { :id => 'category_n', :onclick => 'window.category_onclick(this)' }
+  = mf.label :category_n, MembersHelper::US_CITIZEN, :for => 'category_n'
 .para.small.alignright
   != oops_on(member, :res_state)
   My permanent residence is in:
   = res_state_select(mf, member)
 %hr
 .para
-  = mf.radio_button :category, :o, { :onclick => 'window.category_onclick(this, 2)' }
-  = mf.label :category_o, MembersHelper::OTHER
+  = mf.radio_button :category, :o, { :id => 'category_o', :onclick => 'window.category_onclick(this)' }
+  = mf.label :category_o, MembersHelper::OTHER, :for => 'category_o'
 .para.small.alignright
   I would still like to submit a design in the Open Competition.
