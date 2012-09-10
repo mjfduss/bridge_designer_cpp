@@ -1,41 +1,40 @@
 = content_for :dialog do
-  .dialogbody
-    = form_for(@team) do |f|
-      = render :partial => "shared/error_head", :locals => { :obj => @team }
-      .box
-        .big
-          Team Name:
-          != oops_on(@team, [:name, :name_key])
-          = f.text_field :name, { :size => 16 }
-        .para.small.subdued
-          \-- Type a Team Name (up to 15 characters). Do not use anyone's last name! 
-          %br
-          \-- Remember your Team Name! You will need it later.
-          %br 
-          \-- Be careful! Team Names judged to be inappropriate will be disqualified.
-      .box
-        .big Contest selection:
-        .para.small.subdued
-          Your team may enter either the national contest sponsored by 
-          West Point or a local contest sponsored by an organization in 
-          your community. Select one below. 
-        .para
-          = f.radio_button :contest, :national, :id => 'national', :onclick => "national_onclick(this)" 
-          = f.label :contest_national, 'The national West Point Bridge Design Contest only.'
-        .para
-          = f.radio_button :contest, :local, :id => 'local'
-          = f.label :contest_local, 'A local bridge design contest with Local Contest Code: '
-          = f.text_field :local_contest_code, { :id => 'local_contest_code', :size => 6, |
-            :onfocus => 'local_contest_code_focus(this)' } |
-          != oops_on(@team, :local_contest_code)
-      .box
-        .big
-          Team Captain
-        .para.small.subdued
-          Every team must have a captain. If you're competing alone,
-          then you're it! Please enter the information requested below.
-        = f.fields_for :members, @team.captain do |mf| 
-          = render :partial => "shared/member", |
-                   :locals => { :mf => mf, :member => @team.captain } |
-      .para.alignright
-        = f.submit 'Accept and Continue >>', { :class => 'btn' }
+  = render :partial => "shared/error_head", :locals => { :obj => @team }
+  = form_for(@team) do |f|
+    .box
+      .big
+        Team Name:
+        != oops_on(@team, [:name, :name_key])
+        = f.text_field :name, { :size => 16 }
+      .para.small.subdued
+        \-- Type a Team Name (up to 15 characters). Do not use anyone's last name! 
+        %br
+        \-- Remember your Team Name! You will need it later.
+        %br 
+        \-- Be careful! Team Names judged to be inappropriate will be disqualified.
+    .box
+      .big Contest selection:
+      .para.small.subdued
+        Your team may enter either the national contest sponsored by 
+        West Point or a local contest sponsored by an organization in 
+        your community. Select one below. 
+      .para
+        = f.radio_button :contest, :national, :id => 'national', :onclick => "national_onclick(this)" 
+        = f.label :contest_national, 'The national West Point Bridge Design Contest only.'
+      .para
+        = f.radio_button :contest, :local, :id => 'local'
+        = f.label :contest_local, 'A local bridge design contest with Local Contest Code: '
+        = f.text_field :local_contest_code, { :id => 'local_contest_code', :size => 6, |
+          :onfocus => 'local_contest_code_focus(this)' } |
+        != oops_on(@team, :local_contest_code)
+    .box
+      .big
+        Team Captain
+      .para.small.subdued
+        Every team must have a captain. If you're competing alone,
+        then you're it! Please enter the information requested below.
+      = f.fields_for :members, @team.captain do |mf| 
+        = render :partial => "shared/member", |
+                 :locals => { :mf => mf, :member => @team.captain } |
+    .para.alignright
+      = f.submit TablesHelper::ACCEPT, { :class => 'btn' }

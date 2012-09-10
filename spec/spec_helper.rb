@@ -45,6 +45,19 @@ def fill_in_member_partial(cat_string = 'u')
   select('Pennsylvania', :from => "school_state")
 end
 
+def fill_in_member_completion 
+  select("13", :from => "member_age")
+  select("7", :from => "member_grade")
+  fill_in("member_street", :with => "107A Washington Road")
+  fill_in("member_phone", :with => "845-446-9826")
+  fill_in("member_city", :with => "West Point")
+  fill_in("member_state", :with => "NY")
+  fill_in("member_zip", :with => "10996")
+  fill_in("member_country", :with => "US")
+  fill_in("member_school", :with => "Northamton Senior High")
+  fill_in("member_school_city", :with => "Northampton")
+end
+
 def goto_member_registration_page(captain_cat_string = 'u')
   goto_team_registration_page
   fill_in('team_name', :with => 'Beat Air Force!')
@@ -91,6 +104,30 @@ def it_should_have_certification_tags
   it { should have_selector('td', :text => "Team eligibility:") }
 end
 
+def it_should_have_member_completion_errors
+  it { html.should match "Age must be selected" }
+  it { html.should match "Grade must be selected" }
+  it { html.should match "Street can't be blank" }
+  it { html.should match "Phone can't be blank" }
+  it { html.should match "City can't be blank" }
+  it { html.should match "State can't be blank" }
+  it { html.should match "Zip can't be blank" }
+  it { html.should match "School can't be blank" }
+  it { html.should match "School city can't be blank" }
+end
+
+def goto_captain_completion_page
+  goto_certification_page
+  click_button I_CERTIFY
+end
+
+def goto_member_completion_page
+  goto_certification_page('n', 'n')
+  click_button I_CERTIFY
+  fill_in_member_completion
+  click_button "Accept and Continue >>"
+end
+
 US_SCHOOL = 'Student, age 13 through grade 12, currently enrolled in a U.S. ' +
   'school or legally home-schooled. Eligible for national recognition.'
 
@@ -112,3 +149,5 @@ IN_OPEN = 'Open Competition.'
 I_CERTIFY = 'I Certify the Information Above is True and Correct >>'
 
 GO_BACK = 'Go Back to Make Changes'
+
+ACCEPT = 'Accept and Continue >>'

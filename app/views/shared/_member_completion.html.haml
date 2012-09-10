@@ -1,56 +1,83 @@
-.para
-  %span.tiny
-    Age
-  != oops_on(member, :age)
-  != age_select(f, member.age)
-  %span.tiny
-    &nbsp;&nbsp;&nbsp;Grade
-  != oops_on(member, :grade)
-  != grade_select(f, member.grade)
-%table
-  %tr.tiny
-    %td.shr Mailing Address
-    %td.shr{ :colspan => 3 } Phone Number
-  %tr
-    %td
-      = f.text_field :street, { :size => 32 }
-    %td{ :colspan => 3 }
-      = f.text_field :phone,  { :size => 16 }
-  %tr.tiny
-    %td.shr City
-    %td.shr State/Province
-    %td.shr Zip/Postal Code
-    %td.shr Country
-  %tr
-    %td
-      = f.text_field :city, { :size => 32 }
-    %td
-      = f.text_field :state, { :size => 16 }
-    %td
-      = f.text_field :zip, { :size => 16 }
-    %td
-      = f.text_field :country, { :size => 16 }
-  %tr.tiny
-    %td.shr Full Name of School
-    %td.shr{ :colspan => 3 } School City
-  %tr
-    %td
-      = f.text_field :school, { :size => 32 }
-    %td{ :colspan => 3 }
-      = f.text_field :school_city, { :size => 16 }
-%hr
-.para.small.subdued
-  The following items are optional and confidential.
-%table
-  %tr
-    %td.tiny Sex:
-    %td
-      = sex_select(f, member.sex)
-  %tr
-    %td.tiny Spanish/Hispanic/Latino?
-    %td
-      = hispanic_select(f, member.hispanic)
-  %tr
-    %td.tiny Race:
-    %td
-      = race_select(f, member.race)
+.box
+  .big 
+    Personal Info for Team 
+    = label
+    = member.full_name
+  .para.small.subdued
+    Please enter the information requested below. Note carefully:
+    %br
+    \-- Your answers are confidential.
+    %br
+    \-- Entering erroneous information may result in disqualification from the contest.
+  .para
+    %span.tiny
+      Age
+    != oops_on(member, :age)
+    != age_select(f, member.age)
+    %span.tiny
+      &nbsp;&nbsp;&nbsp;Grade
+    != oops_on(member, :grade)
+    != grade_select(f, member.grade)
+  %table
+    %tr.tiny
+      %td.shr 
+        Street Address
+        != oops_on(member, :street)
+      %td.shr{ :colspan => 3 }
+        Phone Number
+        != oops_on(member, :phone)
+    %tr
+      %td
+        = f.text_field :street, { :size => 32 }
+      %td{ :colspan => 3 }
+        = f.text_field :phone,  { :size => 16 }
+    %tr.tiny
+      %td.shr 
+        City
+        != oops_on(member, :city)
+      %td.shr
+        State/Province
+        != oops_on(member, :state)
+      %td.shr
+        Zip/Postal Code
+        != oops_on(member, :zip)
+      %td.shr
+        Country
+        != oops_on(member, :country)
+    %tr
+      %td
+        = f.text_field :city, { :size => 32 }
+      %td
+        = f.text_field :state, { :size => 16 }
+      %td
+        = f.text_field :zip, { :size => 16 }
+      %td
+        = f.text_field :country, { :size => 16 }
+    %tr.tiny
+      %td.shr 
+        Full Name of School
+        != oops_on(member, :school)
+      %td.shr{ :colspan => 3 } 
+        School City
+        != oops_on(member, :school_city)
+    %tr
+      %td
+        = f.text_field :school, { :size => 32 }
+      %td{ :colspan => 3 }
+        = f.text_field :school_city, { :size => 16 }
+  %hr
+  .para.small.subdued
+    The following items are optional and confidential.
+  %table
+    %tr
+      %td.tiny Sex:
+      %td
+        = sex_select(f, member.sex)
+    %tr
+      %td.tiny Spanish/Hispanic/Latino?
+      %td
+        = hispanic_select(f, member.hispanic)
+    %tr
+      %td.tiny Race:
+      %td
+        = race_select(f, member.race)

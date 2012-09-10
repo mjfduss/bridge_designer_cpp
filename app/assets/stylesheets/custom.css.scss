@@ -26,11 +26,7 @@ div.dialog {
     border: 2px solid $box_border;
 }
 div.dialoghead {
-    width: 100%;
     background-color: $dialog_head_bg;
-}
-div.dialogheadcontent {
-    background-color: transparent;
     color: #fff;
     font-weight: bold;
     padding: 3px 6px; 
@@ -38,6 +34,14 @@ div.dialogheadcontent {
 div.dialogbody {
     background-color: transparent;
     padding: 4px;
+}
+div.banner {
+    font-size: 110%;
+    font-weight: bold;
+    background-color: $dialog_head_bg;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 16px; 
 }
 div.para {
     padding: 1px 0; 
@@ -107,4 +111,11 @@ hr {
     width: 1px;
     white-space: nowrap;
     vertical-align: top;
+}
+div.strength_meter {
+    vertical-align: center;
+    text-align: center;
+    font-weight: bold;
+    margin: 2px 4px 2px 4px;
+    border: 1px solid $box_border;
 }

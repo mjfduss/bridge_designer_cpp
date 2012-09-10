@@ -13,6 +13,7 @@ class TeamsController < ApplicationController
     @team.captain = @team.members.first
     if @team.save
       session[:team_id] = @team.id
+      session[:captain_id] = @team.captain.id
       redirect_to :controller => :members, :action => :new
     else
       render 'new'

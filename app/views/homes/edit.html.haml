@@ -1,2 +1,12 @@
-%h1 Homes#edit
-%p Find me in app/views/homes/edit.html.haml
+.banner
+  Home page for
+  = @team.name
+.para
+  Your team status:
+.para
+  = form_for(@design, :method => :put, :url => home_path(@team.id)) do |f|
+    Submit a design (West Point Bridge Designer 2012 only):
+    %br
+    = f.file_field :bridge
+    %br
+    = f.submit 'Submit your design', { :class => 'btn' }

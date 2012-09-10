@@ -1,17 +1,16 @@
 = content_for :dialog do
-  .dialogbody
-    = render :partial => "shared/error_head", :locals => { :obj => @member }
-    = form_for(@member) do |f|
-      .box
-        .big Second Team Member (optional):
-        .para.small.subdued.alignright
-          If you are competing alone, as a one-person team, click here to
-          = f.submit 'Continue >>', { :name => 'skip', :class => 'btn' }
-        %hr
-        .para.small.subdued
-          Otherwise, please enter the information requested below.
-        = render :partial => "shared/member", |
-                 :locals => { :mf => f, :member => @member } |
-      .para.alignright
-        = f.submit '<< Cancel and Go Back', { :name => 'cancel', :class => 'btn' }
-        = f.submit 'Accept and Continue >>', { :name => 'accept', :class => 'btn' }
+  = render :partial => "shared/error_head", :locals => { :obj => @member }
+  = form_for(@member) do |f|
+    .box
+      .big Second Team Member (optional):
+      .para.small.subdued.alignright
+        If you are competing alone, as a one-person team, click here to
+        = f.submit 'Continue >>', { :name => 'skip', :class => 'btn' }
+      %hr
+      .para.small.subdued
+        Otherwise, please enter the information requested below.
+      = render :partial => "shared/member", |
+               :locals => { :mf => f, :member => @member } |
+    .para.alignright
+      = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
+      = f.submit TablesHelper::ACCEPT, { :name => 'accept', :class => 'btn' }

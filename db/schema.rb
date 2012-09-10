@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120902025004) do
+ActiveRecord::Schema.define(:version => 20120908162250) do
 
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",       :null => false
@@ -64,8 +64,8 @@ ActiveRecord::Schema.define(:version => 20120902025004) do
     t.string   "phone",          :limit => 16
     t.string   "street",         :limit => 40
     t.string   "city",           :limit => 40
-    t.string   "state",          :limit => 2
-    t.string   "zip",            :limit => 9
+    t.string   "state",          :limit => 40
+    t.string   "zip",            :limit => 16
     t.string   "school",         :limit => 40
     t.string   "school_city",    :limit => 40
     t.string   "sex",            :limit => 1
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20120902025004) do
     t.datetime "updated_at",                    :null => false
     t.integer  "captain_id"
     t.string   "password_digest", :limit => 60
+    t.string   "kind",            :limit => 1
   end
 
 end
