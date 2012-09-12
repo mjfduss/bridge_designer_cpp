@@ -1,0 +1,23 @@
+= content_for :dialog do
+  = form_tag(verification_path) do
+    .big Verify Contact Info
+    .para.small.subdued
+      Please check that the information below is correct. 
+      We must be able to contact winners!
+    .box
+      .dialoghead 
+        Team information for Team
+        = @team.name
+      %table
+        %tr
+          %td{ :class => 'bold' } Email:
+          %td @team.email
+    .box
+      = render :partial => 'member_verification', |
+               :locals => { :member => @captain } |
+      - if @member
+        = render :partial => 'member_verification', |
+                 :locals => { :member => @member } |
+    .para.alignright
+      = submit_tag '<< Make Changes', :name => :cancel, :class => 'btn'
+      = submit_tag TablesHelper::ACCEPT, :name => :accept, :class => 'btn'

@@ -1,7 +1,6 @@
 = content_for :dialog do
-  = form_tag(certification_path) do 
-    .big
-      Certify Your Team's Eligiblity
+  = form_tag(certification_path(@team.id), :method => :put) do 
+    .big Certify Your Team's Eligiblity
     .para.small.subdued
       Please check that the information below is true and correct. 
       Be careful. Your eligiblity for national recognition depends 
@@ -13,7 +12,7 @@
         %tr
           %td.bold.shrink Team Name:
           %td
-            = "#{@team.name}"
+            = @team.name
         - if @local_contest
           %tr
             %td.bold.shrink Local Contest:
@@ -57,7 +56,5 @@
                               'recognition. Therefore the team is not eligible. We encourage' + |
                               'you to submit designs in Open Competition!' } |
     .para.alignright
-      .inline
-        = submit_tag '<< Go Back to Make Changes', { :name => 'cancel', :class => 'btn' }
-      .inline
-        = submit_tag 'I Certify the Information Above is True and Correct >>', { :name => 'accept', :class => 'btn' }
+      = submit_tag '<< Go Back to Make Changes', :name => :cancel, :class => 'btn'
+      = submit_tag 'I Certify the Information Above is True and Correct >>', :name => :accept, :class => 'btn'

@@ -14,6 +14,7 @@ class Team < ActiveRecord::Base
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
   belongs_to :captain, :class_name => 'Member', :dependent => :destroy
+  has_many :non_captains, :class_name => 'Member', :conditions => ['id != ?', :captain]
 
   accepts_nested_attributes_for :members
 
@@ -64,16 +65,20 @@ class Team < ActiveRecord::Base
     contest == :local
   end
 
+  def self.authenticate (name, password)
+    find_by_name_key(to_name_key(name)).try(:authenticate, password)
+  end
+
   protected
 
-  def to_name_key (name)
+  def self.to_name_key (name)
     return name.downcase.gsub(/[^a-z0-9]/, '')
   end
 
   # Set the name key from the raw name string.
   # Set a dummy password to suppress empty digest message.
   def tweak_on_create
-    self.name_key = to_name_key(name) unless name.nil?
+    self.name_key = Team.to_name_key(name) unless name.nil?
     self.password_confirmation = self.password = 'temporary'
   end
 

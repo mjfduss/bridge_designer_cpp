@@ -4,9 +4,12 @@
 .para
   Your team status:
 .para
-  = form_for(@design, :method => :put, :url => home_path(@team.id)) do |f|
+  - if flash[:alert]
+    .para
+      = flash[:alert]
+  = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
     Submit a design (West Point Bridge Designer 2012 only):
     %br
     = f.file_field :bridge
     %br
-    = f.submit 'Submit your design', { :class => 'btn' }
+    = f.submit 'Submit your design', :class => 'btn'
