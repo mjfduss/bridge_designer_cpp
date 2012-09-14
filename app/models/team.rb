@@ -51,10 +51,6 @@ class Team < ActiveRecord::Base
   end
   
   def completed=(val)
-    @completed = val
-  end
-
-  def contest
     @contest || :national
   end
 
