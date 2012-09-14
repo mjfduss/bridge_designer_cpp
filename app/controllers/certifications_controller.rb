@@ -12,7 +12,11 @@ class CertificationsController < ApplicationController
       redirect_to :controller => :teams, :action => :edit, :id => session[:team_id]
     else
       team = Team.find(session[:team_id])
-      redirect_to :controller => :captain_completions, :action => :edit, :id => team.captain.id
+      if team.registration_category == 'e'
+        redirect_to :controller => :captain_completions, :action => :edit, :id => team.captain.id
+      else
+        redirect_to :controller => :team_completions, :action => :edit, :id => team.id
+      end
     end
   end
 end

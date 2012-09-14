@@ -5,19 +5,21 @@
       Please check that the information below is correct. 
       We must be able to contact winners!
     .box
-      .dialoghead 
+      .membertitle
         Team information for Team
         = @team.name
       %table
         %tr
-          %td{ :class => 'bold' } Email:
-          %td @team.email
+          %td{ :class => 'bold' } Email:&nbsp;
+          %td= @team.email
     .box
-      = render :partial => 'member_verification', |
-               :locals => { :member => @captain } |
-      - if @member
-        = render :partial => 'member_verification', |
-                 :locals => { :member => @member } |
+      %table{ :width => '100%' }
+        %tr
+          %td{ :width => '50%' }= render :partial => 'member_verification', |
+                      :locals => { :tag => 'Captain', :member => @captain } |
+          - if @member
+            %td= render :partial => 'member_verification', |
+                        :locals => { :tag => 'Member', :member => @member } |
     .para.alignright
       = submit_tag '<< Make Changes', :name => :cancel, :class => 'btn'
       = submit_tag TablesHelper::ACCEPT, :name => :accept, :class => 'btn'

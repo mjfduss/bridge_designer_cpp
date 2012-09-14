@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120908162250) do
+ActiveRecord::Schema.define(:version => 20120911043556) do
 
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",       :null => false
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(:version => 20120908162250) do
     t.integer  "team_id"
     t.integer  "score"
     t.integer  "sequence"
-    t.datetime "submitted"
     t.integer  "scenario"
     t.text     "bridge"
     t.datetime "created_at", :null => false
@@ -71,11 +70,11 @@ ActiveRecord::Schema.define(:version => 20120908162250) do
     t.string   "sex",            :limit => 1
     t.string   "hispanic",       :limit => 1
     t.string   "race",           :limit => 1
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
     t.string   "reg_state",      :limit => 2
     t.integer  "team_id"
-    t.string   "country",        :limit => 40
+    t.string   "country",        :limit => 40, :default => "USA"
   end
 
   create_table "teams", :force => true do |t|
@@ -88,7 +87,8 @@ ActiveRecord::Schema.define(:version => 20120908162250) do
     t.datetime "updated_at",                    :null => false
     t.integer  "captain_id"
     t.string   "password_digest", :limit => 60
-    t.string   "kind",            :limit => 1
+    t.string   "category",        :limit => 4
+    t.datetime "reg_completed"
   end
 
 end

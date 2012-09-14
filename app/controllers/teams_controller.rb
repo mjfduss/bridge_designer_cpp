@@ -16,6 +16,7 @@ class TeamsController < ApplicationController
       session[:captain_id] = @team.captain.id
       redirect_to :controller => :members, :action => :new
     else
+      flash[:error] = "Could not save your team. Close your browser and try again."
       render 'new'
     end
   end

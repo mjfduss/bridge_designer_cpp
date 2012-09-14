@@ -10,6 +10,11 @@ body {
     font-family: arial, sans-serif;
     font-size: $font_size;
 }
+table, th, td {
+    padding: 0px;
+    border-spacing: 0px;
+    border: 0px;
+}
 .normalfont {
     font-size: $font_size;
     color: #000000;
@@ -30,6 +35,13 @@ div.dialoghead {
     color: #fff;
     font-weight: bold;
     padding: 3px 6px; 
+}
+.membertitle {
+    background-color: $dialog_head_bg;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 4px;
+    padding-left: 8px;
 }
 div.dialogbody {
     background-color: transparent;

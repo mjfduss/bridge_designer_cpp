@@ -1,40 +1,44 @@
-%table{ :width => '48%' }
+%table
+  %tr
+    %td{ :class => 'membertitle', :colspan => 2 }
+      Team
+      = "#{tag} #{member.full_name}"
   %tr
     %td{ :class => 'bold' } Age:
-    %td member.age
+    %td= member.age
   %tr
     %td{ :class => 'bold' } Grade:
-    %td member.grade
+    %td= member.grade
   %tr
     %td{ :class => 'bold' } Street address:
-    %td member.street
+    %td= member.street
   %tr
     %td{ :class => 'bold' } State/Province:
-    %td member.state
+    %td= member.state
   %tr
     %td{ :class => 'bold' } Zip/Postal code:
-    %td member.zip
+    %td= member.zip
   %tr
     %td{ :class => 'bold' } Country:
-    %td member.country
+    %td= member.country
   %tr
     %td{ :class => 'bold' } Phone:
-    %td member.phone
+    %td= member.phone
   %tr
     %td{ :class => 'bold' } School:
-    %td member.school
+    %td= member.school
   %tr
     %td{ :class => 'bold' } School city:
-    %td member.school_city
+    %td= member.school_city
   - if member.sex
     %tr
       %td{ :class => 'bold' } Sex:
-      %td member.sex
+      %td= member.sex
   - if member.hispanic
     %tr
       %td{ :class => 'bold' } Hispanic:
-      %td member.hispanic
+      %td= member.hispanic
   - if member.race
     %tr
       %td{ :class => 'bold' } Race:
-      %td member.race
+      %td= member.race

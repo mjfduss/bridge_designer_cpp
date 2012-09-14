@@ -10,11 +10,12 @@ class Team < ActiveRecord::Base
   has_secure_password
 
   has_many :members
+  has_many :non_captains, :class_name => 'Member', 
+    :conditions => proc { ['members.id != ?', captain.id ] }
   has_many :designs
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
   belongs_to :captain, :class_name => 'Member', :dependent => :destroy
-  has_many :non_captains, :class_name => 'Member', :conditions => ['id != ?', :captain]
 
   accepts_nested_attributes_for :members
 
@@ -46,11 +47,11 @@ class Team < ActiveRecord::Base
   end
 
   def completed
-    !kind.nil?
+    @completed
   end
   
   def completed=(val)
-    self.kind = val ? 'qual' : nil
+    @completed = val
   end
 
   def contest
@@ -59,6 +60,14 @@ class Team < ActiveRecord::Base
 
   def contest=(val)
     @contest = val.to_sym
+  end
+
+  def registration_category
+    0 == members.index {|m| m.category == 'o'} ? 'e' : 'i'
+  end
+
+  def register
+    category.nil? && (self.category = registration_category)
   end
 
   def local_selected?
