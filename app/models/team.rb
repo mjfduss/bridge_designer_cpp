@@ -51,6 +51,10 @@ class Team < ActiveRecord::Base
   end
   
   def completed=(val)
+    @completed = val
+  end
+
+  def contest 
     @contest || :national
   end
 
@@ -59,7 +63,8 @@ class Team < ActiveRecord::Base
   end
 
   def registration_category
-    0 == members.index {|m| m.category == 'o'} ? 'e' : 'i'
+    i = members.index {|m| m.category == 'o'}
+    i.nil? ? 'e' : 'i'
   end
 
   def register

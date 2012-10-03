@@ -2,6 +2,8 @@ class TeamCompletionsController < ApplicationController
 
   def edit
     @team = Team.find(params[:id])
+    @captain = @team.captain
+    @member = @team.non_captains.first
   end
 
   def update

@@ -22,12 +22,12 @@ class TeamsController < ApplicationController
   end
 
   def edit
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
     render 'new'
   end
 
   def update
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
     if @team.update_attributes(params[:team])
       if session[:member_id]
         redirect_to :controller => :members, :action => :edit, :id => session[:member_id]

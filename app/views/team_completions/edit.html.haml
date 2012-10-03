@@ -43,6 +43,14 @@
         %br
         Your team's Local Contest Code is permanent. It cannot be set or changed here. If you 
         wish to compete in a different contest, local or national, you must register a new team.
+      - if @team.category != 'e'
+        .para.bold
+          Team Captain
+          = @captain.full_name
+        - if @member
+          .para.bold
+            Team Member
+            = @member.full_name
     .para.alignright
       = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
       = f.submit TablesHelper::ACCEPT, { :name => 'accept', :class => 'btn' }
