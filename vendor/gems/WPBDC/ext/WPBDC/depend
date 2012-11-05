@@ -1,0 +1,20 @@
+WPBDC.o: WPBDC.c internal.h rubydefs.h judge.h sketch.h
+analysis.o: analysis.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+bridge.o: bridge.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+bridge_cost.o: bridge_cost.c stdafx.h internal.h rubydefs.h judge.h \
+  sketch.h
+bridge_hash.o: bridge_hash.c stdafx.h internal.h rubydefs.h judge.h \
+  sketch.h
+bridge_parser.o: bridge_parser.c stdafx.h internal.h rubydefs.h judge.h \
+  sketch.h rc4.h
+bridge_random.o: bridge_random.c stdafx.h internal.h rubydefs.h judge.h \
+  sketch.h
+bridge_sketch.o: bridge_sketch.c stdafx.h internal.h rubydefs.h judge.h \
+  sketch.h
+geometry.o: geometry.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+judge.o: judge.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+loading.o: loading.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+params.o: params.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+rc4.o: rc4.c rc4.h
+scenario.o: scenario.c stdafx.h internal.h rubydefs.h judge.h sketch.h
+sketch.o: sketch.c stdafx.h internal.h rubydefs.h judge.h sketch.h

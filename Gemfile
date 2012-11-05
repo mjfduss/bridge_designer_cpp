@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
+gem 'WPBDC', '2013.1.0'
 gem 'rails', '3.2.7'
 gem 'bootstrap-sass', '2.0.4.0'
 gem 'bcrypt-ruby', '3.0.1'
 gem 'haml-rails', '0.3.4'
-
+gem 'redis', '3.0.2'
 group :development, :test do
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '2.10.0'

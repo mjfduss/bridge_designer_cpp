@@ -1,7 +1,7 @@
-- if flash[:alert]
-  .error 
-    = flash[:alert]
-.para.hi.big 
+- flash.each do |key, msg|
+  %div{:class => key}
+    = msg
+.para.hi.big
   Welcome Bridge Designer! 
 .para.hi 
   We're open for individuals who want to test 

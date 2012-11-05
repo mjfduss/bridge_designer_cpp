@@ -3,10 +3,21 @@
   = @team.name
 .para
   Your team status:
-.para
-  - if flash[:alert]
-    .para
-      = flash[:alert]
+  %ul
+    - if @team.category == 'e'
+      %li
+        Registered in US/PR Student Competition.
+      %li
+        Eligible for national recognition.
+    - else
+      %li
+        Registered in Open Competition.
+    - if @team.improves == 0
+      %li
+        You have not yet submitted a design.  Go for it!
+    - else
+      %li
+        = "Your current best design's cost is $1000.00."
   = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
     Submit a design (West Point Bridge Designer 2012 only):
     %br

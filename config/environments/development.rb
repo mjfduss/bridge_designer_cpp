@@ -34,4 +34,7 @@ Wpbdc::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  # Redis setup.  Here we are connecting to server on my machine. Change for Heroku.
+  ENV["REDISTOGO_URL"] = 'redis://localhost:6379'
 end

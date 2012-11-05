@@ -131,8 +131,20 @@ div.strength_meter {
     margin: 2px 4px 2px 4px;
     border: 1px solid $box_border;
 }
+div.match_indicator {
+    vertical-align: center;
+    text-align: center;
+    font-weight: bold;
+    margin: 2px 4px 2px 4px;
+    border: 1px solid $box_border;
+}
 div.error {
     font-size: 110%;
     font-weight: bold;
     color: #f22;
+}
+div.alert {
+    font-size: 110%;
+    font-weight: bold;
+    color: #22f;
 }

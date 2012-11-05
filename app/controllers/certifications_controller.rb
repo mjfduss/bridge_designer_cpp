@@ -1,5 +1,7 @@
 class CertificationsController < ApplicationController
 
+  # TODO: If we arrive here and category is already set, it's a back button, etc. Bounce to captain completion.
+
   def edit
     @team = Team.find(session[:team_id])
     @captain = @team.captain
@@ -12,7 +14,8 @@ class CertificationsController < ApplicationController
       redirect_to :controller => :teams, :action => :edit, :id => session[:team_id]
     else
       team = Team.find(session[:team_id])
-      team.register
+      # This seals the registration category, never to be changed.
+      team.update_attribute(:category, team.registration_category)
       if team.category == 'e'
         redirect_to :controller => :captain_completions, :action => :edit, :id => team.captain.id
       else

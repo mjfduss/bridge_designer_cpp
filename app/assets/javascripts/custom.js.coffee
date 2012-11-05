@@ -75,7 +75,14 @@ interpolate = (t, a, b) ->
   red = lerp(t, 0xff & (a >> 16), 0xff & (b >> 16))
   (red << 16) | (grn << 8) | blu
 
-window.update_password_strength = (pwd_field) ->
+color_string = (c) ->
+  s = c.toString(16)
+  s = '0' + s while s.length < 6
+  "\##{s}"
+
+window.update_indicators = () ->
+  pwd_field = getElement('team_password')
+  match_field = getElement('team_password_confirmation')
   log = password_strength(pwd_field.value)
   mid_log = 0.5 * password_max_log
   color = if log < mid_log 
@@ -83,8 +90,19 @@ window.update_password_strength = (pwd_field) ->
   else
     interpolate((log - mid_log) / mid_log, 0xffff00, 0x00ff00)
   meter = getElement("strength_meter")
-  meter.style.backgroundColor = "\##{color.toString(16)}"
-  s = strength(log) 
-  meter.innerHTML = s.msg
-  meter.style.color = "\##{interpolate(0.7, 0, color).toString(16)}"
+  meter.style.backgroundColor = color_string(color)
+  meter.innerHTML = strength(log).msg
+  meter.style.color = color_string(interpolate(0.7, 0, color))
+  indicator = getElement("match_indicator")
+  if (pwd_field.value == match_field.value)
+    indicator.innerHTML = 'match'
+    color = 0x00ff00
+  else
+    indicator.innerHTML = 'no match'
+    color = 0xff0000
+  indicator.style.backgroundColor = color_string(color)
+  indicator.style.color = color_string(interpolate(0.7, 0, color))
   true
+
+set_field_value = (field, val) ->
+  getElement(field).value = val

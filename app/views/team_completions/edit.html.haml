@@ -11,46 +11,52 @@
         = f.label :email, 'E-mail address:'
         = f.text_field :email, :size => 32
         != oops_on(@team, :email)
-      .para.small.subdued
-        %hr
-        Choose a good password and type it twice in the spaces below:
-        %br
-        \-- Use from 8 to 16 characters that no one else will guess.
-        %br
-        \-- You will need this password later to check the standing of your design and enter new designs.
-        %br
-        \-- Keep it secret! Keep it safe!
-        %br
-        \-- 
-        %strong But don't forget it. 
-        There is no way to recover a lost password.
-      %table
-        %tr
-          %td 
-            Team Password:
-            != oops_on(@team, [:password, :password_confirmation])
-          %td         
-            = f.password_field :password, :size => 16, :onkeyup => "window.update_password_strength(this)"
-          %td{ :width => '100px' }
-            .strength_meter{ :id => 'strength_meter' } &nbsp;
-        %tr
-          %td
-            Type same Password again:
-          %td{ :colspan => '2' }
-            = f.password_field :password_confirmation, :size => 16
+      %hr
+      Digest:
+      = ":#{@team.password_digest}:"
+      %br
+      - if @team.password_digest.blank?
+        = render :partial => "password", :locals => { :form => f, :team => @team }
+      - else
+        = f.submit "Reset Team Password", { :name => 'change_password', :class => 'btn' }
+      %hr
       .para.small.subdued
         %strong A note for local contest participants:
         %br
         Your team's Local Contest Code is permanent. It cannot be set or changed here. If you 
         wish to compete in a different contest, local or national, you must register a new team.
       - if @team.category != 'e'
-        .para.bold
-          Team Captain
-          = @captain.full_name
-        - if @member
+        = f.fields_for :members, @captain do |c|
           .para.bold
-            Team Member
-            = @member.full_name
+            Team Captain
+            = @captain.full_name
+          %table
+            %tr
+              %td
+                = c.label :school, 'School or organization:'
+              %td
+                = c.text_field :school, :size => 32
+            %tr
+              %td
+                = c.label :school_city, "Location:"
+              %td
+                = c.text_field :school_city, :size => 32
+        - if @member
+          = fields_for :members, @member do |m|
+            .para.bold
+              Team Member
+              = @member.full_name
+            %table
+              %tr
+                %td
+                  = m.label :school, 'School or organization:'
+                %td
+                  = m.text_field :school, :size => 32
+              %tr
+                %td
+                  = m.label :school_city, "Location:"
+                %td
+                  = m.text_field :school_city, :size => 32
     .para.alignright
       = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
       = f.submit TablesHelper::ACCEPT, { :name => 'accept', :class => 'btn' }

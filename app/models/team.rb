@@ -7,19 +7,18 @@ class Team < ActiveRecord::Base
   attr_accessible :password, :password_confirmation
   attr_accessor :local_contest_code
 
-  has_secure_password
+  future_has_secure_password :validations => false
 
-  has_many :members
-  has_many :non_captains, :class_name => 'Member', 
-    :conditions => proc { ['members.id != ?', captain.id ] }
+  has_many :members, :order => 'rank ASC', :dependent => :destroy
+  has_one :captain, :class_name => 'Member', :conditions => 'members.rank == 0'
+  has_many :non_captains, :class_name => 'Member', :order => 'rank ASC', :conditions => 'members.rank != 0'
   has_many :designs
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
-  belongs_to :captain, :class_name => 'Member', :dependent => :destroy
 
   accepts_nested_attributes_for :members
 
-  before_validation :tweak_on_create, :on => :create
+  before_validation :set_name_key, :on => :create
   before_validation :fix_local_contest_code
   before_save :adjust_local_contests, :downcase_email
   after_find :set_non_db_fields
@@ -31,9 +30,8 @@ class Team < ActiveRecord::Base
 
   with_options :if => :completed do |v|
     v.validates :email, :presence => true, :format => { :with => VALID_EMAIL_ADDRESS }
-    v.validates :password, :presence => true, :length => { :minimum => 6 }
-    v.validates :password_confirmation, presence: true
- 
+    v.validates :password, :presence => true, :confirmation => true, :length => { :minimum => 6 }
+
     v.validates_associated :members
     v.validates :captain , :presence => true
   end
@@ -68,7 +66,7 @@ class Team < ActiveRecord::Base
   end
 
   def register
-    category.nil? && (self.category = registration_category)
+    self.category ||= registration_category
   end
 
   def local_selected?
@@ -87,9 +85,9 @@ class Team < ActiveRecord::Base
 
   # Set the name key from the raw name string.
   # Set a dummy password to suppress empty digest message.
-  def tweak_on_create
+  def set_name_key
     self.name_key = Team.to_name_key(name) unless name.nil?
-    self.password_confirmation = self.password = 'temporary'
+    # self.password_confirmation = self.password = 'temporary'
   end
 
   def fix_local_contest_code

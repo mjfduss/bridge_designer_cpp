@@ -8,11 +8,17 @@
 /log/*.log
 /tmp
 
+# For now, we need to restrict distribution of the scramble key to serious developers.
+# If you want it, just write us to explain why.
+rc4_key.c
+
 # Ignore other unneeded files.
 doc/
 *.swp
 *.bat
 *.cmd
+*.o
+*.bundle
 *~
 \#*#
 .project

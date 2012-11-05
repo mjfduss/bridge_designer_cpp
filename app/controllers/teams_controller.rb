@@ -1,5 +1,7 @@
 class TeamsController < ApplicationController
 
+  skip_before_filter :require_valid_session, :only => [:new, :create]
+
   def index
   end
 
@@ -10,10 +12,11 @@ class TeamsController < ApplicationController
 
   def create
     @team = Team.create(params[:team])
-    @team.captain = @team.members.first
+    # Fill in rank of nested captain member, since form doesn't provide it.
+    @team.members[0].rank = 0
     if @team.save
       session[:team_id] = @team.id
-      session[:captain_id] = @team.captain.id
+      session[:captain_id] = @team.members[0].id
       redirect_to :controller => :members, :action => :new
     else
       flash[:error] = "Could not save your team. Close your browser and try again."
