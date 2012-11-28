@@ -7,11 +7,16 @@
       .para.bold
         Your team status:
       %ul
-        - if @team.category == 'e'
-          %li{ :class => 'status_list' } Registered in US/PR Student Competition.
-          %li{ :class => 'status_list' } Eligible for national recognition.
-        - else
-          %li{ :class => 'status_list' } Registered in Open Competition.
+        - case @team.category
+          - when 'e'
+            %li{ :class => 'status_list' } Registered in US/PR Student Competition.
+            %li{ :class => 'status_list' } Eligible for national recognition.
+          - when 'i'
+            %li{ :class => 'status_list' } Registered in Open Competition.
+          - when '2'
+            %li{ :class => 'status_list' } Congratulations! You made the semi-finals!
+          - else
+            %li{ :class => 'status_list' } Hmmm... I don't know your team's category.
         - if @best
           %li{ :class => 'status_list' }== Your current best design's cost is #{to_cost(@best)}.
         - else
@@ -57,7 +62,7 @@
               %li{ :class => 'msg_list' } Drat! Your bridge failed the Load Test!
               %li{ :class => 'msg_list' } Go back to the drawing board, build a bridge that passes the Load Test, Save, and Submit again.
             - else
-              %li{ :class => 'msg_list'} [ bad result ]
+              %li{ :class => 'msg_list'} [ bad @result ]
 .para
   = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
     .para.bold
