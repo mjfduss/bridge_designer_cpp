@@ -1,26 +1,85 @@
 .banner
   Home page for
   = @team.name
+%table
+  %tr
+    %td{ :width => '400px', :valign => 'top' }
+      .para.bold
+        Your team status:
+      %ul
+        - if @team.category == 'e'
+          %li{ :class => 'status_list' } Registered in US/PR Student Competition.
+          %li{ :class => 'status_list' } Eligible for national recognition.
+        - else
+          %li{ :class => 'status_list' } Registered in Open Competition.
+        - if @best
+          %li{ :class => 'status_list' }== Your current best design's cost is #{to_cost(@best)}.
+        - else
+          %li{ :class => 'status_list' } You have not yet submitted a design. Go for it!
+    %td{ :width => '400px', :valign => 'top' }
+      - if flash.empty? && @result.nil?
+        &nbsp;
+      - else
+        .para.bold
+          Messages for your team:
+        %ul
+          - flash.each do |key, items|
+            - items.each do |text|
+              %li{ :class => "message #{key}"}= text
+          - case @result
+            - when :get_standings
+              %li{ :class => 'msg_list' }== Your team's standing is #{@standing} out of #{@out_of} teams.
+            - when :new_best
+              %li{ :class => 'msg_list' } Well done! A new best for your team!
+              %li{ :class => 'msg_list' }== You improved your old best #{to_cost(@old_best)} to #{to_cost(@analysis[:score])}.
+              %li{ :class => 'msg_list' }== Your new standing is #{@standing} out of #{out_of} teams.
+            - when :not_new_best
+              %li{ :class => 'msg_list' }== Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
+              - if @best_for_scenario
+                %li{ :class => 'msg_list' }== You improved the old cost of #{to_cost(@best_for_scenario)} for this scenario.
+              %li{ :class => 'msg_list' } But you overall best remains the same.
+            - when :no_improvement
+              %li{ :class => 'msg_list' }== Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
+              %li{ :class => 'msg_list' }== The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.
+            - when :duplicate
+              %li{ :class => 'msg_list' } Oh, no! This bridge is the same as one already submitted.
+              %li{ :class => 'msg_list' }== With its cost of #{to_cost(@analysis[:score])}, your team would stand #{@standing} out of #{@out_of} teams if it weren't a duplicate.
+            - when :no_bridge
+              %li{ :class => 'msg_list' } Oops! You forgot to choose a bridge file before pressing Submit.
+              %li{ :class => 'msg_list' } Please choose your bridge file and Submit again.
+            - when :bridge_malformed
+              %li{ :class => 'msg_list' } Ouch! The file you submitted is not a bridge!
+              %li{ :class => 'msg_list' } Choose your WPBD 2013 bridge file and Submit again.
+            - when :bridge_wrong_version
+              %li{ :class => 'msg_list' } Ugh! The file you submitted is from the wrong version of the West Point Bridge Designer!
+              %li{ :class => 'msg_list' } Choose your WPBD 2013 bridge file and Submit again.
+            - when :bridge_failed_test
+              %li{ :class => 'msg_list' } Drat! Your bridge failed the Load Test!
+              %li{ :class => 'msg_list' } Go back to the drawing board, build a bridge that passes the Load Test, Save, and Submit again.
+            - else
+              %li{ :class => 'msg_list'} [ bad result ]
 .para
-  Your team status:
-  %ul
-    - if @team.category == 'e'
-      %li
-        Registered in US/PR Student Competition.
-      %li
-        Eligible for national recognition.
-    - else
-      %li
-        Registered in Open Competition.
-    - if @team.improves == 0
-      %li
-        You have not yet submitted a design.  Go for it!
-    - else
-      %li
-        = "Your current best design's cost is $1000.00."
   = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
-    Submit a design (West Point Bridge Designer 2012 only):
-    %br
-    = f.file_field :bridge
-    %br
-    = f.submit 'Submit your design', :class => 'btn'
+    .para.bold
+      Submit a design (West Point Bridge Designer 2012 only):
+    .para
+      = f.file_field :bridge
+    .para
+      = f.submit 'Submit your design', :class => 'btn'
+    %hr
+    .para.bold
+      Menu options
+    %table
+      %tr
+        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
+                                            :locals => { :name => 'update_contact', :text => "Update contact information" } |
+        %td{ :class => 'link_menu'} So we can find you when you win!
+      %tr
+        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
+                                            :locals => { :name => 'get_standings', :text => "Check team standings" } |
+        %td{ :class => 'link_menu'} To see how your team's best design is doing in the national contest. 
+      %tr
+        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
+                                            :locals => { :name => 'logout', :text => "Log out" } |
+        %td{ :class => 'link_menu'} To secure your home page from unintended use by others.
+

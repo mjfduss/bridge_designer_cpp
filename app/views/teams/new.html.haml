@@ -13,21 +13,6 @@
         %br 
         \-- Be careful! Team Names judged to be inappropriate will be disqualified.
     .box
-      .big Contest selection:
-      .para.small.subdued
-        Your team may enter either the national contest sponsored by 
-        West Point or a local contest sponsored by an organization in 
-        your community. Select one below. 
-      .para
-        = f.radio_button :contest, :national, :id => 'national', :onclick => "national_onclick(this)" 
-        %label{ :for => 'national' } The national West Point Bridge Design Contest only.
-      .para
-        = f.radio_button :contest, :local, :id => 'local'
-        %label{ :for => 'local' } A local bridge design contest with Local Contest Code:
-        = f.text_field :local_contest_code, { :id => 'local_contest_code', :size => 6, |
-          :onfocus => 'local_contest_code_focus(this)' } |
-        != oops_on(@team, :local_contest_code)
-    .box
       .big
         Team Captain
       .para.small.subdued

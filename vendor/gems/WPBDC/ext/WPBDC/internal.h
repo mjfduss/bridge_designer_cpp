@@ -56,7 +56,6 @@ typedef double TFloat;						// 8 bytes
 typedef signed short TCoordinate;			// 2 bytes
 typedef unsigned short TElementNumber;		// 2 bytes
 
-
 // ---------------------------------------------------------------------
 // -------- Structural elements ----------------------------------------
 // ---------------------------------------------------------------------
@@ -446,7 +445,7 @@ int lookup_scenario_descriptor(TScenarioDescriptor *desc, char *id);
 TFloat bridge_cost(TBridge *bridge, TGeometry *geometry, TParams *params);
 int test_scenario_table(void);
 /* bridge_hash.c */
-void hashify_vec(unsigned long *v, unsigned v_len, unsigned long *hash, unsigned h_len);
+void hashify_vec(unsigned int *v, unsigned v_len, unsigned int *hash, unsigned h_len);
 char *hex_nibble(int n, char *p);
 char *hex_byte(int b, char *p);
 char *hex_str(char *s, unsigned n, char *p);
@@ -483,16 +482,6 @@ void do_sketch(TBridge *bridge, TAnalysis *analysis, int width, int height, COMP
 void init_geometry(TGeometry *geometry);
 void clear_geometry(TGeometry *geometry);
 void setup_geometry(TGeometry *geometry, TBridge *bridge);
-/* judge.c */
-void endecrypt(STRING *bridge_as_string);
-void analyze(STRING *bridge_as_string, struct analysis_result_t *result);
-int compare(STRING *bridge_as_string_a, STRING *bridge_as_string_b);
-char *variant(STRING *bridge_as_string, int seed);
-char *failed_variant(STRING *bridge_as_string, int seed);
-char *perturbation(STRING *bridge_as_string, int seed, int n_joints, int n_members);
-void sketch(STRING *bridge_as_string, int width, int height, COMPRESSED_IMAGE *compressed_image, struct analysis_result_t *result);
-char *analysis_table(STRING *bridge_as_string);
-void look_up_local_contest_number(STRING *number_as_string, char *id);
 /* loading.c */
 void init_loading(TLoading *loading);
 void clear_loading(TLoading *loading);

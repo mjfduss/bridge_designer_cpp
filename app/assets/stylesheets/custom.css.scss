@@ -4,147 +4,207 @@ $box_border: #999944;
 $btn_bg: lighten($box_border, 20%);
 $hr_color: $box_border;
 $font_size: 10pt;
+$link_normal: $box_border;
+$link_hover: $btn_bg;
+$link_active: #000000;
 
-body { 
-    background-color: #fff; 
-    font-family: arial, sans-serif;
-    font-size: $font_size;
+body {
+  background-color: #fff;
+  font-family: arial, sans-serif;
+  font-size: $font_size;
 }
+
 table, th, td {
-    padding: 0px;
-    border-spacing: 0px;
-    border: 0px;
+  padding: 0px;
+  border-spacing: 0px;
+  border: 0px;
+  margin: 0px;
 }
+
+a {
+  text-decoration: none;
+}
+
+a:link, a:visited {
+  color: $link_normal;
+}
+
+a:hover {
+  color: $link_hover;
+}
+
+a:active {
+  color: $link_active;
+} 
+
+.link_menu {
+  padding: 4pt;
+}
+
+.status_list {
+  padding: 4pt;
+}
+
 .normalfont {
-    font-size: $font_size;
-    color: #000000;
+  font-size: $font_size;
+  color: #000000;
 }
+
 div.stdwidth {
-    width: 720px;
+  width: 720px;
 }
+
 div.loginwidth {
-    display: inline-block;
+  display: inline-block;
 }
+
 div.dialog {
-    background-color: $dialog_bg;
-    margin: 6px auto 0 8px;
-    border: 2px solid $box_border;
+  background-color: $dialog_bg;
+  margin: 6px auto 0 8px;
+  border: 2px solid $box_border;
 }
+
 div.dialoghead {
-    background-color: $dialog_head_bg;
-    color: #fff;
-    font-weight: bold;
-    padding: 3px 6px; 
+  background-color: $dialog_head_bg;
+  color: #fff;
+  font-weight: bold;
+  padding: 3px 6px;
 }
+
 .membertitle {
-    background-color: $dialog_head_bg;
-    color: #fff;
-    font-weight: bold;
-    margin-bottom: 4px;
-    padding-left: 8px;
+  background-color: $dialog_head_bg;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 4px;
+  padding-left: 8px;
 }
+
 div.dialogbody {
-    background-color: transparent;
-    padding: 4px;
+  background-color: transparent;
+  padding: 4px;
 }
+
 div.banner {
-    font-size: 110%;
-    font-weight: bold;
-    background-color: $dialog_head_bg;
-    color: #fff;
-    font-weight: bold;
-    padding: 8px 16px; 
+  font-size: 110%;
+  font-weight: bold;
+  background-color: $dialog_head_bg;
+  color: #fff;
+  font-weight: bold;
+  padding: 8px 16px;
+  margin-bottom: 8px;
 }
+
 div.para {
-    padding: 1px 0; 
-    margin: 1px auto 0 0;
+  padding: 1px 0;
+  margin: 1px auto 0 0;
 }
+
 div.hi {
-    color: #006699;
-    font-weight: bold;
+  color: #006699;
+  font-weight: bold;
 }
+
 div.alignright {
-    text-align: right;
+  text-align: right;
 }
+
 div.box {
-    padding: 6px 9px;
-    margin: 2px 2px 0px 2px;
-    border: 2px ridge $box_border;
+  padding: 6px 9px;
+  margin: 2px 2px 0px 2px;
+  border: 2px ridge $box_border;
 }
+
 hr {
-    width: 100%;
-    height: 1px;
-    border: 0;
-    background-color: $hr_color; 
-    color: $hr_color;
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background-color: $hr_color;
+  color: $hr_color;
 }
+
 .btn {
-    background-color: $btn_bg; 
-    font-weight: bold;
-    border-color: $box_border;
+  background-color: $btn_bg;
+  font-weight: bold;
+  border-color: $box_border;
 }
+
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }
+
 .big {
-    font-size: 110%;
-    font-weight: bold;
+  font-size: 110%;
+  font-weight: bold;
 }
+
 .small {
-    font-size: 90%;
+  font-size: 90%;
 }
+
 .tiny {
-    font-size: 75%
+  font-size: 75%
 }
+
 .subdued {
-    color: #aa3333;
+  color: #aa3333;
 }
+
 .shr {
-    padding: 0 0 0 6px;
-    vertical-align: bottom;
+  padding: 0 0 0 6px;
+  vertical-align: bottom;
 }
+
 .highlight {
-    background-color: lighten($dialog_bg, 10%)
+  background-color: lighten($dialog_bg, 10%)
 }
+
 .oops {
-    border-width: 0;
-    vertical-align: sub;
+  border-width: 0;
+  vertical-align: sub;
 }
+
 .inline {
-    display: inline-block
+  display: inline-block
 }
+
 .field_with_errors {
-    display: inline-block
+  display: inline-block
 }
+
 .fullwidth {
-    width: 100%
+  width: 100%
 }
+
 .shrink {
-    width: 1px;
-    white-space: nowrap;
-    vertical-align: top;
+  width: 1px;
+  white-space: nowrap;
+  vertical-align: top;
 }
+
 div.strength_meter {
-    vertical-align: center;
-    text-align: center;
-    font-weight: bold;
-    margin: 2px 4px 2px 4px;
-    border: 1px solid $box_border;
+  vertical-align: center;
+  text-align: center;
+  font-weight: bold;
+  margin: 2px 4px 2px 4px;
+  border: 1px solid $box_border;
 }
+
 div.match_indicator {
-    vertical-align: center;
-    text-align: center;
-    font-weight: bold;
-    margin: 2px 4px 2px 4px;
-    border: 1px solid $box_border;
+  vertical-align: center;
+  text-align: center;
+  font-weight: bold;
+  margin: 2px 4px 2px 4px;
+  border: 1px solid $box_border;
 }
+
 div.error {
-    font-size: 110%;
-    font-weight: bold;
-    color: #f22;
+  font-size: 110%;
+  font-weight: bold;
+  color: #f22;
 }
+
 div.alert {
-    font-size: 110%;
-    font-weight: bold;
-    color: #22f;
+  font-size: 110%;
+  font-weight: bold;
+  color: #22f;
 }

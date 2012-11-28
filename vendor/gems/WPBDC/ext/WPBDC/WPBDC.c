@@ -4,6 +4,7 @@
     STRING String[1] = {{ RSTRING_PTR(Value), RSTRING_LEN(Value) }}
 
 static VALUE rb_api_endecrypt(VALUE self, VALUE bridge_as_string)
+#define ARGC_endecrypt 1
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     endecrypt(bridge_internal_string);
@@ -30,19 +31,23 @@ static VALUE symbol(char *name)
 
 static void add_analysis_to_hash(VALUE hash, struct analysis_result_t *result)
 {
+    char hex_hash[2 * HASH_SIZE + 1];
+
     rb_hash_aset(hash, symbol("version"), INT2FIX(result->version));
-    rb_hash_aset(hash, symbol("scenario_id"), rb_str_new(result->scenario_id, SCENARIO_ID_SIZE));
+    rb_hash_aset(hash, symbol("scenario"), rb_str_new(result->scenario_id, SCENARIO_ID_SIZE));
     rb_hash_aset(hash, symbol("scenario_number"), rb_str_new(result->scenario_number, SCENARIO_NUMBER_SIZE));
     rb_hash_aset(hash, symbol("test_status"), INT2FIX(result->test_status));
     rb_hash_aset(hash, symbol("status"), INT2FIX(result->status));
     rb_hash_aset(hash, symbol("error"), INT2FIX(result->error));
-    rb_hash_aset(hash, symbol("cost"), rb_float_new(result->cost));
+    rb_hash_aset(hash, symbol("score"), rb_float_new(result->cost));
     if (result->status == BRIDGE_OK || result->status == BRIDGE_FAILEDTEST) {
-        rb_hash_aset(hash, symbol("hash"), rb_str_new(result->hash, HASH_SIZE));
+        rb_hash_aset(hash, symbol("hash"),
+            rb_str_new(hex_str(result->hash, HASH_SIZE, hex_hash), 2 * HASH_SIZE));
     }
 }
 
 static VALUE rb_api_analyze(VALUE self, VALUE bridge_as_string)
+#define ARGC_analyze 1
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     struct analysis_result_t result[1];
@@ -53,6 +58,7 @@ static VALUE rb_api_analyze(VALUE self, VALUE bridge_as_string)
 }
 
 static VALUE rb_api_are_same(VALUE self, VALUE bridge_as_string_a, VALUE bridge_as_string_b)
+#define ARGC_are_same 2
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string_a, bridge_as_string_a);
     INIT_STRING_FROM_VALUE(bridge_internal_string_b, bridge_as_string_b);
@@ -71,6 +77,7 @@ static VALUE c_str_to_value(char *s)
 }
 
 static VALUE rb_api_variant(VALUE self, VALUE bridge_as_string, VALUE seed)
+#define ARGC_variant 2
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = variant(bridge_internal_string, FIX2INT(seed));
@@ -78,6 +85,7 @@ static VALUE rb_api_variant(VALUE self, VALUE bridge_as_string, VALUE seed)
 }
 
 static VALUE rb_api_failed_variant(VALUE self, VALUE bridge_as_string, VALUE seed)
+#define ARGC_failed_variant 2
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = failed_variant(bridge_internal_string, FIX2INT(seed));
@@ -85,6 +93,7 @@ static VALUE rb_api_failed_variant(VALUE self, VALUE bridge_as_string, VALUE see
 }
 
 static VALUE rb_api_perturbation(VALUE self, VALUE bridge_as_string, VALUE seed, VALUE n_joints, VALUE n_members)
+#define ARGC_perturbation 4
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = perturbation(bridge_internal_string, FIX2INT(seed), FIX2INT(n_joints), FIX2INT(n_members));
@@ -92,6 +101,7 @@ static VALUE rb_api_perturbation(VALUE self, VALUE bridge_as_string, VALUE seed,
 }
 
 static VALUE rb_api_sketch(VALUE self, VALUE bridge_as_string, VALUE width, VALUE height)
+#define ARGC_sketch 3
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
 	COMPRESSED_IMAGE compressed_image[1];
@@ -122,6 +132,7 @@ static VALUE rb_api_sketch(VALUE self, VALUE bridge_as_string, VALUE width, VALU
 }
 
 static VALUE rb_api_analysis_table(VALUE self, VALUE bridge_as_string)
+#define ARGC_analysis_table 1
 {
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = analysis_table(bridge_internal_string);
@@ -129,30 +140,31 @@ static VALUE rb_api_analysis_table(VALUE self, VALUE bridge_as_string)
 }
 
 static VALUE rb_api_local_contest_number_to_id(VALUE self, VALUE number_as_string)
+#define ARGC_local_contest_number_to_id 1
 {
     INIT_STRING_FROM_VALUE(number_internal_string, number_as_string);
-    char id[SCENARIO_ID_SIZE + 1];
-    look_up_local_contest_number(number_internal_string, id);
-    return c_str_to_value(id[0] ? id : NULL);
+    char * result = get_local_contest_number(number_internal_string);
+    // Don't use c_str_to_value here because result is static.
+    return result ? rb_str_new2(result) : Qnil;
 }
 
 
-#define FUNCTION(Name, Argc) { #Name, rb_api_ ## Name, Argc }
+#define FUNCTION(Name) { #Name, rb_api_ ## Name, ARGC_ ## Name }
 
 static struct ft_entry {
   char *name;
   VALUE (*func)();
   int argc;
 } function_table[] = {
-  FUNCTION(endecrypt, 1),
-  FUNCTION(analyze, 1),
-  FUNCTION(are_same, 2),
-  FUNCTION(variant, 2),
-  FUNCTION(failed_variant, 2),
-  FUNCTION(perturbation, 4),
-  FUNCTION(sketch, 3),
-  FUNCTION(analysis_table, 1),
-  FUNCTION(local_contest_number_to_id, 1),
+  FUNCTION(endecrypt),
+  FUNCTION(analyze),
+  FUNCTION(are_same),
+  FUNCTION(variant),
+  FUNCTION(failed_variant),
+  FUNCTION(perturbation),
+  FUNCTION(sketch),
+  FUNCTION(analysis_table),
+  FUNCTION(local_contest_number_to_id),
 };
 
 #define INT_CONST(Name) { #Name, Name }

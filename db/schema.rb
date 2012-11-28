@@ -11,23 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121030213221) do
+ActiveRecord::Schema.define(:version => 20121126004433) do
 
   create_table "affiliations", :force => true do |t|
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
-    t.integer  "team_id"
-    t.integer  "local_contest_id"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.integer  "team_id",          :default => 0, :null => false
+    t.integer  "local_contest_id", :default => 0, :null => false
   end
 
   create_table "designs", :force => true do |t|
-    t.integer  "team_id"
-    t.integer  "score"
-    t.integer  "sequence"
-    t.integer  "scenario"
+    t.integer  "team_id",                   :default => 0,  :null => false
+    t.integer  "score",                     :default => 0,  :null => false
+    t.integer  "sequence",                  :default => 0,  :null => false
+    t.string   "scenario",    :limit => 10, :default => "", :null => false
     t.text     "bridge"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
+    t.string   "hash_string", :limit => 40
   end
 
   create_table "environments", :force => true do |t|
@@ -66,8 +67,8 @@ ActiveRecord::Schema.define(:version => 20121030213221) do
     t.string   "middle_initial", :limit => 1
     t.string   "last_name",      :limit => 40
     t.string   "category",       :limit => 1
-    t.integer  "age"
-    t.integer  "grade"
+    t.integer  "age",                          :default => 0,     :null => false
+    t.integer  "grade",                        :default => 0,     :null => false
     t.string   "phone",          :limit => 16
     t.string   "street",         :limit => 40
     t.string   "city",           :limit => 40
@@ -81,19 +82,26 @@ ActiveRecord::Schema.define(:version => 20121030213221) do
     t.datetime "created_at",                                      :null => false
     t.datetime "updated_at",                                      :null => false
     t.string   "reg_state",      :limit => 2
-    t.integer  "team_id"
+    t.integer  "team_id",                      :default => 0,     :null => false
     t.string   "country",        :limit => 40, :default => "USA"
-    t.integer  "rank"
+    t.integer  "rank",                         :default => 0,     :null => false
+  end
+
+  create_table "sequence_numbers", :force => true do |t|
+    t.string   "tag",        :limit => 8,                :null => false
+    t.integer  "value",                   :default => 0, :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
   end
 
   create_table "teams", :force => true do |t|
     t.string   "name",            :limit => 32
     t.string   "name_key",        :limit => 32
     t.string   "email",           :limit => 40
-    t.integer  "submits"
-    t.integer  "improves"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.integer  "submits",                       :default => 0, :null => false
+    t.integer  "improves",                      :default => 0, :null => false
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.string   "password_digest", :limit => 60
     t.string   "category",        :limit => 4
     t.datetime "reg_completed"

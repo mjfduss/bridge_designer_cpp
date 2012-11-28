@@ -403,12 +403,23 @@ static TScenarioDescriptor scenario_descriptor_tbl[] = {
     { 391, "4110824361", "77D",  99300.00 },
 };
 
+static int to_upper_case(int c)
+{
+  return ('a' <= c && c <= 'z') ? c + ('A' - 'a') : c;
+}
+
+static TBool scenario_numbers_equal(char *a, char *b)
+{
+  return a[0] == b[0] && a[1] == b[1] && to_upper_case(a[2]) == to_upper_case(b[2]);
+}
+
+// Input must be a string of length at least 3.
 char *local_contest_number_to_id(char *number)
 {
 	unsigned i;
 
 	for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++)
-		if (strnicmp(scenario_descriptor_tbl[i].number, number, SCENARIO_NUMBER_SIZE) == 0)
+	    if (scenario_numbers_equal(scenario_descriptor_tbl[i].number, number))
 			return scenario_descriptor_tbl[i].id;
 	return NULL;
 }

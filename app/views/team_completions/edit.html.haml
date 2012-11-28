@@ -12,19 +12,12 @@
         = f.text_field :email, :size => 32
         != oops_on(@team, :email)
       %hr
-      Digest:
-      = ":#{@team.password_digest}:"
-      %br
-      - if @team.password_digest.blank?
+      - if @team.completion_status == :pending_new_password
         = render :partial => "password", :locals => { :form => f, :team => @team }
       - else
-        = f.submit "Reset Team Password", { :name => 'change_password', :class => 'btn' }
+        .para.bold Your password
+        .para= render :partial => "shared/submit_link", :locals => { :name => 'change_password', :text => "Change your team's password." }
       %hr
-      .para.small.subdued
-        %strong A note for local contest participants:
-        %br
-        Your team's Local Contest Code is permanent. It cannot be set or changed here. If you 
-        wish to compete in a different contest, local or national, you must register a new team.
       - if @team.category != 'e'
         = f.fields_for :members, @captain do |c|
           .para.bold
@@ -42,7 +35,7 @@
               %td
                 = c.text_field :school_city, :size => 32
         - if @member
-          = fields_for :members, @member do |m|
+          = f.fields_for :members, @member do |m|
             .para.bold
               Team Member
               = @member.full_name
@@ -57,6 +50,23 @@
                   = m.label :school_city, "Location:"
                 %td
                   = m.text_field :school_city, :size => 32
+        %hr
+      .para.bold
+        %strong Local contest codes (optional):
+      .para.small.subdued
+        Enter up to four 4- or 6-character codes provided by local contest sponsors in your area:
+        %br 
+      .para
+        - unless @team.local_contests.empty?
+          Your current codes:&nbsp;&nbsp;
+          != @team.local_contests.collect { |lc| "#{lc.code} - #{check_box_tag 'deleted_affiliations[]', lc.code, false, :id => lc.code}delete" }.join('&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;');
+          %br
+        - if @team.local_contests.length < 4
+          = f.label :new_local_contest, 'Add a new code: '
+          != oops_on(@team, :new_local_contest)
+          = f.text_field :new_local_contest, :size => 8
+          %br
     .para.alignright
       = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
+      = f.submit 'Update and Stay Here', { :name => 'update', :class => 'btn' }
       = f.submit TablesHelper::ACCEPT, { :name => 'accept', :class => 'btn' }

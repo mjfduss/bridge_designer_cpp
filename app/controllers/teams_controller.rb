@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
 
   def new
     @team = Team.new
-    @team.captain = Member.new
+    @team.members.build
   end
 
   def create

@@ -39,17 +39,17 @@ void setup_rc4(TRC4State *state, char *key, int keylen)
 	// state->y = 0;
 }
 
-unsigned long endecrypt_rc4(unsigned char *buf, unsigned long len, TRC4State *state)
+unsigned endecrypt_rc4(unsigned char *buf, unsigned len, TRC4State *state)
 {
    int x, y; 
    unsigned char *s, tmp;
-   unsigned long n;
+   unsigned n;
 
-   n = len;
    x = state->x;
    y = state->y;
    s = state->buf;
-   while (len--) {
+   n = len;
+   while (n--) {
       x = (x + 1) & 255;
       y = (y + s[x]) & 255;
       tmp = s[x]; s[x] = s[y]; s[y] = tmp;
@@ -58,5 +58,5 @@ unsigned long endecrypt_rc4(unsigned char *buf, unsigned long len, TRC4State *st
    }
    state->x = x;
    state->y = y;
-   return n;
+   return len;
 }

@@ -14,7 +14,6 @@
 #define CONTEST_YEAR 2012
 #define YEAR_TO_VERSION(Y) (((((Y) % 100) / 10) << 8) | (((Y) % 10) << 4) | 0x400c)
 #define BD_VERSION YEAR_TO_VERSION(CONTEST_YEAR)
-//#define BD_VERSION 0x412c
 
 // Status returns from analyze().
 #define BRIDGE_OK           0
@@ -135,5 +134,9 @@ void sketch(STRING *bridge_as_string,
 
 // Return HTML for a table of analysis data.
 char *analysis_table(STRING *bridge_as_string);
+
+// Accept a string containing a scenario number.
+// Return a pointer to the 3-character local contest code or null if no match.
+char *get_local_contest_number(STRING *number_as_string);
 
 #endif

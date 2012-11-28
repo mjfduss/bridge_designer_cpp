@@ -11,8 +11,8 @@
 #define N_BITS(X)					(8 * sizeof X)
 
 typedef unsigned char BYTE;
-typedef unsigned long UNSIGNED;
 typedef float FLOAT;
+typedef unsigned UNSIGNED;
 
 #ifndef INLINE
 #define INLINE __inline

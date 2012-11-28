@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "internal.h"
 
-static INLINE int bit_width(unsigned long n)
+static INLINE int bit_width(unsigned int n)
 {
 	int w = 0;
 	while (n) {
@@ -15,8 +15,8 @@ static INLINE int bit_width(unsigned long n)
 // Xors in the significant bits (omitting leading zeros) of the 
 // given vector with each set of signifcant bits separated by a 1,
 // which is "or'ed" in.
-void hashify_vec(unsigned long  *v, unsigned v_len, 
-				 unsigned long  *hash, unsigned h_len)
+void hashify_vec(unsigned int  *v, unsigned v_len,
+				 unsigned int  *hash, unsigned h_len)
 {
 	unsigned iv, ip;
 
@@ -25,11 +25,11 @@ void hashify_vec(unsigned long  *v, unsigned v_len,
 	assert(h_len >= 1);
 
 	for (ip = 0; ip < h_len; ip++)
-		hash[ip] = 0x55555555ul;
+		hash[ip] = 0x55555555u;
 
 	ip = 0;
 	for (iv = 0; iv < v_len; iv++) {
-		unsigned long  val = (v[iv] << 1) | 1;
+		unsigned int  val = (v[iv] << 1) | 1;
 		unsigned ipw = ip >> 5;
 		unsigned ipo = ip & 0x1f;
 		assert(ipw < h_len);
@@ -78,15 +78,15 @@ int hash_bridge(TBridge *bridge, char *hash)
 
 	unsigned v_size = 256;
 	unsigned p = 0;
-	unsigned long *v;
-	unsigned long h[HASH_SIZE / sizeof(unsigned long)];
+	unsigned int *v;
+	unsigned int h[HASH_SIZE / sizeof(unsigned int)];
 
-	New(190, v, v_size, unsigned long);
+	New(190, v, v_size, unsigned int);
 
 #define Add(Val)	do {													\
 		if (p >= v_size) {													\
 			v_size *= 2;													\
-			Renew(v, v_size, unsigned long);								\
+			Renew(v, v_size, unsigned int);								    \
 		}																	\
 		v[p++] = (Val);														\
 	} while (0)
@@ -114,8 +114,9 @@ int hash_bridge(TBridge *bridge, char *hash)
 		Add(cb->members[member_index].x_section.section);
 		Add(cb->members[member_index].x_section.size);
 	}
+
 	// Can't hashify directly into hash because it might not be aligned.
-	hashify_vec(v, p, h, HASH_SIZE / sizeof(unsigned long));
+	hashify_vec(v, p, h, HASH_SIZE / sizeof(unsigned int));
 	memcpy(hash, h, HASH_SIZE);
 
 	Safefree(v);

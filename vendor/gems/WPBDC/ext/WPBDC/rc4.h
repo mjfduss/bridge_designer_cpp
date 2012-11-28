@@ -14,6 +14,6 @@ typedef struct TRC4State_t {
 void init_rc4(TRC4State *state);
 void clear_rc4(TRC4State *state);
 void setup_rc4(TRC4State *state, char *key, int keylen);
-unsigned long endecrypt_rc4(unsigned char *buf, unsigned long len, TRC4State *state);
+unsigned endecrypt_rc4(unsigned char *buf, unsigned len, TRC4State *state);
 
 #endif

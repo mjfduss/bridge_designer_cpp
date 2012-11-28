@@ -4,28 +4,53 @@ class TeamCompletionsController < ApplicationController
     @team = Team.find(params[:id])
     @captain = @team.captain
     @member = @team.non_captains.first
+    @team.completion_status = :pending_new_password if @team.password_digest.blank?
   end
 
   def update
     @team = Team.find(params[:id])
     @captain = @team.captain
     @member = @team.non_captains.first
-    if params.has_key? :change_password
-      @team.update_attribute(:password_digest, '')
+    @team.completion_status = :pending_new_password if @team.password_digest.blank?
+    if !params[:change_password].blank?
+      @team.completion_status = :pending_new_password
       render 'edit'
     elsif params.has_key? :cancel
       redirect_to :controller => :captain_completions, :action => :edit, :id => @captain.id
+    elsif params.has_key? :update
+      if do_update
+        @team.new_local_contest = nil if @team.errors[:new_local_contest].blank?
+      else
+        @team.completion_status = :pending_new_password if params[:team].has_key? :password        
+      end
+      render 'edit'
     else
-      @team.completed = true
-      if @team.update_attributes(params[:team])
+      if do_update
         redirect_to :controller => :homes, :action => :edit, :id => @team.id
       else
-        # Cause the password box to be drawn if something was wrong there.
-        if @team.password_digest
-          @team.password_digest.clear if @team.errors[:password] or @team.errors[:password_confirmation]
-        end
+        # Keep the password fields open if they already are
+        @team.completion_status = :pending_new_password if params[:team].has_key? :password
         render 'edit'
       end
     end
+  end
+
+private
+  
+  def do_update
+
+    # Clobber any deleted local contest affiliations
+    if params[:deleted_affiliations]
+      @team.affiliations.each do |a| 
+        Affiliation.delete(a.id) if params[:deleted_affiliations].include? a.local_contest.code
+      end 
+    end
+
+    # Set a status flag in the model to govern validation
+    @team.completion_status = params[:team].has_key?(:password) ? :complete_with_fresh_password : :complete_with_old_password
+
+    # Validate and save if good
+    @team.update_attributes(params[:team])
+
   end
 end

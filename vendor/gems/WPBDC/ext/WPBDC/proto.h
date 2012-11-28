@@ -22,7 +22,7 @@ int lookup_scenario_descriptor(TScenarioDescriptor *desc, char *id);
 TFloat bridge_cost(TBridge *bridge, TGeometry *geometry, TParams *params);
 int test_scenario_table(void);
 /* bridge_hash.c */
-void hashify_vec(unsigned long *v, unsigned v_len, unsigned long *hash, unsigned h_len);
+void hashify_vec(unsigned *v, unsigned v_len, unsigned *hash, unsigned h_len);
 char *hex_nibble(int n, char *p);
 char *hex_byte(int b, char *p);
 char *hex_str(char *s, unsigned n, char *p);

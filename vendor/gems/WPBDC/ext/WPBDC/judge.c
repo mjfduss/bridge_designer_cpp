@@ -4,7 +4,7 @@
  * Bridge Design Contest web site.  Ruby-visible constants
  * and functions.
  *
- * Hashing code assumes unsigned long is 32 bits, but should otherwise be portable.
+ * Hashing code assumes unsigned int is 32 bits, but should otherwise be portable.
  *
  * This compiles judges for V3, V4 and V4 (contest) of the WPBD
  * according to compile time constants.
@@ -169,17 +169,13 @@ void sketch(STRING *bridge_as_string,
     clear_analysis(analysis);
 }
 
-void look_up_local_contest_number(STRING *number_as_string, char *id)
+char *get_local_contest_number(STRING *number_as_string)
 {
     char *rtn;
     
-    id[0] = '\0';  // error value is empty string
     if (number_as_string->size != SCENARIO_NUMBER_SIZE)
-        return;
-    rtn = local_contest_number_to_id(number_as_string->ptr);
-    if (!rtn) 
-        return;
-    strcpy(id, rtn);
+        return NULL;
+    return local_contest_number_to_id(number_as_string->ptr);
 }
 
 char *analysis_table(STRING *bridge_as_string)

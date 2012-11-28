@@ -22,7 +22,7 @@ class Member < ActiveRecord::Base
   validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid"
 
   validates_each :school_state, :res_state do |record, attr, value|
-    record.errors.add(attr, 'must be selected') if value == '--' && attr == ValidationHelper.to_state(record.category)
+    record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_state(record.category)
   end
 
   with_options :if => :completed do |v|
@@ -48,7 +48,7 @@ class Member < ActiveRecord::Base
   end
 
   def school_state
-    return category == 'u' ? reg_state : '--';
+    return category == 'u' ? reg_state : '-';
   end
 
   def school_state=(val)
@@ -56,11 +56,10 @@ class Member < ActiveRecord::Base
   end
 
   def res_state
-    return category == 'n' ? reg_state : '--';
+    return category == 'n' ? reg_state : '-';
   end
 
   def res_state=(val)
     self.reg_state = val if category == 'n'
   end
-
 end
