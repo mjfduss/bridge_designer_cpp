@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'WPBDC', '2013.1.0'
+gem 'WPBDC', '2013.1.1'
 gem 'rails', '3.2.7'
 gem 'bootstrap-sass', '2.0.4.0'
 gem 'bcrypt-ruby', '3.0.1'
