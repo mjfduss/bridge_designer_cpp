@@ -64,9 +64,9 @@ module Standing
     end
     (rank, len) = REDIS.pipelined do
       REDIS.zrank(scores_key, bigger[0])
-      REDIS.zcard(scores_key) + 1
+      REDIS.zcard(scores_key)
     end
-    return [1 + rank, len]
+    return [1 + rank, 1 + len]
   end
 
   # Return the current standing of the given team.

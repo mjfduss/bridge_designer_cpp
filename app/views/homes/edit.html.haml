@@ -33,7 +33,10 @@
               %li{ :class => "message #{key}"}= text
           - case @result
             - when :get_standings
-              %li{ :class => 'msg_list' }== Your team's standing is #{@standing} out of #{@out_of} teams.
+              - if @standing
+                %li{ :class => 'msg_list' }== Your team's standing is #{@standing} out of #{@out_of} teams.
+              - else
+                %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
             - when :new_best
               %li{ :class => 'msg_list' } Well done! A new best for your team!
               %li{ :class => 'msg_list' }== You improved your old best #{to_cost(@old_best)} to #{to_cost(@analysis[:score])}.

@@ -4,7 +4,7 @@ describe Standing do
 
   before(:all) do
     REDIS.flushall
-    n_teams = 10000
+    n_teams = 1000
     @teams = []
     for id in 1..n_teams
       team = Team.new
@@ -13,7 +13,7 @@ describe Standing do
       @teams << team
     end
     @teams.shuffle!
-    n_designs = 30000
+    n_designs = 3000
     @designs = []
     for id in 1..n_designs
       design = Design.new
