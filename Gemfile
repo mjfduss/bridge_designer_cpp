@@ -9,6 +9,7 @@ gem 'redis', '3.0.2'
 gem 'pg', '0.12.2'
 gem 'jquery-rails', '2.0.2'
 gem 'nokogiri'
+gem 'thin'
 
 group :development, :test do
   gem 'rspec-rails', '2.10.0'

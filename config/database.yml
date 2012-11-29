@@ -19,3 +19,14 @@ test:
   allow_concurrency: true
   pool: 5
   min_messages: error
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  database: wpbdc_production
+  username: generessler
+  password:
+  allow_concurrency: true
+  pool: 5
+  min_messages: warning
