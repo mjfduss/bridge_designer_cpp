@@ -45,7 +45,7 @@
               %li{ :class => 'msg_list' }== Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
               - if @best_for_scenario
                 %li{ :class => 'msg_list' }== You improved the old cost of #{to_cost(@best_for_scenario)} for this scenario.
-              %li{ :class => 'msg_list' } But you overall best remains the same.
+              %li{ :class => 'msg_list' } But your team's overall best remains the same.
             - when :no_improvement
               %li{ :class => 'msg_list' }== Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
               %li{ :class => 'msg_list' }== The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.

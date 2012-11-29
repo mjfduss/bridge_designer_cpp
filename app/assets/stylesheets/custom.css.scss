@@ -15,10 +15,14 @@ body {
 }
 
 table, th, td {
-  padding: 0px;
+  padding: 2px;
   border-spacing: 0px;
   border: 0px;
   margin: 0px;
+}
+
+input {
+  font-family: sans-serif;
 }
 
 a {
