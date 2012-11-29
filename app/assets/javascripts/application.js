@@ -2,5 +2,5 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require_self
-//= require custom
-//= require html5shiv
+//= require custom.js.coffee
+//= require html5shiv.js
