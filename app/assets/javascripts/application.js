@@ -12,3 +12,4 @@
 //
 //= require_self
 //= require custom
+//= require_directory ./layout
