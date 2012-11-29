@@ -40,7 +40,7 @@
             - when :new_best
               %li{ :class => 'msg_list' } Well done! A new best for your team!
               %li{ :class => 'msg_list' }== You improved your old best #{to_cost(@old_best)} to #{to_cost(@analysis[:score])}.
-              %li{ :class => 'msg_list' }== Your new standing is #{@standing} out of #{out_of} teams.
+              %li{ :class => 'msg_list' }== Your new standing is #{@standing} out of #{@out_of} teams.
             - when :not_new_best
               %li{ :class => 'msg_list' }== Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
               - if @best_for_scenario
