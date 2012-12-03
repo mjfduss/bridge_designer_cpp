@@ -35,7 +35,7 @@ module Standing
       REDIS.zrank(scores_key, seq)
       REDIS.hlen(teams_key)
     end
-    return [1 + rank, len]
+    return rank && len && [1 + rank, len]
   end
 
   # Delete the standing for the given team.
@@ -74,7 +74,7 @@ module Standing
     scores_key = to_scores_key(team)
     teams_key = to_teams_key(team)
     seq = REDIS.hget(teams_key, team.id)
-    return nil unless seq
+    return [0, REDIS.hlen(teams_key)] unless seq
     (rank, len) = REDIS.pipelined do
       REDIS.zrank(scores_key, seq)
       REDIS.hlen(teams_key)

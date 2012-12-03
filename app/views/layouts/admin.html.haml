@@ -1,0 +1,14 @@
+!!! 5
+%html
+  %head
+    %title West Point Bridge Design Contest Administrator
+    = stylesheet_link_tag 'application'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+    /[if lt IE 9]
+      = javascript_include_tag 'html5fix'
+  %body{ :class => 'admin_body' }
+    = yield
+    %div{ :style => 'clear:both;' }
+      = debug(session) if Rails.env.development?
+      = debug(params) if Rails.env.development?

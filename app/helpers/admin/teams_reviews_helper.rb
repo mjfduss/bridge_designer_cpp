@@ -1,0 +1,2 @@
+module Admin::TeamsReviewsHelper
+end

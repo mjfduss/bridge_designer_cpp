@@ -42,7 +42,7 @@ password_tests = [
   { n_unique: 26, regex: /[A-Z]+/ }
   { n_unique: 26, regex: /[a-z]+/ }
   { n_unique: 10, regex: /[0-9]+/ }
-  { n_unique: 31, regex: /[!@#$%^&*()~`_\-+={}|;:'"<>,.\[\]?/]+/ }
+  { n_unique: 31, regex: /[!@#$%^&*()~`_\-+={}|;:'"<>,.\[\]?\/\\]+/ }
 ]
 
 password_strengths = [
@@ -107,6 +107,10 @@ window.update_indicators = () ->
 set_field_value = (field, val) ->
   getElement(field).value = val
 
+window.do_submit = (name) ->
+  eval("document.forms[0].#{name}.value = 1")
+  document.forms[0].submit()
+
 tick_spacing = (axis_len, max_divisions) ->
   axis_len = -axis_len if axis_len < 0
   spacing = 1
@@ -118,12 +122,6 @@ tick_spacing = (axis_len, max_divisions) ->
     return spacing if axis_len / spacing <= max_divisions
     spacing *= 2
   undefined
-
-bar = (wd, ht, color, align = 'bottom') ->
-  if color == null
-    "<span style=\"display: inline-block;vertical-align: #{align};width: #{wd};height: #{ht};\" />"
-  else
-    "<span style=\"display: inline-block;vertical-align: #{align};width: #{wd};height: #{ht};background-color: #{color};\" />"
 
 zero_pad = (n, width) ->
   rtn = '0' + rtn while rtn.length < width
@@ -137,34 +135,48 @@ commafy = (n) ->
     n = Math.floor(n / 1000)
   undefined
 
-label_inc = 32
-tick_width = 32
-marker_margin = 3
+bar =  (x, y, w, h, color) ->
+  "<div style=\"position:absolute;left:#{x}px;top:#{y}px;width:#{w}px;height:#{h}px;background-color:#{color};\"></div>"
 
-window.standings_graph = (place, n_entries, msg) ->
-  return "Your team ranks #{place} of #{n_entries} entries in your category!" if n_entries < 2
+left_label = (x, y, w, text) ->
+  "<div style=\"position:absolute;left:#{x-w-4}px;top:#{y}px;width:#{w}px;line-height:0px;text-align:right;\">#{text}</div>"
+
+right_label = (x, y, w, text) ->
+  "<div style=\"position:absolute;left:#{x+4}px;top:#{y}px;width:#{w}px;line-height:0px;text-align:left;\">#{text}</div>"
+
+window.standings_graph = (place, n_entries) ->
+  return "<div class=\"canvas\">Your team ranks #{place} of #{n_entries}!</div>" if n_entries < 2
+  label_inc = 32
+  label_width = 100
+  tick_width = 8
+  axis_color = 'blue'
+  pole_size = 4
+  marker_margin = 4
+  marker_color = 'red'
+  marker_width = 20
   place = n_entries if place > n_entries
   spacing = tick_spacing(n_entries, 4)
-  html = "<table><tr><td colspan=\"4\"><b>Your Team's National Contest Standing</b><br>&nbsp;</td></tr> +
-      <tr><td nowrap align=\"right\" valign=\"top\">#{bar(1, marker_margin, space, 'top')}<br>
-      #{bar(tick_width, 1, blue)}<br>\#1&nbsp;"
-  total_height = 0
-  lbl = Math.max(spacing, 2)
-  while lbl <= n_entries
-    inc = label_inc
-    if lbl + spacing > n_entries
-      inc += Math.round(label_inc * (n_entries - lbl) / spacing)
-      lbl = n_entries
-    html += "#{bar(1, inc - 1, null, 'top')}<br>#{bar(tick_width, 1, 'blue')}<br>#{commafy(lbl)}"
-    total_height += inc
-    lbl += spacing
-  html += "</td><td nowrap valign=\"top\">#{bar(1, marker_margin, null, 'top')}<br>
-    #{bar(8, total_height + 1, 'blue')}</td><td nowrap align=\"left\" valign=\"top\">"
-  spacer_ht = Math.round(total_height * (place - 1) / (n_entries - 1))
-  html += "#{bar(1, spacer_ht, space, 'top')}<br>" if spacer_ht > 0
-  html + "&nbsp;<b>#{commafy(place)}</b> of <b>#{commafy(n_entries)}</b> teams!
-    </td></tr></table>"
-
-window.do_submit = (name) ->
-  eval("document.forms[0].#{name}.value = 1")
-  document.forms[0].submit()
+  y0 = 16
+  dy = Math.floor(label_inc * (n_entries - 1) / spacing)
+  y1 = y0 + dy
+  y = y0
+  html = "<div><div class=\"canvas\" style=\"height:#{y1 + y0}px;\">"
+  last_lbl = 0
+  x = label_width
+  for lbl in [1..n_entries] by spacing
+    # If the second last tick is too close to the bottom, stop now.
+    if y1 - y < label_inc / 2
+      break
+    html += bar(x, y, tick_width, 1, axis_color) + left_label(x, y, label_width, "\##{commafy(lbl)}")
+    last_lbl = lbl
+    y += label_inc
+  # Draw the bottom tick if necessary.
+  if last_lbl != n_entries
+    html += bar(x, y1, tick_width, 1, axis_color) + left_label(x, y1, label_width, "\##{commafy(n_entries)}")
+  x += tick_width
+  html += bar(x, y0, pole_size, dy + 1, axis_color)
+  x += pole_size + marker_margin
+  y = y0 + Math.floor(dy * (place - 1) / (n_entries - 1))
+  html += bar(x, y - Math.floor(pole_size * 0.5), marker_width, pole_size, marker_color)
+  html += right_label(x + marker_width, y, label_width, "Your team...")
+  html + "</div><div class=\"canvas\">Standing \##{place} of #{n_entries}!</div></div>"

@@ -1,5 +1,12 @@
 Wpbdc::Application.routes.draw do
 
+  namespace :admin do
+    resource :main, :only => [ :edit, :update ]
+    resource :server_status, :only => [ :edit, :update ]
+    resource :standings_review, :only => [ :edit, :update ]
+    resource :teams_review, :only => [ :edit, :update ]
+    resource :session, :only => [ :new, :create, :destroy ]
+  end
   resources :teams, :except => [ :show ]
   resources :members, :except => [ :show, :destroy ]
   resources :certifications, :only => [ :edit, :update ]

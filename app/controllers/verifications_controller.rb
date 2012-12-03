@@ -8,7 +8,8 @@ class VerificationsController < ApplicationController
   def update
     @team = Team.find(params[:id])
     if params.has_key? :cancel
-      redirect_to :controller => :captain_completions, :action => :edit, :id => session[:captain_id]
+      c = @team.category == 'i' ? :team_completions : :captain_completions
+      redirect_to :controller => c, :action => :edit, :id => session[:captain_id]
     else
       if @team.valid?
         redirect_to :controller => :homes, :action => :edit, :id => params[:id]

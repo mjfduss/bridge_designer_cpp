@@ -42,9 +42,24 @@ class Team < ActiveRecord::Base
       unless record.new_local_contest.blank? || !LocalContest.find_by_code(record.new_local_contest).nil?
   end
 
+  def best_design
+    designs.select('score').order('score, sequence ASC').limit(1).first
+  end
+
   def best_score
-    d = designs.select('score').order('score, sequence ASC').limit(1).first
+    d = best_design
     return d ? d.score : nil
+  end
+
+  def self.synch_standings
+    Team.all.each do |team|
+      if team.status == 'x'
+        Standing.delete(team)
+      else
+        d = team.best_design
+        Standing.insert(team, d) if d
+      end
+    end
   end
 
   def best_score_for_scenario(scenario)

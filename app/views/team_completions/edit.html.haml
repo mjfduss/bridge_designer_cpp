@@ -67,6 +67,7 @@
           = f.text_field :new_local_contest, :size => 8
           %br
     .para.alignright
-      = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
+      - if @team.category != 'i'
+        = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
       = f.submit 'Update and Stay Here', { :name => 'update', :class => 'btn' }
       = f.submit TablesHelper::ACCEPT, { :name => 'accept', :class => 'btn' }

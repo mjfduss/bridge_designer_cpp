@@ -27,8 +27,8 @@
             = f.label 'Password:'
           %td
             = f.password_field :password, { :size => 16, :maxlength => 16 }
-      .alignright 
-        = f.submit 'Log In', { :class => 'btn' }
+        %tr
+          %td{ :colspan => 2, :align => 'right' }= f.submit 'Log In', { :class => 'btn' }
 %hr
 .para
   If you have not yet registered, then...

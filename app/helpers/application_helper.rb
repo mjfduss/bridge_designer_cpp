@@ -3,7 +3,7 @@ module ApplicationHelper
   include TablesHelper
 
   def school_selected(m, ch)
-    return (m.category == ch) ? m.reg_state : '--'
+    return (m.category == ch) ? m.reg_state : '-'
   end
 
   def school_state_select(f, m)
@@ -17,23 +17,23 @@ module ApplicationHelper
   end
 
   def age_select(f, sel)
-    return f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel || '--')
+    return f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel || '-')
   end
 
   def grade_select(f, sel)
-    return f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel || '--')
+    return f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel || '-')
   end
 
   def sex_select(f, sel)
-    return f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel || '--')
+    return f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel || '-')
   end
 
   def hispanic_select(f, sel)
-    return f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel || '--')
+    return f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel || '-')
   end
 
   def race_select(f, sel)
-    return f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel || '--')
+    return f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel || '-')
   end
 
   def oops(msg)

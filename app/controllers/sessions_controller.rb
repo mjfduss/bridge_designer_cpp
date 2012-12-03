@@ -22,6 +22,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    sesson.clear
+    session.clear
+    render 'new'
   end
 end

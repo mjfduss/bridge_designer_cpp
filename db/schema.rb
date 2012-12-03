@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121126004433) do
+ActiveRecord::Schema.define(:version => 20121201010653) do
 
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",                      :null => false
@@ -98,13 +98,14 @@ ActiveRecord::Schema.define(:version => 20121126004433) do
     t.string   "name",            :limit => 32
     t.string   "name_key",        :limit => 32
     t.string   "email",           :limit => 40
-    t.integer  "submits",                       :default => 0, :null => false
-    t.integer  "improves",                      :default => 0, :null => false
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.integer  "submits",                       :default => 0,   :null => false
+    t.integer  "improves",                      :default => 0,   :null => false
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
     t.string   "password_digest", :limit => 60
     t.string   "category",        :limit => 4
     t.datetime "reg_completed"
+    t.string   "status",          :limit => 1,  :default => "-", :null => false
   end
 
 end

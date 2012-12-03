@@ -10,15 +10,16 @@ class HomesController < ApplicationController
 
     # If logout...
     if !params[:logout].blank?
-      session.clear
       redirect_to :controller => :sessions, :action => :new
 
     # Else if update contact information...
     elsif !params[:update_contact].blank?
-      redirect_to :controller => :captain_completions, :action => :edit
+      c = @team.category == 'i' ? :team_completions : :captain_completions
+      redirect_to :controller => c, :action => :edit
 
     # Else if get standings...
     elsif !params[:get_standings].blank?
+      @best = @team.best_score
       @design = Design.new
       (@standing, @out_of) = Standing.standing(@team)
       @result = :get_standings

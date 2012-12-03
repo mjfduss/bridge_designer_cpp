@@ -103,6 +103,11 @@ div.para {
   margin: 1px auto 0 0;
 }
 
+div.wrap {
+  padding: 0 0;
+  margin: 0px auto 0 0;
+}
+
 div.hi {
   color: #006699;
   font-weight: bold;
@@ -211,4 +216,10 @@ div.alert {
   font-size: 110%;
   font-weight: bold;
   color: #22f;
+}
+
+div.canvas {
+  position: relative;
+  width: 300px;
+  text-align: center;
 }

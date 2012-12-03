@@ -1,0 +1,46 @@
+$menu_labels: #00649C;
+
+body.admin_body {
+  height: 96%;
+}
+
+div.admin_main {
+  width: 1200px;
+  height: 100%;
+}
+
+div.admin_menu {
+  float:left;
+  width: 300px;
+  height: 100%;
+}
+
+div.menu_label {
+  color: $menu_labels;
+}
+
+div.menu_item {
+  margin-bottom: 10px;
+}
+
+div.centerbox {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.centeredbox {
+  padding: 16px;
+  margin: 20%;
+  border: solid black 2px;
+  text-align: left;
+  display: inline-block;
+}
+
+iframe.admin_edit {
+  float: right;
+  width: 890px;
+  height: 100%;
+  border: solid;
+  border-width: 1px;
+}
