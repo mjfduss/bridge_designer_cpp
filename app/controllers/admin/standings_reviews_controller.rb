@@ -1,4 +1,4 @@
-class Admin::StandingsReviewsController < ApplicationController
+class Admin::StandingsReviewsController < Admin::ApplicationController
   def edit
   end
 

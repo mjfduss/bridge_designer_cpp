@@ -1,6 +1,4 @@
-class Admin::MainsController < ApplicationController
-
-  layout 'admin'
+class Admin::MainsController < Admin::ApplicationController
 
   def edit
   end

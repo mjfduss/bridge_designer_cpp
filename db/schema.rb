@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121201010653) do
+ActiveRecord::Schema.define(:version => 20121204042806) do
+
+  create_table "administrators", :force => true do |t|
+    t.string   "name",            :limit => 16
+    t.string   "password_digest", :limit => 60
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
 
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",                      :null => false

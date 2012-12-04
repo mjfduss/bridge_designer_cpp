@@ -51,6 +51,5 @@ private
 
     # Validate and save if good
     @team.update_attributes(params[:team])
-
   end
 end

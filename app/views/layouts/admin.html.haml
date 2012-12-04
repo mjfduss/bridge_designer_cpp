@@ -8,6 +8,11 @@
     /[if lt IE 9]
       = javascript_include_tag 'html5fix'
   %body{ :class => 'admin_body' }
+    - unless flash.empty?
+      Results:
+      %ul
+        - flash.each do |key, val|
+          %li== #{key.capitalize}: #{val}
     = yield
     %div{ :style => 'clear:both;' }
       = debug(session) if Rails.env.development?
