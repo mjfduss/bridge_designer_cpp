@@ -107,7 +107,11 @@ window.update_indicators = () ->
 set_field_value = (field, val) ->
   getElement(field).value = val
 
+last_name = null
+
 window.do_submit = (name) ->
+  eval("document.forms[0].#{last_name}.value = null") if last_name
+  last_name = name
   eval("document.forms[0].#{name}.value = 1")
   document.forms[0].submit()
 
@@ -127,6 +131,18 @@ zero_pad = (n, width) ->
   rtn = '0' + rtn while rtn.length < width
   rtn + ''
 
+window.set_all_in_list = (id, select = true) ->
+  option.selected = select for option in getElement(id).options
+  undefined
+
+window.set_list = (id, selects) ->
+  i = 0
+  option.selected = selects[i++] for option in getElement(id).options
+  undefined
+
+window.select_all_reviewed_teams = (val) ->
+  cb.checked = val for cb in document.forms[0].elements when cb.name.slice(-4) == 'mark'
+
 commafy = (n) ->
   rtn = ''
   while true
@@ -135,7 +151,7 @@ commafy = (n) ->
     n = Math.floor(n / 1000)
   undefined
 
-bar =  (x, y, w, h, color) ->
+bar = (x, y, w, h, color) ->
   "<div style=\"position:absolute;left:#{x}px;top:#{y}px;width:#{w}px;height:#{h}px;background-color:#{color};\"></div>"
 
 left_label = (x, y, w, text) ->
@@ -180,3 +196,4 @@ window.standings_graph = (place, n_entries) ->
   html += bar(x, y - Math.floor(pole_size * 0.5), marker_width, pole_size, marker_color)
   html += right_label(x + marker_width, y, label_width, "Your team...")
   html + "</div><div class=\"canvas\">Standing \##{place} of #{n_entries}!</div></div>"
+

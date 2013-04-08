@@ -1,11 +1,12 @@
 class Team < ActiveRecord::Base
 
   VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  NONE = "[none]"
 
   attr_accessible :name, :email, :contest
   attr_accessible :members_attributes
   attr_accessible :password, :password_confirmation
-  attr_accessible :submits, :improves
+  attr_accessible :submits, :improves, :status
 
   attr_accessible :new_local_contest
   attr_accessor :new_local_contest, :completion_status
@@ -17,6 +18,7 @@ class Team < ActiveRecord::Base
   has_many :designs
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
+  belongs_to :group
 
   accepts_nested_attributes_for :members
 
@@ -35,7 +37,10 @@ class Team < ActiveRecord::Base
     v.validates :captain, :presence => true
   end
 
-  validates :password, :presence => true, :confirmation => true, :length => { :minimum => 6 }, :if => :completed_with_password?
+  with_options :if => :completed_with_password? do |v|
+    v.validates :password, :presence => true, :confirmation => true, :length => { :minimum => 6 }
+    v.validates :password_confirmation, :presence => true
+  end
 
   validates_each :new_local_contest do |record, attr, value|
     record.errors.add(attr, 'is not valid. Ask your local contest sponsor for the correct code!') \
@@ -71,13 +76,22 @@ class Team < ActiveRecord::Base
     members[0]
   end
 
+  # Compute the registration category from the member categories.
   def registration_category
     i = members.index {|m| m.category == 'o'}
     i.nil? ? 'e' : 'i'
   end
 
   def register
-    self.category ||= registration_category
+    self.reg_completed = Time.now unless registered?
+  end
+
+  def registered?
+    !reg_completed.blank?
+  end
+
+  def accepted_or_hidden?
+    status == 'a'
   end
 
   def self.authenticate (name, password)
@@ -85,7 +99,119 @@ class Team < ActiveRecord::Base
     return team ? team.try(:authenticate, password) : nil
   end
 
+  def self.get_top_teams(category, limit)
+    limit = 50 unless limit > 0
+    # PSQL specific
+    Team.includes(:teams, :designs, :affiliations).find_by_sql("select * from
+      (select distinct on (d.team_id) t.*, d.score, d.sequence
+        from teams t inner join designs d
+        on t.id = d.team_id
+        where t.category = '#{category}'
+        order by d.team_id, d.score asc, d.sequence asc
+        limit #{limit}) tmp
+      order by score asc, sequence asc")
+  end
+
+  def self.format_team(team, visible)
+    visible.map { |item| team.send("#{item}_formatted") }
+  end
+
+  def self.format_all_teams(teams, visible)
+    teams.map { |team| self.format_team(team, visible) }
+  end
+
+  def status_formatted
+    ["Review status", TablesHelper::STATUSES[status] || NONE ]
+  end
+
+  def status_id
+    case status
+      when '-'
+        'none'
+      when 'a'
+        'acc'
+      when 'r'
+        'rej'
+      else
+        'unk'
+    end
+  end
+
+  def team_name_formatted
+    ["Team name", name ]
+  end
+
+  def category_formatted
+    ["Category",  TablesHelper::CATEGORY_MAP[category] || "[unknown]"]
+  end
+
+  def captain_name_formatted
+    ["Captain name", captain.full_name]
+  end
+
+  def captain_category_formatted
+    ["Captain category", captain.category_formatted]
+  end
+
+  def captain_age_grade_formatted
+    ["Captain age/grade", captain.age_grade_formatted]
+  end
+
+  def captain_contact_formatted
+    ["Captain contact", captain.contact_formatted]
+  end
+
+  def captain_school_formatted
+    ["Captain school", captain.school_formatted]
+  end
+
+  def captain_demographics_formatted
+    ["Captain demographics", captain.demographics_formatted]
+  end
+
+  def member_name_formatted
+    ["Member name", Team.optional(non_captains.first, :full_name)]
+  end
+
+  def member_category_formatted
+    ["Member category", Team.optional(non_captains.first, :category_formatted)]
+  end
+
+
+  def member_age_grade_formatted
+    ["Member age/grade", Team.optional(non_captains.first, :age_grade_formatted)]
+  end
+
+  def member_contact_formatted
+    ["Member contact", Team.optional(non_captains.first, :contact_formatted)]
+  end
+
+  def member_school_formatted
+    ["Member school", Team.optional(non_captains.first, :school_formatted)]
+  end
+
+  def member_demographics_formatted
+    ["Member demographics", Team.optional(non_captains.first, :demographics_formatted)]
+  end
+
+  def email_formatted
+    ["Email", email]
+  end
+
+  def local_contests_formatted
+    codes = local_contests.map {|t| t.code}
+    ["Local contests", codes.blank? ? NONE : codes]
+  end
+
+  def best_score_formatted
+    ["Best score", best_score]
+  end
+
   protected
+
+  def self.optional(inst, fld)
+    inst ? inst.send(fld) : NONE
+  end
 
   def self.to_name_key (name)
     return name.downcase.gsub(/[^a-z0-9]/, '')

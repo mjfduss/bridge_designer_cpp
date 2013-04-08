@@ -1,11 +1,13 @@
 class MemberCompletionsController < ApplicationController
 
+  before_filter :require_member_post
+
   def edit
-    @member = Member.find(params[:id])
+    @member = Member.find(session[:member_id])
   end
 
   def update
-    @member = Member.find(params[:id])
+    @member = Member.find(session[:member_id])
     if params.has_key? :cancel
       redirect_to :controller => :captain_completions, :action => :edit, :id => session[:captain_id]
     else

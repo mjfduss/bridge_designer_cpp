@@ -1,14 +1,16 @@
 class TeamCompletionsController < ApplicationController
 
+  before_filter :require_team_post
+
   def edit
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
     @captain = @team.captain
     @member = @team.non_captains.first
     @team.completion_status = :pending_new_password if @team.password_digest.blank?
   end
 
   def update
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
     @captain = @team.captain
     @member = @team.non_captains.first
     @team.completion_status = :pending_new_password if @team.password_digest.blank?
@@ -48,6 +50,9 @@ private
 
     # Set a status flag in the model to govern validation
     @team.completion_status = params[:team].has_key?(:password) ? :complete_with_fresh_password : :complete_with_old_password
+
+    # Fill in registration fields if the team is not already registered
+    @team.register
 
     # Validate and save if good
     @team.update_attributes(params[:team])

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121204042806) do
+ActiveRecord::Schema.define(:version => 20130331213231) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(:version => 20121204042806) do
     t.string   "category",        :limit => 4
     t.datetime "reg_completed"
     t.string   "status",          :limit => 1,  :default => "-", :null => false
+    t.integer  "group_id"
   end
 
 end

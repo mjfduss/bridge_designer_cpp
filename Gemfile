@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'WPBDC', '2013.1.1'
-gem 'rails', '3.2.7'
+gem 'rails', '3.2.13'
 gem 'bootstrap-sass', '2.0.4.0'
 gem 'bcrypt-ruby', '3.0.1'
 gem 'haml-rails', '0.3.4'
@@ -13,6 +13,7 @@ gem 'thin'
 
 group :development, :test do
   gem 'rspec-rails', '2.10.0'
+  gem 'factory_girl_rails', '4.0.0'
 end
 
 group :assets do
@@ -23,7 +24,6 @@ end
 
 group :test do
   gem 'capybara', '1.1.2'
-  gem 'factory_girl_rails', '4.0.0'
 end
 
 # group :production do

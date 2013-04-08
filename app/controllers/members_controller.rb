@@ -1,5 +1,7 @@
 class MembersController < ApplicationController
 
+  before_filter :require_member_post
+
   def index
   end
 
@@ -28,7 +30,7 @@ class MembersController < ApplicationController
   end
 
   def edit
-    @member = Member.find(params[:id])
+    @member = Member.find(session[:member_id])
     render 'new'
   end
 
@@ -36,11 +38,11 @@ class MembersController < ApplicationController
     if params.has_key? :cancel
       redirect_to :controller => :teams, :action => :edit, :id => session[:team_id]
     elsif params.has_key? :skip
+      Member.delete(session[:member_id])
       session.delete(:member_id)
-      Member.delete(params[:id])
       redirect_to :controller => :certifications, :action => :edit, :id => session[:team_id]
     else
-      @member = Member.find(params[:id])
+      @member = Member.find(session[:member_id])
       if @member.update_attributes(params[:member])
         redirect_to :controller => :certifications, :action => :edit, :id => session[:team_id]   
       else

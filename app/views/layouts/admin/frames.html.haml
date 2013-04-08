@@ -1,0 +1,8 @@
+!!! Frameset
+%html
+  %head
+    %title West Point Bridge Design Contest Administrator
+    = csrf_meta_tags
+  %frameset{ :cols => '360,*' }
+    = yield(:menu_frame)
+    = yield(:data_frame)

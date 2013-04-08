@@ -1,7 +1,7 @@
 module ValidationHelper
 
   # Convert a category letter to tag of corresponding state selector
-  def self.to_state(category)
+  def self.to_state_selector(category)
     case category
       when 'u', :u 
         :school_state

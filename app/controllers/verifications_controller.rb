@@ -1,4 +1,7 @@
 class VerificationsController < ApplicationController
+
+  before_filter :require_team_post
+
   def edit
     @team = Team.find(session[:team_id])
     @captain = @team.captain
@@ -6,7 +9,7 @@ class VerificationsController < ApplicationController
   end
 
   def update
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
     if params.has_key? :cancel
       c = @team.category == 'i' ? :team_completions : :captain_completions
       redirect_to :controller => c, :action => :edit, :id => session[:captain_id]

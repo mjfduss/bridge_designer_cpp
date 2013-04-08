@@ -1,0 +1,28 @@
+%a{ :name => team.name_key }
+%table.review
+  - rows = columnize(team_items, 2)
+  %tr
+    %td{ :rowspan => 1 + rows.length, :class => team.status_id }= "[#{rank}]"
+    %td.review_head{ :colspan => 2 }
+      #{team.name_key}:
+      = select_tag("#{team.id}_group", options_for_select([['Select Group',  '-']], '-'))
+      = hidden_field_tag "#{team.id}_group_in", team.group || '-'
+      = sep
+      - [['None', '-'], ['Accept', 'a'], ['Reject', 'r']].each do |label, param|
+        = radio_button_tag "#{team.id}_status", param, param == team.status
+        = label
+      = hidden_field_tag "#{team.id}_status_in", team.status
+      = sep
+      = check_box_tag "#{team.id}_mark"
+      Mark
+      = sep
+      %a{ :class => 'review', :href => '#top' }= "[top]"
+  - for row in rows
+    %tr{ :class => if even = !even then 'plain' else 'stripe' end }
+      - for col in row
+        %td.review
+          - if col
+            %span.bold #{col[0]}:
+            = insert_html_breaks(col[1])
+          - else
+            ="&nbsp;".html_safe

@@ -22,8 +22,10 @@ class Member < ActiveRecord::Base
   validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid"
 
   validates_each :school_state, :res_state do |record, attr, value|
-    record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_state(record.category)
+    record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_state_selector(record.category)
   end
+
+  # TODO USA-specific validations.
 
   with_options :if => :completed do |v|
     v.validates_inclusion_of :age, :in => TablesHelper::VALID_AGES, :message => "must be selected"
@@ -42,9 +44,7 @@ class Member < ActiveRecord::Base
   end
 
   def full_name
-    return first_name.nil? || last_name.nil? ? '' 
-    : (middle_initial && middle_initial.length > 0) ? "#{first_name} #{middle_initial}. #{last_name}" 
-    : "#{first_name} #{last_name}"
+    middle_initial.blank? ? "#{first_name} #{last_name}" : "#{first_name} #{middle_initial}. #{last_name}"
   end
 
   def school_state
@@ -62,4 +62,36 @@ class Member < ActiveRecord::Base
   def res_state=(val)
     self.reg_state = val if category == 'n'
   end
+
+  def category_formatted
+    case category
+      when 'u'
+        "Attending U.S. K-12 #{reg_state}"
+      when 'n'
+        "K-12 citizen OCONUS #{reg_state}"
+      else
+        '[unknown]'
+    end
+  end
+
+  def age_grade_formatted
+    "#{age} Yrs / Grade #{grade}"
+  end
+
+  def contact_formatted
+    [street, "#{city}, #{state} #{zip} #{country}", "Ph: #{phone}"]
+  end
+
+  def school_formatted
+    "#{school}, #{school_city}"
+  end
+
+  def demographics_formatted
+    rtn = []
+    rtn.push(TablesHelper::SEX_MAP[sex]) if sex
+    rtn.push(["Hispanic:",  TablesHelper::HISPANIC_MAP[hispanic]]) if hispanic
+    rtn.push(["Race:", TablesHelper::RACE_MAP[race]]) if race
+    rtn = "[none given]" if rtn.blank?
+  end
+
 end

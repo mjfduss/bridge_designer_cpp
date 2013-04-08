@@ -3,15 +3,7 @@ require 'spec_helper'
 describe Team do
 
   before {
-    Team.where("name_key='beatnavy'").each{ |t| t.delete }
-    @team = Team.new(:name => 'Beat Navy')
-    @team.captain = Member.create(:first_name => 'Navy',
-                                  :last_name => 'Goat',
-                                  :category => 'u');
-  }
-
-  after {
-    @team.captain.delete unless @team.captain.nil?
+    @team = create(:team)
   }
 
   subject { @team }
@@ -24,7 +16,6 @@ describe Team do
   it { should respond_to(:improves) }
   it { should respond_to(:captain) }
   it { should respond_to(:members) }
-  
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
@@ -42,11 +33,12 @@ describe Team do
   end
 
   describe "when name is already taken" do
-    before do
-      team_with_same_name = @team.dup
-      team_with_same_name.name.upcase!
-      team_with_same_name.save
-    end
+    before {
+      same_named_team = @team.dup
+      same_named_team.name.upcase!
+      @team.save
+      @team = same_named_team
+    }
     it { should_not be_valid }
   end
 
@@ -56,7 +48,7 @@ describe Team do
     @team.email = "goat@usna.edu"
     @team.password = "Go Army 1978!"
     @team.password_confirmation = "Go Army 1978!"
-    @team.completed = true 
+    @team.completion_status = :complete_with_fresh_password
   }
 
   describe "when email format is invalid" do
@@ -80,7 +72,7 @@ describe Team do
     end
   end
 
-  describe "when email is convered from mixed to lower case" do
+  describe "when email is converted from mixed to lower case" do
     let(:mixed_case_email) { "Foo@ExAMPle.CoM" }
     it "should be saved as all lower-case" do
       @team.email = mixed_case_email
@@ -99,7 +91,7 @@ describe Team do
     it { should_not be_valid }
   end
 
-  describe "Password not matching confirmation" do
+  describe "when password doesn't match confirmation" do
     before { @team.password_confirmation = "mismatch" }
     it { should_not be_valid }
   end
@@ -114,7 +106,7 @@ describe Team do
     it { should be_invalid }
   end
 
-  describe "return value of authenticate method" do
+  describe "when inspecting value of authenticate method" do
 
     before { @team.save }
 

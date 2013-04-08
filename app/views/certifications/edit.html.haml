@@ -13,11 +13,11 @@
           %td.bold.shrink Team Name:
           %td
             = @team.name
-        - if @local_contest
+        - unless @team.local_contests.empty?
           %tr
-            %td.bold.shrink Local Contest:
-            %td 
-              = @local_contest.code
+            %td.bold.shrink Local Contests:
+            %td
+              = local_contest_list(@team)
         %tr
           %td{:colspan => 2}
             %hr

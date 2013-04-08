@@ -17,6 +17,8 @@
             %li{ :class => 'status_list' } Congratulations! You made the semi-finals!
           - else
             %li{ :class => 'status_list' } Hmmm... I don't know your team's category.
+        - unless @team.local_contests.empty?
+          %li{ :class => 'status_list' }== Your local contests: #{local_contest_list(@team)}
         - if @best
           %li{ :class => 'status_list' }== Your current best design's cost is #{to_cost(@best)}.
         - else

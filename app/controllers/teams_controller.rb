@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
 
   skip_before_filter :require_valid_session, :only => [:new, :create]
+  before_filter :require_team_post
 
   def index
   end

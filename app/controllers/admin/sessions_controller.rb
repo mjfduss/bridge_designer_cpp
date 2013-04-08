@@ -10,7 +10,7 @@ class Admin::SessionsController < Admin::ApplicationController
     admin = Administrator.authenticate(params[:session][:login], params[:session][:password])
     if admin
       session[:admin_id] = admin.id
-      redirect_to :controller => :mains, :action => :edit
+      redirect_to :controller => :frames, :action => :new
     else
       flash.now[:alert] = "Your login failed."
       render 'new'

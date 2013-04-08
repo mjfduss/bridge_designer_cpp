@@ -1,6 +1,5 @@
 - flash.each do |key, msg|
-  %div{:class => key}
-    = msg
+  %div{:class => key}= msg
 .para.hi.big
   Welcome Bridge Designer! 
 .para.hi 
@@ -9,7 +8,6 @@
 .para
   If you've already registered, then log in by 
   typing your Team Name and Password below.
-
 .dialog.loginwidth
   .dialoghead
     .dialogheadcontent

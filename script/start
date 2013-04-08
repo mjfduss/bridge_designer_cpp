@@ -1,4 +1,5 @@
 #! /bin/csh
+sudo ls
 redis-server /Users/generessler/Projects/Rails/wpbdc/db/redis.conf &
 sudo su postgres -c '/opt/local/lib/postgresql92/bin/postgres -D /opt/local/var/db/postgresql92/defaultdb' &
 bundle exec rails s &

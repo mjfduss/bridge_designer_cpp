@@ -31,6 +31,9 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
+
+  # Avoids having to use FactoryGirl prefix
+  config.include FactoryGirl::Syntax::Methods
 end
 
 def goto_team_registration_page
@@ -45,7 +48,7 @@ def fill_in_member_partial(cat_string = 'u')
   select('Pennsylvania', :from => "school_state")
 end
 
-def fill_in_member_completion 
+def fill_in_member_completion
   select("13", :from => "member_age")
   select("7", :from => "member_grade")
   fill_in("member_street", :with => "107A Washington Road")
@@ -84,7 +87,7 @@ def it_should_have_member_partial
   it { should have_selector('td', :text => 'First Name') }
   it { should have_selector('td', :text => 'MI') }
   it { should have_selector('td', :text => 'Last Name') }
-  it { should have_selector('div', :text => 'My school is located in:') }    
+  it { should have_selector('div', :text => 'My school is located in:') }
   it { should have_selector('div', :text => 'My permanent residence is in:') }
 end
 
@@ -131,7 +134,7 @@ end
 US_SCHOOL = 'Student, age 13 through grade 12, currently enrolled in a U.S. ' +
   'school or legally home-schooled. Eligible for national recognition.'
 
-NON_US_SCHOOL = 'U.S. citizen, age 13 through grade 12 (or equivalent), currently ' + 
+NON_US_SCHOOL = 'U.S. citizen, age 13 through grade 12 (or equivalent), currently ' +
   'attending a school outside the U.S. Eligible for national recognition.'
 
 OPEN = 'Open Competitor. Not eligible for national recognition.'
@@ -139,7 +142,7 @@ OPEN = 'Open Competitor. Not eligible for national recognition.'
 ELIGIBLE = 'Your team is eligible to compete for national recognition by submitting designs.'
 
 INELIGIBLE = 'At least one of your team members is not eligible for ' +
-  'nationalrecognition. Therefore the team is not eligible. We encourageyou ' +
+  'national recognition. Therefore the team is not eligible. We encourage you ' +
   'to submit designs in Open Competition!'
 
 IN_US = 'US/PR Student Competition.'

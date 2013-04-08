@@ -1,11 +1,13 @@
 class CaptainCompletionsController < ApplicationController
 
+  before_filter :require_captain_post
+
   def edit
-    @member = Member.find(params[:id])
+    @member = Member.find(session[:captain_id])
   end
 
   def update
-    @member = Member.find(params[:id])
+    @member = Member.find(session[:captain_id])
     # Cause all validations to occur.
     @member.completed = true
     if @member.update_attributes(params[:member])

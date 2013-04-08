@@ -64,7 +64,7 @@ module TablesHelper
      ["Wyoming", "WY"],
     ]
 
-  AGE_PAIRS = 
+  AGE_PAIRS =
     [
      ["-- Select here --", "-"],
      ["13", 13],
@@ -97,7 +97,9 @@ module TablesHelper
      [ "Female", "F" ],
     ]
 
-  HISPANIC_PAIRS = 
+  SEX_MAP = Hash[ SEX_PAIRS[1..-1].map{ |p| [p[1], p[0]] } ]
+
+  HISPANIC_PAIRS =
     [
      ["-- Select here --", "-"],
      ["No. Not Spanish/Hispanic/Latino.", "N"],
@@ -107,7 +109,9 @@ module TablesHelper
      ["Yes. Other.", "O"],
     ]
 
-  RACE_PAIRS = 
+  HISPANIC_MAP = Hash[ HISPANIC_PAIRS[1..-1].map{ |p| [p[1], p[0]] } ]
+
+  RACE_PAIRS =
     [
      ['-- Select here --', '-'],
      ["White", "W"],
@@ -127,6 +131,8 @@ module TablesHelper
      ["Other race", "O"],
     ]
 
+  RACE_MAP = Hash[ RACE_PAIRS[1..-1].map{ |p| [p[1], p[0]] } ]
+
   CATEGORY_PAIRS =
     [
       ["Select Category", "-"],
@@ -134,6 +140,8 @@ module TablesHelper
       ["Open Competition", "i"],
       ["Semifinalists", "2"],
     ]
+
+  CATEGORY_MAP = Hash[ CATEGORY_PAIRS[1..-1].map{ |p| [p[1], p[0]] } ]
 
   STANDINGS_PAIRS =
     [
@@ -185,14 +193,24 @@ module TablesHelper
     captain_name captain_category captain_age_grade captain_contact captain_school
     member_name member_age_grade member_contact member_school
     email local_contests best_score}
+  TEAM_ATTRIBUTE_SELECTED = TEAM_ATTRIBUTE_PAIRS.map { |p| TEAM_ATTRIBUTE_DEFAULTS.include? p[1] }
 
   STATUS_PAIRS =
     [
       ["Accepted", "accepted"],
+      ["Hidden",   "hidden"],
       ["Rejected", "rejected"]
     ]
 
   STATUS_PAIR_DEFAULTS = %w{accepted rejected}
+
+  def self.keyed_code_from_pairs(key, pairs)
+    if pairs[0][1] == '-'
+      pairs[1 + key % (pairs.length - 1)][1]
+    else
+      pairs[key % pairs.length][1]
+    end
+  end
 
   STATES            = Hash[ STATE_PAIRS.map{             |p| [p[1], true] } ]
   AGES              = Hash[ AGE_PAIRS.map{               |p| [p[1], true] } ]

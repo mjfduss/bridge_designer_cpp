@@ -1,12 +1,13 @@
 class CertificationsController < ApplicationController
 
+  before_filter :require_team_post
+
   # TODO: If we arrive here and category is already set, it's a back button, etc. Bounce to captain completion.
 
   def edit
     @team = Team.find(session[:team_id])
     @captain = @team.captain
     @member = session[:member_id] && Member.find(session[:member_id])
-    @local_contest = @team.local_contests.first
   end
 
   def update

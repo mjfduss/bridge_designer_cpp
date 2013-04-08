@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
   skip_before_filter :require_valid_session, :only => [:new, :create]
 
   def new
-    session.clear
+    session.delete(:team_id)
   end
 
   def create
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
       session[:member_id] = member.id if member
       redirect_to :controller => :verifications, :action => :edit, :id => team.id
     else
-      flash.now[:alert] = "Your login failed. Have you registered? If not, start the Registration Wizard below. If you have already registered, please retype your Team Name and Password and click the Log In button again."
+      flash.now[:alert] = "Your login failed. If you haven't registered, start the Registration Wizard below. Otherwise try to Log In again."
       render 'new'
     end
   end

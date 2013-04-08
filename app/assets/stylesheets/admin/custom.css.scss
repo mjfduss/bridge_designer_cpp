@@ -1,4 +1,6 @@
 $menu_labels: #00649C;
+$stripe: #cfc;
+$plain: #e4e4e4;
 
 body.admin_body {
   height: 96%;
@@ -44,3 +46,75 @@ iframe.admin_edit {
   border: solid;
   border-width: 1px;
 }
+
+tr.plain {
+  background-color: $plain;
+}
+
+tr.stripe {
+  background-color: $stripe;
+}
+
+table.review, table.index {
+  border-style: solid;
+  border-width: 1px;
+  border-collapse: collapse;
+  margin: 4px 0px 4px 0px;
+  width: 100%;
+}
+
+td.review {
+  padding: 2px 4px 2px 4px;
+}
+
+td.none {
+  @extend td.review;
+  width: 8px;
+  background-color: #777;
+  color: #fff;
+}
+
+td.accepted {
+  @extend td.none;
+  background-color: #4f4;
+}
+
+td.rejected {
+  @extend td.none;
+  background-color: #f44;
+}
+
+td.index {
+  text-align: center;
+  border: 1px solid black;
+}
+
+td.review_head {
+  @extend td.review;
+  background-color: #aaa;
+}
+
+a.review:link, a.review:visited {
+  color: #000;
+}
+
+a.review:hover {
+  color: #555;
+}
+
+a.review:active {
+  color: #000;
+}
+
+a.index:link, a.index:visited {
+  color: #fff;
+}
+
+a.index:hover {
+  color: #555;
+}
+
+a.index:active {
+  color: #fff;
+}
+

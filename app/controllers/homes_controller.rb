@@ -1,12 +1,14 @@
 class HomesController < ApplicationController
 
+  before_filter :require_team_post
+
   def edit
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
     @design = Design.new
   end
 
   def update
-    @team = Team.find(params[:id])
+    @team = Team.find(session[:team_id])
 
     # If logout...
     if !params[:logout].blank?

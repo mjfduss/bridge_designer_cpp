@@ -1,2 +1,31 @@
-%h1 Admin::TeamsReview#edit
-%p Find me in app/views/admin/teams_review/edit.html.haml
+- if @category == '-'
+  .centeredbox.bold Please select a category to review.
+- elsif @teams.blank?
+  .centeredbox.bold Sorry. No teams in category #{TablesHelper::CATEGORY_MAP[@category]}!
+- else
+  %a{ :name => 'top' }
+  - team_rank_items_table = @teams.zip(team_ranks(@teams, 1), Team.format_all_teams(@teams, @visible_attributes))
+  .bold
+    = TablesHelper::CATEGORY_MAP[@category] || 'Unknown category'
+    = ": #{@teams.length} teams shown"
+  %table.index
+    - for row_team_rank_items in team_rank_items_table.each_slice(30)
+      %tr
+        - for team, rank, items in row_team_rank_items
+          %td{ :class => [team.status_id, 'index'] }
+            %a{ :class => 'index', :href => "##{team.name_key}" }= rank
+  = form_tag admin_teams_review_path, :method => :put do
+    = hidden_field_tag 'team_category', @category
+    = hidden_field_tag 'standings_cutoff', @standings_cutoff
+    - @visible_attributes.each_with_index do |attribute, i|
+      = hidden_field_tag "visible_attributes[]", attribute
+    = submit_tag 'Process', :name => 'process'
+    = sep
+    = submit_tag 'Retrieve marked bridges', :name => 'retrieve'
+    = sep
+    = button_tag 'Select all', :type => 'button', :onclick => 'select_all_reviewed_teams(true)'.html_safe
+    = button_tag 'Clear all', :type => 'button', :onclick => 'select_all_reviewed_teams(false)'.html_safe
+    - rank = 0
+    - team_rank_items_table.each do |team, rank, items|
+      = render :partial => 'shared/team_review_record',                          |
+               :locals => { :rank => rank, :team => team, :team_items => items } |

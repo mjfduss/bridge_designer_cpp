@@ -5,13 +5,14 @@
       Please check that the information below is correct. 
       We must be able to contact winners!
     .box
-      .membertitle
-        Team information for Team
-        = @team.name
+      .membertitle==Team information for Team #{@team.name}
       %table
         %tr
           %td{ :class => 'bold' } Email:&nbsp;
           %td= @team.email
+        - unless @team.local_contests.empty?
+          %td{ :class => 'bold' } Local contests:&nbsp;
+          %td= local_contest_list(@team)
     .box
       %table{ :width => '100%' }
         %tr

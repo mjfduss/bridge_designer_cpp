@@ -149,74 +149,74 @@ static VALUE rb_api_local_contest_number_to_id(VALUE self, VALUE number_as_strin
 }
 
 
-#define FUNCTION(Name) { #Name, rb_api_ ## Name, ARGC_ ## Name }
+#define FUNCTION_TABLE_ENTRY(Name) { #Name, rb_api_ ## Name, ARGC_ ## Name }
 
 static struct ft_entry {
   char *name;
   VALUE (*func)();
   int argc;
 } function_table[] = {
-  FUNCTION(endecrypt),
-  FUNCTION(analyze),
-  FUNCTION(are_same),
-  FUNCTION(variant),
-  FUNCTION(failed_variant),
-  FUNCTION(perturbation),
-  FUNCTION(sketch),
-  FUNCTION(analysis_table),
-  FUNCTION(local_contest_number_to_id),
+  FUNCTION_TABLE_ENTRY(endecrypt),
+  FUNCTION_TABLE_ENTRY(analyze),
+  FUNCTION_TABLE_ENTRY(are_same),
+  FUNCTION_TABLE_ENTRY(variant),
+  FUNCTION_TABLE_ENTRY(failed_variant),
+  FUNCTION_TABLE_ENTRY(perturbation),
+  FUNCTION_TABLE_ENTRY(sketch),
+  FUNCTION_TABLE_ENTRY(analysis_table),
+  FUNCTION_TABLE_ENTRY(local_contest_number_to_id),
 };
 
-#define INT_CONST(Name) { #Name, Name }
+#define INT_CONST_TABLE_ENTRY_TABLE_ENTRY(Name) { #Name, Name }
 
 static struct ict_entry {
   char *name;
   int val;
 } int_const_table[] = {
-  INT_CONST(BRIDGE_OK),
-  INT_CONST(BRIDGE_MALFORMED),
-  INT_CONST(BRIDGE_WRONGVERSION),
-  INT_CONST(BRIDGE_FAILEDTEST),
+  INT_CONST_TABLE_ENTRY(BRIDGE_OK),
+  INT_CONST_TABLE_ENTRY(BRIDGE_MALFORMED),
+  INT_CONST_TABLE_ENTRY(BRIDGE_WRONGVERSION),
+  INT_CONST_TABLE_ENTRY(BRIDGE_FAILEDTEST),
 
-  INT_CONST(MAX_JOINTS),
-  INT_CONST(MAX_MEMBERS),
+  INT_CONST_TABLE_ENTRY(MAX_JOINTS),
+  INT_CONST_TABLE_ENTRY(MAX_MEMBERS),
 
   // Size of hash value in bytes.
-  INT_CONST(HASH_SIZE),
+  INT_CONST_TABLE_ENTRY(HASH_SIZE),
 
   // Possible errors during bridge parsing.
-  INT_CONST(BridgeNoError),
-  INT_CONST(BridgeMissingData),
-  INT_CONST(BridgeSyntax),
-  INT_CONST(BridgeMissingHeader),
-  INT_CONST(BridgeBadHeader),
-  INT_CONST(BridgeMissingTestStatus),
-  INT_CONST(BridgeBadTestStatus),
-  INT_CONST(BridgeBadScenario),
-  INT_CONST(BridgeBadNDesignIterations),
-  INT_CONST(BridgeTooManyElements),
-  INT_CONST(BridgeBadJointBanner),
-  INT_CONST(BridgeTooFewJoints),
-  INT_CONST(BridgeWrongPrescribedJoints),
-  INT_CONST(BridgeBadMemberBanner),
-  INT_CONST(BridgeTooFewMembers),
-  INT_CONST(BridgeBadLabelPos),
-  INT_CONST(BridgeExtraJunk),
-  INT_CONST(BridgeDupJoints),
-  INT_CONST(BridgeDupMembers),
-  INT_CONST(BridgeJointOnMember),
-  INT_CONST(BridgeBadLoadScenario),
-  INT_CONST(BridgeBadChar),
+  INT_CONST_TABLE_ENTRY(BridgeNoError),
+  INT_CONST_TABLE_ENTRY(BridgeMissingData),
+  INT_CONST_TABLE_ENTRY(BridgeSyntax),
+  INT_CONST_TABLE_ENTRY(BridgeMissingHeader),
+  INT_CONST_TABLE_ENTRY(BridgeBadHeader),
+  INT_CONST_TABLE_ENTRY(BridgeMissingTestStatus),
+  INT_CONST_TABLE_ENTRY(BridgeBadTestStatus),
+  INT_CONST_TABLE_ENTRY(BridgeBadScenario),
+  INT_CONST_TABLE_ENTRY(BridgeBadNDesignIterations),
+  INT_CONST_TABLE_ENTRY(BridgeTooManyElements),
+  INT_CONST_TABLE_ENTRY(BridgeBadJointBanner),
+  INT_CONST_TABLE_ENTRY(BridgeTooFewJoints),
+  INT_CONST_TABLE_ENTRY(BridgeWrongPrescribedJoints),
+  INT_CONST_TABLE_ENTRY(BridgeBadMemberBanner),
+  INT_CONST_TABLE_ENTRY(BridgeTooFewMembers),
+  INT_CONST_TABLE_ENTRY(BridgeBadLabelPos),
+  INT_CONST_TABLE_ENTRY(BridgeExtraJunk),
+  INT_CONST_TABLE_ENTRY(BridgeDupJoints),
+  INT_CONST_TABLE_ENTRY(BridgeDupMembers),
+  INT_CONST_TABLE_ENTRY(BridgeJointOnMember),
+  INT_CONST_TABLE_ENTRY(BridgeBadLoadScenario),
+  INT_CONST_TABLE_ENTRY(BridgeBadChar),
 
   // Test status flag values read from bridge file.
-  INT_CONST(NullTestStatus),
-  INT_CONST(Unrecorded),
-  INT_CONST(Untested),
-  INT_CONST(Failed),
-  INT_CONST(Passed),
+  INT_CONST_TABLE_ENTRY(NullTestStatus),
+  INT_CONST_TABLE_ENTRY(Unrecorded),
+  INT_CONST_TABLE_ENTRY(Untested),
+  INT_CONST_TABLE_ENTRY(Failed),
+  INT_CONST_TABLE_ENTRY(Passed),
 
-  INT_CONST(SCENARIO_ID_SIZE),
-  INT_CONST(SCENARIO_NUMBER_SIZE),
+  INT_CONST_TABLE_ENTRY(SCENARIO_ID_SIZE),
+  INT_CONST_TABLE_ENTRY(SCENARIO_NUMBER_SIZE),
 };
 
 void Init_WPBDC(void)

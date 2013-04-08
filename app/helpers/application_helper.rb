@@ -53,4 +53,7 @@ module ApplicationHelper
     return ''
   end
 
+  def local_contest_list(team)
+    team.local_contests.map {|c| c.code}.join(', ')
+  end
 end
