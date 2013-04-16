@@ -10,7 +10,7 @@ module Admin::TeamsReviewsHelper
     group_counts = Hash.new(0)
     teams.map do |team|
       g = team.group
-      team.status == 'a' && (g.nil? || group_counts[g.id] += 1 <= max_ranked_in_group) ? ++rank : 'x'
+      team.status == 'a' && (g.nil? || (group_counts[g.id] += 1) <= max_ranked_in_group) ? ++rank : 'x'
     end
   end
 

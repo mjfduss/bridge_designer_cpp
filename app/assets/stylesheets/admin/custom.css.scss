@@ -65,8 +65,10 @@ table.review, table.index {
 
 td.review {
   padding: 2px 4px 2px 4px;
+  width: 49%;
 }
 
+/* Must match TablesHelper::STATUS_PAIRS */
 td.none {
   @extend td.review;
   width: 8px;
@@ -76,13 +78,19 @@ td.none {
 
 td.accepted {
   @extend td.none;
-  background-color: #4f4;
+  background-color: #2a2;
 }
 
 td.rejected {
   @extend td.none;
-  background-color: #f44;
+  background-color: #a22;
 }
+
+td.hidden {
+  @extend td.none;
+  background-color: #181;
+}
+/* End must match TablesHelper::STATUS_PAIRS */
 
 td.index {
   text-align: center;
@@ -118,3 +126,15 @@ a.index:active {
   color: #fff;
 }
 
+hr {
+  color: #000;
+  background-color: #000;
+  border-collapse: collapse;
+  height:3px;
+  width:100%;
+}
+
+topic {
+  color: #00a;
+  font-weight: bold;
+}

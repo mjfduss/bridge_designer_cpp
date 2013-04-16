@@ -197,13 +197,17 @@ module TablesHelper
 
   STATUS_PAIRS =
     [
-      ["Accepted", "accepted"],
-      ["Hidden",   "hidden"],
-      ["Rejected", "rejected"]
+      ["None", "-"],
+      ["Accepted", "a"],
+      ["Rejected", "r"],
+      ["Hidden",   "h"],
     ]
 
   STATUS_PAIR_DEFAULTS = %w{accepted rejected}
 
+  STATUS_MAP = Hash[ STATUS_PAIRS.map{ |p| [p[1], p[0]] } ]
+
+  # For factories to generate randomized values
   def self.keyed_code_from_pairs(key, pairs)
     if pairs[0][1] == '-'
       pairs[1 + key % (pairs.length - 1)][1]
@@ -226,6 +230,7 @@ module TablesHelper
   STANDINGS_CUTOFFS = Hash[ STANDINGS_CUTOFF_PAIRS.map{  |p| [p[1], true] } ]
   TEAM_ATTRIBUTES   = Hash[ TEAM_ATTRIBUTE_PAIRS.map{    |p| [p[1], true] } ]
   STATUSES          = Hash[ STATUS_PAIRS.map{            |p| [p[1], true] } ]
+  VALID_STATUSES    = Hash[ STATUS_PAIRS[1..-1].map{     |p| [p[1], true] } ]
 
   CANCEL = '<< Cancel and Go Back'
   ACCEPT = 'Accept and Continue >>'

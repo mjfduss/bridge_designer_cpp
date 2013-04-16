@@ -1,19 +1,17 @@
 Wpbdc::Application.routes.draw do
 
-  get "groups/edit"
-
-  get "groups/update"
-
   namespace :admin do
     resource :frame, :only => [ :new ]
     resource :initial, :only => [ :new ]
     resource :main_menu, :only => [ :edit, :update ]
     resource :main, :only => [ :edit, :update ]
     resource :server_status, :only => [ :edit, :update ]
+    resource :password_change, :only => [ :edit, :update ]
     resource :standings_review, :only => [ :edit, :update ]
     resource :teams_review, :only => [ :edit, :update ]
     resource :session, :only => [ :new, :create, :destroy ]
     resource :group, :only => [ :edit, :update ]
+    resource :local_contest, :only => [ :edit, :update ]
   end
   resources :teams, :except => [ :show ]
   resources :members, :except => [ :show, :destroy ]

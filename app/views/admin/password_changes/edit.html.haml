@@ -1,0 +1,27 @@
+.big.bold Change Password
+%hr
+.bold.menu_label Password workspace:
+= form_for @admin, :url => admin_password_change_path, :method => :put do |f|
+  %table
+    %tr
+      %td{ :colspan => 2 } Change password for administrator '#{@admin.name}'
+    %tr
+      %td= label_tag(:current_password, "Current:")
+      %td= password_field_tag :current_password, '', :size => 40
+    %tr
+      %td= f.label(:password, "New:")
+      %td= f.password_field :password, :size => 40
+    %tr
+      %td= f.label(:password_confirmation, "Confirm new:")
+      %td= f.password_field :password_confirmation, :size => 40
+  .para
+  = f.submit "Change password", :name => 'change'
+  %hr
+- unless flash.empty?
+  Results:
+  %ul
+    - flash.each do |key, val|
+      %li== #{val}
+    - if @admin.errors.any?
+      - @admin.errors.full_messages.each do |msg|
+        %li== #{msg}

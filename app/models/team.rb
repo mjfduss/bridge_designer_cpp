@@ -6,7 +6,7 @@ class Team < ActiveRecord::Base
   attr_accessible :name, :email, :contest
   attr_accessible :members_attributes
   attr_accessible :password, :password_confirmation
-  attr_accessible :submits, :improves, :status
+  attr_accessible :submits, :improves, :status, :group
 
   attr_accessible :new_local_contest
   attr_accessor :new_local_contest, :completion_status
@@ -14,7 +14,6 @@ class Team < ActiveRecord::Base
   future_has_secure_password :validations => false
 
   has_many :members, :order => 'rank ASC', :dependent => :destroy
-  has_many :non_captains, :class_name => 'Member', :order => 'rank ASC', :conditions => 'members.rank != 0'
   has_many :designs
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
@@ -38,13 +37,21 @@ class Team < ActiveRecord::Base
   end
 
   with_options :if => :completed_with_password? do |v|
-    v.validates :password, :presence => true, :confirmation => true, :length => { :minimum => 6 }
     v.validates :password_confirmation, :presence => true
+    v.validates :password, :presence => true, :confirmation => true, :length => { :minimum => 6 }
   end
 
   validates_each :new_local_contest do |record, attr, value|
     record.errors.add(attr, 'is not valid. Ask your local contest sponsor for the correct code!') \
       unless record.new_local_contest.blank? || !LocalContest.find_by_code(record.new_local_contest).nil?
+  end
+
+  def captain
+    members[0]
+  end
+
+  def non_captains
+    self.members[1..-1]
   end
 
   def best_design
@@ -70,10 +77,6 @@ class Team < ActiveRecord::Base
   def best_score_for_scenario(scenario)
     d = designs.select('score').where(:scenario => scenario).order('score, sequence ASC').limit(1).first
     return d ? d.score : nil
-  end
-
-  def captain
-    members[0]
   end
 
   # Compute the registration category from the member categories.
@@ -112,29 +115,20 @@ class Team < ActiveRecord::Base
       order by score asc, sequence asc")
   end
 
-  def self.format_team(team, visible)
-    visible.map { |item| team.send("#{item}_formatted") }
+  def status_style_id
+    TablesHelper::STATUS_MAP[status].downcase
   end
 
-  def self.format_all_teams(teams, visible)
-    teams.map { |team| self.format_team(team, visible) }
+  def formatted(visible)
+    visible.map { |item| send("#{item}_formatted") }
+  end
+
+  def self.format_all(teams, visible)
+    teams.map { |t| t.formatted(visible) }
   end
 
   def status_formatted
-    ["Review status", TablesHelper::STATUSES[status] || NONE ]
-  end
-
-  def status_id
-    case status
-      when '-'
-        'none'
-      when 'a'
-        'acc'
-      when 'r'
-        'rej'
-      else
-        'unk'
-    end
+    ["Review status", TablesHelper::STATUS_MAP[status] || NONE ]
   end
 
   def team_name_formatted
@@ -142,7 +136,7 @@ class Team < ActiveRecord::Base
   end
 
   def category_formatted
-    ["Category",  TablesHelper::CATEGORY_MAP[category] || "[unknown]"]
+    ["Category",  TablesHelper::CATEGORY_MAP[category] || NONE]
   end
 
   def captain_name_formatted

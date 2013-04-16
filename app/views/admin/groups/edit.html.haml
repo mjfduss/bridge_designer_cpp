@@ -1,2 +1,21 @@
-%h1 Admin::Groups#edit
-%p Find me in app/views/admin/groups/edit.html.haml
+.big.bold Administer Groups
+%hr
+.bold.menu_label
+  Groups workspace:
+= form_for @edited_group, :url => admin_group_path, :method => :put do |f|
+  .para
+    = if @edited_group.new_record?
+      - f.label(:description, "New description:")
+    - else
+      - f.label(:description, "Edit description:") + f.hidden_field(:id, :value => @edited_group.id)
+    = f.text_field :description, :size => 40
+  .para
+  = f.submit @edited_group.new_record? ? "Add record" : "Update record", :name => 'update'
+  = sep
+  = f.submit @edited_group.new_record? ? "Get selected record" : "Get new or selected record", :name => 'get'
+  = sep
+  = f.submit "Delete selected records", :name => 'delete'
+  %hr
+  = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_group.errors }
+  .para
+    = render @groups

@@ -5,10 +5,10 @@ class Administrator < ActiveRecord::Base
   future_has_secure_password
 
   validates :name, :uniqueness => true
+  validates :password, :length => { :minimum => 6 }
 
   def self.authenticate (name, password)
     admin = Administrator.find_by_name(name)
-    logger.info admin ? "Found admin #{admin.inspect}" : "Didn't find admin"
     return admin ? admin.try(:authenticate, password) : nil
   end
 

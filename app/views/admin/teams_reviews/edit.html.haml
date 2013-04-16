@@ -4,7 +4,7 @@
   .centeredbox.bold Sorry. No teams in category #{TablesHelper::CATEGORY_MAP[@category]}!
 - else
   %a{ :name => 'top' }
-  - team_rank_items_table = @teams.zip(team_ranks(@teams, 1), Team.format_all_teams(@teams, @visible_attributes))
+  - team_rank_items_table = @teams.zip(team_ranks(@teams, 1), Team.format_all(@teams, @visible_attributes))
   .bold
     = TablesHelper::CATEGORY_MAP[@category] || 'Unknown category'
     = ": #{@teams.length} teams shown"
@@ -12,7 +12,7 @@
     - for row_team_rank_items in team_rank_items_table.each_slice(30)
       %tr
         - for team, rank, items in row_team_rank_items
-          %td{ :class => [team.status_id, 'index'] }
+          %td{ :class => [team.status_style_id, 'index'] }
             %a{ :class => 'index', :href => "##{team.name_key}" }= rank
   = form_tag admin_teams_review_path, :method => :put do
     = hidden_field_tag 'team_category', @category

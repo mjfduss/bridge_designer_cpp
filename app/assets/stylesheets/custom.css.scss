@@ -218,8 +218,13 @@ div.alert {
   color: #22f;
 }
 
-div.canvas {
+div.caption {
   position: relative;
   width: 300px;
   text-align: center;
 }
+
+div.canvas {
+  @extend div.caption;
+}
+

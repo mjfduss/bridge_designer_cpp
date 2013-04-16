@@ -172,11 +172,11 @@ window.standings_graph = (place, n_entries) ->
   marker_width = 20
   place = n_entries if place > n_entries
   spacing = tick_spacing(n_entries, 4)
-  y0 = 16
+  y0 = 32
   dy = Math.floor(label_inc * (n_entries - 1) / spacing)
   y1 = y0 + dy
   y = y0
-  html = "<div><div class=\"canvas\" style=\"height:#{y1 + y0}px;\">"
+  html = "<div class=\"canvas\" style=\"height:#{y1 + y0}px;\">"
   last_lbl = 0
   x = label_width
   for lbl in [1..n_entries] by spacing
@@ -195,5 +195,5 @@ window.standings_graph = (place, n_entries) ->
   y = y0 + Math.floor(dy * (place - 1) / (n_entries - 1))
   html += bar(x, y - Math.floor(pole_size * 0.5), marker_width, pole_size, marker_color)
   html += right_label(x + marker_width, y, label_width, "Your team...")
-  html + "</div><div class=\"canvas\">Standing \##{place} of #{n_entries}!</div></div>"
+  html + "</div><div class=\"caption\">Standing \##{place} of #{n_entries}!</div>"
 

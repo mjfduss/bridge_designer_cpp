@@ -20,6 +20,11 @@ module FactoryHelpers
       { :bridge => bridge, :analysis => WPBDC.analyze(bridge) }
     end
   end
+
+  def self.next_local_contest_code
+    @@code ||= 'AAAA'
+    @@code.next!
+  end
 end
 
 FactoryGirl.define do
@@ -58,6 +63,21 @@ FactoryGirl.define do
 
   sequence :phone_number do |n|
     sprintf '(555)555-%04d', n
+  end
+
+  factory :local_contest do
+    code { FactoryHelpers.next_local_contest_code }
+    sequence(:description) {|n| "Local contest #{n}"}
+    poc_first_name 'John'
+    poc_middle_initial 'Q'
+    poc_last_name 'Public'
+    poc_position 'Bridge Contest Director'
+    organization 'West Virgina'
+    city 'Arlington'
+    state 'VA'
+    zip '123451234'
+    phone '1231231234'
+    link 'ressler@usma.edu'
   end
 
   factory :member do

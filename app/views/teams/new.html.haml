@@ -5,7 +5,7 @@
       .big
         Team Name:
         != oops_on(@team, [:name, :name_key])
-        = f.text_field :name, { :size => 16 }
+        = f.text_field :name, :size => 16
       .para.small.subdued
         \-- Type a Team Name (up to 15 characters). Do not use anyone's last name! 
         %br
@@ -22,4 +22,4 @@
         = render :partial => "shared/member", |
                  :locals => { :mf => mf, :member => @team.captain } |
     .para.alignright
-      = f.submit TablesHelper::ACCEPT, { :class => 'btn' }
+      = f.submit TablesHelper::ACCEPT, :class => 'btn'

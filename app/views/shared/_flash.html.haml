@@ -1,0 +1,11 @@
+- flash_p = !flash.empty?
+- errs_p = errors && !errors.empty?
+- if flash_p || errs_p
+  %ul
+    - if flash_p
+      - flash.each do |key, val|
+        %li== #{val}
+      - if errs_p
+        - errors.full_messages.each do |msg|
+          %li== #{msg}
+  %hr

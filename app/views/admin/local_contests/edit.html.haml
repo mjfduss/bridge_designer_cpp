@@ -1,0 +1,53 @@
+.big.bold Administer Local Contests
+%hr
+.bold.menu_label
+  Local contest workspace:
+= form_for @edited_local_contest, :url => admin_local_contest_path, :method => :put do |f|
+  .para
+    = if @edited_local_contest.new_record?
+      - "New local contest:"
+    - else
+      - "Edit local contest:".html_safe + f.hidden_field(:id, :value => @edited_local_contest.id)
+  %table
+    %tr
+      %td= f.label(:code, 'Code:')
+      %td{ :colspan => 3 }
+        = f.text_field :code, :size => 8
+        = sep
+        = f.label(:description, 'Description:')
+        = f.text_field :description, :size => 40
+    %tr
+      %td= "POC Name:".html_safe
+      %td{ :colspan => 3 }
+        = f.text_field :poc_first_name, :size => 30
+        = f.text_field :poc_middle_initial, :size => 1
+        = f.text_field :poc_last_name, :size => 30
+    %tr
+      %td= f.label("Position:")
+      %td= f.text_field :poc_position, :size => 30
+      %td= f.label("Organization:")
+      %td= f.text_field :organization, :size => 30
+    %tr
+      %td= f.label("City:")
+      %td= f.text_field :city, :size => 30
+      %td= f.label("State:")
+      %td
+        = f.text_field :state, :size => 2
+        = sep
+        = f.label("Zip:")
+        = f.text_field :zip, :size => 9
+    %tr
+      %td= f.label("Email/web:")
+      %td= f.text_field :link, :size => 30
+      %td= f.label("Phone:")
+      %td= f.text_field :phone, :size => 30
+  .para
+    = f.submit @edited_local_contest.new_record? ? "Add record" : "Update record", :name => 'update'
+    = sep
+    = f.submit @edited_local_contest.new_record? ? "Get selected record" : "Get new or selected record", :name => 'get'
+    = sep
+    = f.submit "Delete selected records", :name => 'delete'
+    %hr
+    = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
+  .para
+    = render @local_contests

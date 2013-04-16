@@ -15,4 +15,7 @@ module SharedHelper
     @@sep ||= ('&nbsp;' * 2).html_safe
   end
 
+  def team_review_group_list_data(groups)
+    ( groups.map { |g| [g.description, g.id] } ).unshift( ['Select Group',  '-'] )
+  end
 end

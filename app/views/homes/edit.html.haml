@@ -24,59 +24,57 @@
         - else
           %li{ :class => 'status_list' } You have not yet submitted a design. Go for it!
     %td{ :width => '400px', :valign => 'top' }
-      - if flash.empty? && @result.nil?
-        &nbsp;
+      - if @result.nil?
+        = sep
       - else
         .para.bold
           Messages for your team:
-        %ul
-          - flash.each do |key, items|
-            - items.each do |text|
-              %li{ :class => "message #{key}"}= text
-          - case @result
-            - when :get_standings
-              -# Do nothing here. Handled below the %ul
-            - when :new_best
-              - if @old_best
-                %li{ :class => 'msg_list' }== Well done! You improved your old best #{to_cost(@old_best)} to #{to_cost(@analysis[:score])}.
-              -else
-                %li{ :class => 'msg_list' } Well done! Your first design is a success!
-              - if @standing
-                %li{ :class => 'msg_list' }== Your new standing is #{@standing} out of #{@out_of} teams.
-            - when :not_new_best
-              %li{ :class => 'msg_list' }== Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
-              - if @best_for_scenario
-                %li{ :class => 'msg_list' }== You improved the old cost of #{to_cost(@best_for_scenario)} for this scenario.
-              %li{ :class => 'msg_list' } But your team's overall best remains the same.
-            - when :no_improvement
-              %li{ :class => 'msg_list' }== Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
-              %li{ :class => 'msg_list' }== The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.
-            - when :duplicate
-              %li{ :class => 'msg_list' } Oh, no! This bridge is the same as one already submitted.
-              - if @standing
-                %li{ :class => 'msg_list' }== With its cost of #{to_cost(@analysis[:score])}, your team would stand #{@standing} out of #{@out_of} teams if it weren't a duplicate.
-            - when :no_bridge
-              %li{ :class => 'msg_list' } Oops! You forgot to choose a bridge file before pressing Submit.
-              %li{ :class => 'msg_list' } Please choose your bridge file and Submit again.
-            - when :bridge_malformed
-              %li{ :class => 'msg_list' } Ouch! The file you submitted is not a bridge!
-              %li{ :class => 'msg_list' } Choose your WPBD 2013 bridge file and Submit again.
-            - when :bridge_wrong_version
-              %li{ :class => 'msg_list' } Ugh! The file you submitted is from the wrong version of the West Point Bridge Designer!
-              %li{ :class => 'msg_list' } Choose your WPBD 2013 bridge file and Submit again.
-            - when :bridge_failed_test
-              %li{ :class => 'msg_list' } Drat! Your bridge failed the Load Test!
-              %li{ :class => 'msg_list' } Go back to the drawing board, build a bridge that passes the Load Test, Save, and Submit again.
-            - else
-              %li{ :class => 'msg_list'} [ bad @result ]
-        - if @result == :get_standings
-          - if @standing
-            - if @standing > 0
-              %script== document.write(standings_graph(#{@standing}, #{@out_of}))
-            - else
+        - if @result == :get_standings && @standing && @standing > 0
+          %script== document.write(standings_graph(#{@standing}, #{@out_of}))
+        - else
+          %ul
+            - if @result == :get_standings && !@standing
               %li{ :class => 'msg_list' } Your team must submit a design to have a standing!
-          - else
-            %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
+            - if @result == :get_standings && @standing <= 0
+              %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
+            - case @result
+              - when :get_standings
+                -# Do nothing here. Handled below the %ul
+              - when :new_best
+                - if @old_best
+                  %li{ :class => 'msg_list' }== Well done! You improved your old best #{to_cost(@old_best)} to #{to_cost(@analysis[:score])}.
+                -else
+                  %li{ :class => 'msg_list' } Well done! Your first design is a success!
+                - if @standing
+                  %li{ :class => 'msg_list' }== Your new standing is #{@standing} out of #{@out_of} teams.
+              - when :not_new_best
+                %li{ :class => 'msg_list' }== Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
+                - if @best_for_scenario
+                  %li{ :class => 'msg_list' }== You improved the old cost of #{to_cost(@best_for_scenario)} for this scenario.
+                %li{ :class => 'msg_list' } But your team's overall best remains the same.
+              - when :no_improvement
+                %li{ :class => 'msg_list' }== Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
+                %li{ :class => 'msg_list' }== The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.
+              - when :duplicate
+                %li{ :class => 'msg_list' } Oh, no! This bridge is the same as one already submitted.
+                - if @standing
+                  %li{ :class => 'msg_list' }== With its cost of #{to_cost(@analysis[:score])}, your team would stand #{@standing} out of #{@out_of} teams if it weren't a duplicate.
+              - when :no_bridge
+                %li{ :class => 'msg_list' } Oops! You forgot to choose a bridge file before pressing Submit.
+                %li{ :class => 'msg_list' } Please choose your bridge file and Submit again.
+              - when :bridge_malformed
+                %li{ :class => 'msg_list' } Ouch! The file you submitted is not a bridge!
+                %li{ :class => 'msg_list' } Choose your WPBD 2013 bridge file and Submit again.
+              - when :bridge_wrong_version
+                %li{ :class => 'msg_list' } Ugh! The file you submitted is from the wrong version of the West Point Bridge Designer!
+                %li{ :class => 'msg_list' } Choose your WPBD 2013 bridge file and Submit again.
+              - when :bridge_failed_test
+                %li{ :class => 'msg_list' } Drat! Your bridge failed the Load Test!
+                %li{ :class => 'msg_list' } Go back to the drawing board, build a bridge that passes the Load Test, Save, and Submit again.
+              - when :save_failed
+                %li{ :class => 'msg_list' } Something went wrong saving your bridge. Sorry. Try again and contact the contest officials if it doesn't work.
+              - else
+                %li{ :class => 'msg_list'} [ bad @result = #{@result} ]
 .para
   = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
     .para.bold

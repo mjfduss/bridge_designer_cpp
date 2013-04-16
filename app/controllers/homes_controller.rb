@@ -16,9 +16,12 @@ class HomesController < ApplicationController
 
     # Else if update contact information...
     elsif !params[:update_contact].blank?
-      c = @team.category == 'i' ? :team_completions : :captain_completions
-      redirect_to :controller => c, :action => :edit
-
+      case @team.category
+        when 'e'
+          redirect_to :controller => :captain_completions, :action => :edit, :id => @team.captain.id
+        when 'i'
+          redirect_to :controller => :team_completions, :action => :edit, :id => @team.id
+      end
     # Else if get standings...
     elsif !params[:get_standings].blank?
       @best = @team.best_score
@@ -58,12 +61,13 @@ class HomesController < ApplicationController
               # No duplicate. Build a new design model instance.
               sequence = SequenceNumber.get_next(:design)
               logger.info "Analysis: #{@analysis.inspect}"
-              @design = Design.create(:team_id => params[:id],
-                                      :score => @analysis[:score],
+              @design = Design.create(:score => @analysis[:score],
                                       :sequence => sequence,
                                       :scenario => @analysis[:scenario],
                                       :hash_string => @analysis[:hash],
-                                      :bridge => bridge)
+                                      :bridge => bridge) do |d|
+                d.team = @team
+              end
               if @design.save
                 Team.increment_counter :submits, @team.id
 
@@ -80,7 +84,6 @@ class HomesController < ApplicationController
                 end
               else
                 logger.error "design save failed: #{@design.inspect}"
-                add_flash :error, "Your bridge could not be saved. Please try again later."
                 @result = :save_failed
               end
 

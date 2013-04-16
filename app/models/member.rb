@@ -34,7 +34,7 @@ class Member < ActiveRecord::Base
     v.validates :phone, :presence => true, :length => { :maximum => 16 }
     v.validates :city, :presence => true, :length => { :maximum => 40 }
     v.validates :state,  :presence => true, :length => { :maximum => 40 }
-    v.validates :zip,  :presence => true, :length => { :maximum => 16 }
+    v.validates :zip,  :presence => true, :length => { :minimum => 5, :maximum => 16 }
     v.validates :country, :presence => true, :length => { :maximum => 40 }
     v.validates :school,  :presence => true, :length => { :maximum => 40 }
     v.validates :school_city,  :presence => true, :length => { :maximum => 40 }
