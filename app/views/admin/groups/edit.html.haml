@@ -1,8 +1,8 @@
 .big.bold Administer Groups
 %hr
-.bold.menu_label
-  Groups workspace:
+.bold.menu_label Groups workspace:
 = form_for @edited_group, :url => admin_group_path, :method => :put do |f|
+  = hidden_field_tag :group_filter, @filter
   .para
     = if @edited_group.new_record?
       - f.label(:description, "New description:")
@@ -17,5 +17,7 @@
   = f.submit "Delete selected records", :name => 'delete'
   %hr
   = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_group.errors }
+  - if @filter =~ /\S/
+    .para.bold Filter '#{@filter}'
   .para
     = render @groups

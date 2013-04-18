@@ -1,5 +1,5 @@
 - # This is an HTML5 compliant version of the administrator page that doesn't work as
 - # well as the frameset version. It's here as a future fallback because frameset is deprecated.
 .admin_main
-  = render :partial => 'shared/admin_main_menu', :locals => { :target => 'admin_edit' }
+  = render :partial => 'shared/admin_main_menu', :locals => { :state => @state, :target => 'admin_edit' }
   %iframe{ :class => 'admin_edit', :name => 'admin_edit', :src => edit_admin_server_status_path }

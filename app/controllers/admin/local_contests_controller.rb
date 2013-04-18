@@ -1,7 +1,8 @@
 class Admin::LocalContestsController < Admin::ApplicationController
 
   def edit
-    @local_contests = LocalContest.all
+    filter = params[:local_contest_filter]
+    @local_contests = filter =~ /\S/ ? LocalContest.where('code LIKE ?', filter) : LocalContest.all
     @edited_local_contest = LocalContest.new
   end
 
@@ -40,7 +41,9 @@ class Admin::LocalContestsController < Admin::ApplicationController
       end
       @edited_local_contest = LocalContest.new
     end
-    @local_contests = LocalContest.all
+    @min_teams = params[:min_teams].to_i
+    @filter =  params[:local_contest_filter]
+    @local_contests = LocalContest.fetch(@filter, @min_teams)
     render :action => :edit
   end
 end

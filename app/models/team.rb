@@ -55,7 +55,7 @@ class Team < ActiveRecord::Base
   end
 
   def best_design
-    designs.select('score').order('score, sequence ASC').limit(1).first
+    designs.select('score').order('score, sequence ASC').first
   end
 
   def best_score
@@ -75,7 +75,7 @@ class Team < ActiveRecord::Base
   end
 
   def best_score_for_scenario(scenario)
-    d = designs.select('score').where(:scenario => scenario).order('score, sequence ASC').limit(1).first
+    d = designs.select('score').where(:scenario => scenario).order('score, sequence ASC').first
     return d ? d.score : nil
   end
 
@@ -97,22 +97,33 @@ class Team < ActiveRecord::Base
     status == 'a'
   end
 
+  def rejected?
+    status == 'r'
+  end
+
   def self.authenticate (name, password)
     team = find_by_name_key(to_name_key(name))
     return team ? team.try(:authenticate, password) : nil
   end
 
-  def self.get_top_teams(category, limit)
-    limit = 50 unless limit > 0
+  def self.get_top_teams(category, statuses, limit)
+    return [] if statuses.empty?
+    return [] unless %w(- e i 2).include?(category)
+    limit = 50 unless limit.to_i > 0
     # PSQL specific
-    Team.includes(:teams, :designs, :affiliations).find_by_sql("select * from
+    Team.find_by_sql("select * from
       (select distinct on (d.team_id) t.*, d.score, d.sequence
         from teams t inner join designs d
         on t.id = d.team_id
         where t.category = '#{category}'
+          and t.status in (#{statuses.map {|s| "'#{s}'"}.join(",") })
         order by d.team_id, d.score asc, d.sequence asc
         limit #{limit}) tmp
       order by score asc, sequence asc")
+  end
+
+  def scoreboard_data
+    { }
   end
 
   def status_style_id

@@ -7,68 +7,68 @@
       = render :partial => "shared/submit_link", :locals => { :name => 'check_servers', :text => "Check servers" }
     .menu_item
       .menu_label Review (Accept/Reject) top teams:
-      = select_tag('team_category', options_for_select(TablesHelper::CATEGORY_PAIRS, '-'))
+      = select_tag('team_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['team_category'] || '-'))
       = render :partial => "shared/submit_link", :locals => { :name => 'get_team_review', :text => "Go" }
     .menu_item
       .menu_label Preview new standings from database:
       .wrap
-        = select_tag 'review_category', options_for_select(TablesHelper::STANDINGS_PAIRS, '-')
+        = select_tag 'review_category', options_for_select(TablesHelper::STANDINGS_PAIRS, state['review_category'] || '-')
         = render :partial => "shared/submit_link", :locals => { :name => 'get_standings_review', :text => "Go" }
       .wrap
         Options:
-        = select_tag 'standings_options', options_for_select(TablesHelper::STANDINGS_OPTIONS_PAIRS, '-')
+        = select_tag 'standings_options', options_for_select(TablesHelper::STANDINGS_OPTIONS_PAIRS, state['standings_options'] || '-')
     .menu_item
       .menu_label View currently posted standings:
       .wrap
-        = select_tag('posted_category', options_for_select(TablesHelper::STANDINGS_PAIRS, '-'))
+        = select_tag('posted_category', options_for_select(TablesHelper::STANDINGS_PAIRS, state['posted_category'] || '-'))
         = render :partial => "shared/submit_link", :locals => { :name => 'get_posted_standings', :text => "Go" }
     .menu_item
       .menu_label Find any team:
       .wrap
         Team Name like:
-        = text_field_tag('team_name_likeness', '', :size => 12)
+        = text_field_tag('team_name_likeness', state['team_name_likeness'] || '', :size => 12)
       .wrap
         Category:
-        = select_tag 'find_category', options_for_select(TablesHelper::CATEGORY_PAIRS, '-')
+        = select_tag 'find_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['posted_category'] || '-')
         = render :partial => "shared/submit_link", :locals => { :name => 'get_any_team', :text => "Go" }
     .menu_item
       .menu_label Administer local contests:
       .wrap
         Filter:
-        = text_field_tag('local_contest_filter', '', :size => 4)
+        = text_field_tag('local_contest_filter', state['local_contest_filter'] || '', :size => 4)
         &nbsp;&nbsp;Min # teams:
-        = text_field_tag('min_teams', '0', :size => 2)
+        = text_field_tag('min_teams', state['min_teams'] || '0', :size => 2)
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contests', :text => "Go" }
     .menu_item
       .menu_label Administer groups:
       .wrap
         Filter:
-        = text_field_tag('group_filter', '', :size => 4)
+        = text_field_tag('group_filter', state['group_filter'] || '', :size => 4)
         = render :partial => "shared/submit_link", :locals => { :name => 'get_groups', :text => "Go" }
     .menu_item
       .menu_label Find teams in local contest:
       .wrap
         Local contest code:
-        = text_field_tag('local_contest_code', '', :size => 4)
+        = text_field_tag('local_contest_code', state['local_contest_code'] || '', :size => 4)
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contest_teams', :text => "Go" }
     .menu_item
       .menu_label Get email menu for leaders:
       .wrap
         Show top:
-        = text_field_tag('min_teams', '20', :size => 2)
+        = text_field_tag('mail_teams', state['mail_teams'] || '10', :size => 2)
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contest_teams', :text => "Go" }
     %hr
     .menu_item
       .menu_label Options
       .wrap
         Review and standings cutoff:
-        = select_tag 'standings_cutoff', options_for_select(TablesHelper::STANDINGS_CUTOFF_PAIRS, 50)
+        = select_tag 'standings_cutoff', options_for_select(TablesHelper::STANDINGS_CUTOFF_PAIRS, state['standings_cutoff'] || 50)
     .menu_item
-      .wrap Visible columns (Ctrl-click to select):
+      .wrap Visible attributes (Ctrl-click to select):
       %table
         %tr
           %td
-            = select_tag 'visible_attributes', options_for_select(TablesHelper::TEAM_ATTRIBUTE_PAIRS, TablesHelper::TEAM_ATTRIBUTE_DEFAULTS), :multiple => true, :size => 11
+            = select_tag 'visible_attributes', options_for_select(TablesHelper::TEAM_ATTRIBUTE_PAIRS, state['visible_attributes'] || TablesHelper::TEAM_ATTRIBUTE_DEFAULTS), :multiple => true, :size => 11
           %td
             = button_tag 'Select all', :type => 'button', :onclick => "set_all_in_list('visible_attributes', true)".html_safe
             %br
@@ -76,5 +76,14 @@
             %br
             = button_tag 'Reset defaults', :type => 'button', :onclick => "set_list('visible_attributes', #{TablesHelper::TEAM_ATTRIBUTE_SELECTED})".html_safe
     .menu_item
-      .wrap Visible teams:
-      = select_tag 'visible_status', options_for_select(TablesHelper::STATUS_PAIRS, TablesHelper::STATUS_PAIR_DEFAULTS), :multiple => true, :size => 3
+      .wrap Visible teams (Ctrl-click to select):
+      %table
+        %tr
+          %td
+            = select_tag 'visible_status', options_for_select(TablesHelper::STATUS_PAIRS, state['visible_status'] || TablesHelper::STATUS_DEFAULTS), :multiple => true, :size => 3
+          %td
+            = button_tag 'Select all', :type => 'button', :onclick => "set_all_in_list('visible_status', true)".html_safe
+            %br
+            = button_tag 'Clear all', :type => 'button', :onclick => "set_all_in_list('visible_status', false)".html_safe
+            %br
+            = button_tag 'Reset defaults', :type => 'button', :onclick => "set_list('visible_status', #{TablesHelper::STATUS_SELECTED})".html_safe

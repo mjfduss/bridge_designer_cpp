@@ -2,7 +2,9 @@ module Admin::TeamsReviewsHelper
 
   # Assumes the teams list is already sorted ascending on score.
   # Returns an array parallel to teams that holds the correct rank
-  # for each or 'x' if no rank is assigned.  For a team to be
+  # for each, :x if the record is rejected and :o if it is either
+  # accepted and hidden by better scores in its group or unreviewed
+  # and would be hidden even if it were accepted.  For a team to be
   # ranked, it must be accepted and there must be no more than
   # max_ranked_in_group - 1 ranked teams in the same group before it.
   def team_ranks(teams, max_ranked_in_group)
@@ -10,7 +12,22 @@ module Admin::TeamsReviewsHelper
     group_counts = Hash.new(0)
     teams.map do |team|
       g = team.group
-      team.status == 'a' && (g.nil? || (group_counts[g.id] += 1) <= max_ranked_in_group) ? ++rank : 'x'
+      case team.status
+        when 'a'
+          if g.nil? || (group_counts[g.id] += 1) <= max_ranked_in_group
+            rank += 1
+          else
+            :o
+          end
+        when 'r'
+          :x
+        when '-'
+          if g.nil? || group_counts[g.id] <= max_ranked_in_group
+            :x # Would be visible if this alone were selected.
+          else
+            :o # Would be hidden even if accepted.
+          end
+      end
     end
   end
 

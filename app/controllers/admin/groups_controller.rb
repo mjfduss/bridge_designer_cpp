@@ -1,8 +1,9 @@
 class Admin::GroupsController < Admin::ApplicationController
 
   def edit
-    @groups = Group.all
     @edited_group = Group.new
+    @filter = params[:group_filter]
+    @groups = Group.fetch @filter
   end
 
   def update
@@ -40,7 +41,8 @@ class Admin::GroupsController < Admin::ApplicationController
       end
       @edited_group = Group.new
     end
-    @groups = Group.all
+    @filter = params[:group_filter]
+    @groups = Group.fetch @filter
     render :action => :edit
   end
 end

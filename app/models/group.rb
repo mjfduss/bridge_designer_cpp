@@ -8,4 +8,7 @@ class Group < ActiveRecord::Base
 
   validates :description, :uniqueness => true, :length => { :maximum => 40 }
 
+  def self.fetch(filter)
+    filter =~ /\S/ ? Group.where('description SIMILAR TO ?', filter) : Group.all
+  end
 end

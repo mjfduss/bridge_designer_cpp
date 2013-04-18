@@ -7,22 +7,29 @@
       .para.bold
         Your team status:
       %ul
-        - case @team.category
-          - when 'e'
-            %li{ :class => 'status_list' } Registered in US/PR Student Competition.
-            %li{ :class => 'status_list' } Eligible for national recognition.
-          - when 'i'
-            %li{ :class => 'status_list' } Registered in Open Competition.
-          - when '2'
-            %li{ :class => 'status_list' } Congratulations! You made the semi-finals!
+        - if @team.rejected?
+          %li.status_list.bold.trouble
+            Regretfully, your team has been disqualified by the judges.
+          %li.status_list
+            It will not be possible for team '#{@team.name}' to participate
+            further in the contest.
+        -else
+          - case @team.category
+            - when 'e'
+              %li.status_list Registered in US/PR Student Competition.
+              %li.status_list Eligible for national recognition.
+            - when 'i'
+              %li.status_list Registered in Open Competition.
+            - when '2'
+              %li.status_list Congratulations! You made the semi-finals!
+            - else
+              %li.status_list Hmmm... I don't know your team's category.
+          - unless @team.local_contests.empty?
+            %li.status_list== Your local contests: #{local_contest_list(@team)}
+          - if @best
+            %li.status_list== Your current best design's cost is #{to_cost(@best)}.
           - else
-            %li{ :class => 'status_list' } Hmmm... I don't know your team's category.
-        - unless @team.local_contests.empty?
-          %li{ :class => 'status_list' }== Your local contests: #{local_contest_list(@team)}
-        - if @best
-          %li{ :class => 'status_list' }== Your current best design's cost is #{to_cost(@best)}.
-        - else
-          %li{ :class => 'status_list' } You have not yet submitted a design. Go for it!
+            %li.status_list You have not yet submitted a design. Go for it!
     %td{ :width => '400px', :valign => 'top' }
       - if @result.nil?
         = sep
@@ -77,24 +84,26 @@
                 %li{ :class => 'msg_list'} [ bad @result = #{@result} ]
 .para
   = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
-    .para.bold
-      Submit a design (West Point Bridge Designer 2012 only):
-    .para
-      = f.file_field :bridge
-    .para
-      = f.submit 'Submit your design', :class => 'btn'
+    - unless @team.rejected?
+      .para.bold
+        Submit a design (West Point Bridge Designer 2013 only):
+      .para
+        = f.file_field :bridge
+      .para
+        = f.submit 'Submit your design', :class => 'btn'
     %hr
     .para.bold
       Menu options
     %table
-      %tr
-        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
-                                            :locals => { :name => 'update_contact', :text => "Update contact information" } |
-        %td{ :class => 'link_menu'} So we can find you when you win!
-      %tr
-        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
-                                            :locals => { :name => 'get_standings', :text => "Check team standings" } |
-        %td{ :class => 'link_menu'} To see how your team's best design is doing in the national contest. 
+      - unless @team.rejected?
+        %tr
+          %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
+                                              :locals => { :name => 'update_contact', :text => "Update contact information" } |
+          %td{ :class => 'link_menu'} So we can find you when you win!
+        %tr
+          %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
+                                              :locals => { :name => 'get_standings', :text => "Check team standings" } |
+          %td{ :class => 'link_menu'} To see how your team's best design is doing in the national contest.
       %tr
         %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
                                             :locals => { :name => 'logout', :text => "Log out" } |

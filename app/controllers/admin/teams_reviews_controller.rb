@@ -5,6 +5,7 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
 
   def update
     if !params[:process].blank?
+      # Check for controls that have changed from their initial value and update only those records.
       params.each_pair do |key, val|
           /^(\d+)_([a-zA-Z0-9]+)$/.match(key) do |m|
             id = m[1].to_i
@@ -18,8 +19,9 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
       end
       @category = params[:team_category]
       @standings_cutoff = params[:standings_cutoff].to_i
-      @teams = Team.get_top_teams(@category, @standings_cutoff)
+      @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
+      @teams = Team.get_top_teams(@category, @visible_status, @standings_cutoff)
       @groups = Group.all
       render :action => :edit
     elsif !params[:retrieve].blank?

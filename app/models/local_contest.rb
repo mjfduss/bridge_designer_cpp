@@ -29,6 +29,11 @@ class LocalContest < ActiveRecord::Base
   validates :phone, :length => { :maximum => 16 }
   validates :link, :length => { :maximum => 40 }
 
+  def self.fetch(filter, min_teams)
+    local_contests = filter =~ /\S/ ? LocalContest.where('code SIMILAR TO ?', filter) : LocalContest.all
+    min_teams > 0 ? local_contests.select{|c| c.affiliations.count >= min_teams } : local_contests
+  end
+
   def formatted(visible = %w(description poc poc_position phone link created))
     visible.map { |item| send("#{item}_formatted") }
   end

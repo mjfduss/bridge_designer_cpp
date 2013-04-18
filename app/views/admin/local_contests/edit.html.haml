@@ -3,11 +3,14 @@
 .bold.menu_label
   Local contest workspace:
 = form_for @edited_local_contest, :url => admin_local_contest_path, :method => :put do |f|
+  = hidden_field_tag :local_contest_filter, @filter
+  = hidden_field_tag :min_teams, @min_teams
   .para
-    = if @edited_local_contest.new_record?
-      - "New local contest:"
+    - if @edited_local_contest.new_record?
+      New local contest:
     - else
-      - "Edit local contest:".html_safe + f.hidden_field(:id, :value => @edited_local_contest.id)
+      Edit local contest:
+      = f.hidden_field(:id, :value => @edited_local_contest.id)
   %table
     %tr
       %td= f.label(:code, 'Code:')
@@ -49,5 +52,9 @@
     = f.submit "Delete selected records", :name => 'delete'
     %hr
     = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
+  - if @min_teams > 0
+    .para.bold Only contests with #{@min_teams} or more teams are shown.
+  - if @filter =~ /\S/
+    .para.bold Filter '#{@filter}'.
   .para
-    = render @local_contests
+    = render @local_contests.select {|c| c.affiliations.count >= @min_teams }

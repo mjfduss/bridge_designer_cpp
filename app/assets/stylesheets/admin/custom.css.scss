@@ -69,7 +69,7 @@ td.review {
 }
 
 /* Must match TablesHelper::STATUS_PAIRS */
-td.none {
+td.unreviewed {
   @extend td.review;
   width: 8px;
   background-color: #777;
@@ -77,17 +77,17 @@ td.none {
 }
 
 td.accepted {
-  @extend td.none;
+  @extend td.unreviewed;
   background-color: #2a2;
 }
 
 td.rejected {
-  @extend td.none;
+  @extend td.unreviewed;
   background-color: #a22;
 }
 
 td.hidden {
-  @extend td.none;
+  @extend td.unreviewed;
   background-color: #181;
 }
 /* End must match TablesHelper::STATUS_PAIRS */

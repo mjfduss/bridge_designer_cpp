@@ -197,14 +197,14 @@ module TablesHelper
 
   STATUS_PAIRS =
     [
-      ["None", "-"],
+      ["Unreviewed", "-"],
       ["Accepted", "a"],
       ["Rejected", "r"],
       ["Hidden",   "h"],
     ]
 
-  STATUS_PAIR_DEFAULTS = %w{accepted rejected}
-
+  STATUS_DEFAULTS = %w{- a r h}
+  STATUS_SELECTED = STATUS_PAIRS.map { |p| STATUS_DEFAULTS.include? p[1] }
   STATUS_MAP = Hash[ STATUS_PAIRS.map{ |p| [p[1], p[0]] } ]
 
   # For factories to generate randomized values

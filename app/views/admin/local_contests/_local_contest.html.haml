@@ -4,6 +4,8 @@
       = check_box_tag 'select[]', local_contest.id
       = local_contest.code
       = sep
+      (#{local_contest.affiliations.count} teams)
+      = sep
       %a{ :class => 'review', :href => "/standings/local/#{local_contest.code}.htm" }= "[view standings]"
       = sep
       %a{ :class => 'review', :href => '#top' }= "[top]"
