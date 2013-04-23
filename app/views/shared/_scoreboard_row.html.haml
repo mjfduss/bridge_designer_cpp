@@ -1,0 +1,33 @@
+- case row_height(row)
+- when 1
+  %tr{ :class => i.even? ? :highlight : :plain }
+    %td.centered
+      = row[:rank]
+      - if row[:score]
+        %br
+        %span.tiny.gray= format "$%.2f", 0.01 * row[:score]
+    %td= row[:team_name]
+    - if category == 'c'
+      %td.centered= TablesHelper::CATEGORY_MAP[row[:category]]
+    %td= row[:members][0]
+    %td= row[:school][0]
+    %td= row[:city_state][0]
+    %td= row[:submitted].to_s(:nice)
+- when 2
+  %tr{ :class => i.even? ? :highlight : :plain }
+    %td.centered{ :rowspan => 2 }
+      = row[:rank]
+      - if row[:score]
+        %br
+        %span.tiny.gray= format "$%.2f", 0.01 * row[:score]
+    %td{ :rowspan => 2 }= row[:team_name]
+    - if category == 'c'
+      %td.centered{ :rowspan => 2 }= TablesHelper::CATEGORY_MAP[row[:category]]
+    = render :partial => 'admin/standings_reviews/two_high_cell', :locals => { :i => 0, :contents => row[:members] }
+    = render :partial => 'admin/standings_reviews/two_high_cell', :locals => { :i => 0, :contents => row[:school] }
+    = render :partial => 'admin/standings_reviews/two_high_cell', :locals => { :i => 0, :contents => row[:city_state] }
+    %td{ :rowspan => 2 }= row[:submitted].to_s(:nice)
+  %tr{ :class => i.even? ? :highlight : :plain }
+    = render :partial => 'admin/standings_reviews/two_high_cell', :locals => { :i => 1, :contents => row[:members] }
+    = render :partial => 'admin/standings_reviews/two_high_cell', :locals => { :i => 1, :contents => row[:school] }
+    = render :partial => 'admin/standings_reviews/two_high_cell', :locals => { :i => 1, :contents => row[:city_state] }
