@@ -8,7 +8,7 @@ module SharedHelper
   end
 
   def insert_html_breaks(obj)
-    if obj.kind_of?(Array) then obj.join('<br>').html_safe else obj end
+    if obj.kind_of?(Array) then obj.join(', ').html_safe else obj end
   end
 
   def sep
@@ -16,6 +16,7 @@ module SharedHelper
   end
 
   def team_review_group_list_data(groups)
-    ( groups.map { |g| [g.description, g.id] } ).unshift( ['Select Group',  '-'] )
+    pairs = groups ? groups.map { |g| [g.description, g.id] } : []
+    pairs.unshift( ['Select Group',  '-'] )
   end
 end

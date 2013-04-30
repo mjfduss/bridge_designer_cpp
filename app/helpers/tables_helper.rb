@@ -146,7 +146,7 @@ module TablesHelper
   STANDINGS_PAIRS =
     [
       ["Select Standings", "-"],
-      ["All Categories", "a"],
+      ["Combined US/PR-Open", "c"],
       ["US/PR Students", "e"],
       ["Open Competition", "i"],
       ["Semifinalists", "2"],

@@ -1,4 +1,5 @@
-require "tables_helper"
+require 'tables_helper'
+require 'standing'
 
 module FactoryHelpers
   def self.read_bridge(key, good = true)
@@ -17,7 +18,7 @@ module FactoryHelpers
     if f
       bridge = f.read
       WPBDC.endecrypt(bridge);
-      { :bridge => bridge, :analysis => WPBDC.analyze(bridge) }
+      { :bridge => bridge, :analysis => WPBDC.analyze(bridge), :good => good }
     end
   end
 
@@ -99,6 +100,7 @@ FactoryGirl.define do
     category { generate :team_category }
     school_state { state }
     res_state { state }
+    rank 0
     team
 
     trait :non_captain do
@@ -121,7 +123,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |team, e|
-      FactoryGirl.create_list(:member, e.member_count, :team => team)
+      (0..e.member_count - 1).each {|rank| FactoryGirl.create(:member, :team => team, :rank => rank) }
     end
 
     trait :ineligible do
@@ -147,6 +149,10 @@ FactoryGirl.define do
     scenario { bridge_data[:analysis][:scenario] }
     hash_string { bridge_data[:analysis][:hash] }
     team
+
+    after(:create) do |design, e|
+      Standing.insert(e.team, design) if e.bridge_data[:good]
+    end
 
     trait :bad do
       ignore do

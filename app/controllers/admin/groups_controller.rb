@@ -36,7 +36,7 @@ class Admin::GroupsController < Admin::ApplicationController
       if s.blank?
         flash.now[:alert] = 'No groups were selected for deletion.'
       else
-        Group.delete(s)
+        Group.destroy(s) # Destroy sets foreign keys in teams to null
         flash.now[:alert] = 'Selected groups were deleted.'
       end
       @edited_group = Group.new

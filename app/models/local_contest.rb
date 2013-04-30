@@ -34,6 +34,11 @@ class LocalContest < ActiveRecord::Base
     min_teams > 0 ? local_contests.select{|c| c.affiliations.count >= min_teams } : local_contests
   end
 
+  def self.get_teams(code, categories, statuses, limit)
+    local_contest = LocalContest.find_by_code(code.strip.upcase);
+    local_contest.nil? ? [] : local_contest.teams.ordered_by_name
+  end
+
   def formatted(visible = %w(description poc poc_position phone link created))
     visible.map { |item| send("#{item}_formatted") }
   end

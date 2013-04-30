@@ -25,18 +25,30 @@ div.menu_item {
   margin-bottom: 10px;
 }
 
-div.centerbox {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
+span.ins, tr.ins {
+  background-color: #ccffcc;
 }
 
-div.centeredbox {
+span.del, tr.del {
+  text-decoration: line-through;
+  background-color: #ffcccc;
+}
+
+div.notice {
+  background-color: #ffcccc;
+  width:100%;
+  margin-top: 120px;
+  text-align: center;
   padding: 16px;
-  margin: 20%;
-  border: solid black 2px;
-  text-align: left;
-  display: inline-block;
+  font-weight: bold;
+}
+
+table.centered_box {
+  border: 2px solid black;
+  margin-top: 120px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 4px;
 }
 
 iframe.admin_edit {
@@ -65,27 +77,24 @@ table.review, table.index {
 
 td.review {
   padding: 2px 4px 2px 4px;
-  width: 49%;
 }
 
 /* Must match TablesHelper::STATUS_PAIRS */
 td.unreviewed {
   @extend td.review;
-  width: 8px;
+  width: 24px;
   background-color: #777;
   color: #fff;
+  text-align: center;
 }
-
 td.accepted {
   @extend td.unreviewed;
   background-color: #2a2;
 }
-
 td.rejected {
   @extend td.unreviewed;
   background-color: #a22;
 }
-
 td.hidden {
   @extend td.unreviewed;
   background-color: #181;
@@ -138,3 +147,4 @@ topic {
   color: #00a;
   font-weight: bold;
 }
+

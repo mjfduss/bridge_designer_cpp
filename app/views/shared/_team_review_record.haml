@@ -2,9 +2,9 @@
 %table.review
   - rows = columnize(team_items, 2)
   %tr
-    %td{ :rowspan => 1 + rows.length, :class => team.status_style_id }= "[#{rank.to_s}]"
+    %td{ :rowspan => 1 + rows.length, :class => team.status_style_id }= "[#{team.rank.to_s}]"
     %td.review_head{ :colspan => 2 }
-      #{team.name_key}:
+      #{team.name_key} [#{Standing.rank(team) || 'x'}]:
       = select_tag("#{team.id}_group", options_for_select(team_review_group_list_data(@groups), team.group_id || '-'))
       = hidden_field_tag "#{team.id}_group_in", (team.group_id || '-')
       = sep

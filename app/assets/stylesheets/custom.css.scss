@@ -14,6 +14,11 @@ body {
   font-size: $font_size;
 }
 
+h1 {
+  font-size: 110%;
+  font-weight: bold;
+}
+
 table, th, td {
   padding: 2px;
   border-spacing: 0px;
@@ -113,6 +118,10 @@ div.hi {
   font-weight: bold;
 }
 
+.gray {
+  color: #777777;
+}
+
 div.alignright {
   text-align: right;
 }
@@ -154,12 +163,20 @@ hr {
   font-size: 75%
 }
 
+.centered {
+  text-align: center;
+}
+
 .subdued {
   color: #aa3333;
 }
 
 .trouble {
   color: #881111;
+}
+
+.bright {
+  color: #44f;
 }
 
 .shr {

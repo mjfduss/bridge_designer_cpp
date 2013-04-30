@@ -36,7 +36,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
       if s.blank?
         flash.now[:alert] = 'No local contests were selected for deletion.'
       else
-        LocalContest.delete(s)
+        LocalContest.destroy(s)
         flash.now[:alert] = 'Selected local contests were deleted.'
       end
       @edited_local_contest = LocalContest.new

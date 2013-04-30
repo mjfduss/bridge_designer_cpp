@@ -6,6 +6,8 @@ if Rails.env.development?
   Team.delete_all
   Member.delete_all
   Design.delete_all
+  LocalContest.delete_all
+  SequenceNumber.find_by_tag('design').update_attribute(:value, 0)
   50.times do |n|
     FactoryGirl.create(:local_contest)
   end
@@ -13,8 +15,8 @@ if Rails.env.development?
     # Team with one member and no designs
     FactoryGirl.create(:team)
     # Team with two members and two designs
-    team = FactoryGirl.create(:team)
-    team.members << FactoryGirl.create(:member, :team => team)
+    team = FactoryGirl.create(:team, :member_count => 2)
+    # team.members << FactoryGirl.create(:member, :team => team, :rank => 1)
     FactoryGirl.create(:design, :team => team)
     FactoryGirl.create(:design, :team => team)
   end

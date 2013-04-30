@@ -74,12 +74,20 @@ module Standing
     scores_key = to_scores_key(team)
     teams_key = to_teams_key(team)
     seq = REDIS.hget(teams_key, team.id)
-    return [0, REDIS.hlen(teams_key)] unless seq
+    return [nil, REDIS.hlen(teams_key)] unless seq
     (rank, len) = REDIS.pipelined do
       REDIS.zrank(scores_key, seq)
       REDIS.hlen(teams_key)
     end
     return [1 + rank, len]
+  end
+
+  # Return the current standing of the given team.
+  def self.rank(team)
+    scores_key = to_scores_key(team)
+    teams_key = to_teams_key(team)
+    seq = REDIS.hget(teams_key, team.id)
+    return seq && 1 + REDIS.zrank(scores_key, seq)
   end
 
   # Stub for testing.

@@ -93,5 +93,4 @@ class Member < ActiveRecord::Base
     rtn.push(["Race:", TablesHelper::RACE_MAP[race]]) if race
     rtn = "[none given]" if rtn.blank?
   end
-
 end

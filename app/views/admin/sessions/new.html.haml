@@ -1,8 +1,10 @@
-.centerbox
-  .centeredbox
-    = form_for :session, :url => admin_session_path do |f|
-      .small= f.label :login
-      .wrap= f.text_field :login
-      .small= f.label :password
-      .wrap= f.password_field :password
-      .wrap= f.submit "Log in", :class => 'btn'
+= form_for :session, :url => admin_session_path do |f|
+  %table.centered_box
+    %tr
+      %td.small= f.label :login, 'Login:'
+      %td.small= f.text_field :login
+    %tr
+      %td.small= f.label :password, 'Password:'
+      %td.small= f.password_field :password
+    %tr
+      %td{ :colspan => 2, :align => :right }= f.submit "Log in", :class => 'btn'

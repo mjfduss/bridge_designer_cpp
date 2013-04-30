@@ -1,21 +1,20 @@
 - if @category == '-'
-  .centeredbox.bold Please select a category to review.
+  .notice Please select a category to review.
 - elsif @teams.blank?
-  .centeredbox.bold Sorry. No teams in category #{TablesHelper::CATEGORY_MAP[@category]}!
+  .notice Sorry. No teams in category #{TablesHelper::CATEGORY_MAP[@category]}!
 - else
   - show_hidden_p = @visible_status.include?('h')
-  - team_rank_items_table = @teams.zip(team_ranks(@teams, 1), Team.format_all(@teams, @visible_attributes))
+  - team_items_table = @teams.zip(Team.format_all(@teams, @visible_attributes))
   %a{ :name => 'top' }
   .bold
-    = TablesHelper::CATEGORY_MAP[@category] || 'Unknown category'
-    = ": #{@teams.length} teams shown"
+    = "#{TablesHelper::CATEGORY_MAP[@category] || 'Unknown category'}: #{pluralize(@teams.length, 'team')} shown."
   %table.index
-    - for row_team_rank_items in team_rank_items_table.each_slice(30)
+    - for row_team_items in team_items_table.each_slice(30)
       %tr
-        - for team, rank, items in row_team_rank_items
-          - if rank != :o || show_hidden_p
+        - for team, items in row_team_items
+          - if team.rank != :o || show_hidden_p
             %td{ :class => [team.status_style_id, 'index'] }
-              %a{ :class => 'index', :href => "##{team.name_key}" }= rank
+              %a{ :class => 'index', :href => "##{team.name_key}" }= team.rank
   = form_tag admin_teams_review_path, :method => :put do
     = hidden_field_tag 'team_category', @category
     = hidden_field_tag 'standings_cutoff', @standings_cutoff
@@ -29,7 +28,7 @@
     = sep
     = button_tag 'Select all', :type => 'button', :onclick => 'select_all_reviewed_teams(true)'.html_safe
     = button_tag 'Clear all', :type => 'button', :onclick => 'select_all_reviewed_teams(false)'.html_safe
-    - team_rank_items_table.each do |team, rank, items|
-      - if rank != :o || show_hidden_p
-        = render :partial => 'shared/team_review_record',                          |
-                 :locals => { :rank => rank, :team => team, :team_items => items } |
+    - team_items_table.each do |team, items|
+      - if team.rank != :o || show_hidden_p
+        = render :partial => 'shared/team_review_record',
+                 :locals => { :team => team, :team_items => items }

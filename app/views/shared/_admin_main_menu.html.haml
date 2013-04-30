@@ -1,5 +1,5 @@
 .admin_menu
-  .big.bold.menu_item Admin Functions
+  %h1 Admin Functions
   = form_tag admin_main_menu_path, :method => :put, :target => target do
     .menu_item
       = render :partial => "shared/submit_link", :locals => { :name => 'change_password', :text => "Change password" }
@@ -17,6 +17,8 @@
       .wrap
         Options:
         = select_tag 'standings_options', options_for_select(TablesHelper::STANDINGS_OPTIONS_PAIRS, state['standings_options'] || '-')
+        &nbsp;&nbsp;Difference:&nbsp;
+        = check_box_tag 'diff_review', '1', true
     .menu_item
       .menu_label View currently posted standings:
       .wrap
@@ -29,7 +31,7 @@
         = text_field_tag('team_name_likeness', state['team_name_likeness'] || '', :size => 12)
       .wrap
         Category:
-        = select_tag 'find_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['posted_category'] || '-')
+        = select_tag 'find_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['find_category'] || '-')
         = render :partial => "shared/submit_link", :locals => { :name => 'get_any_team', :text => "Go" }
     .menu_item
       .menu_label Administer local contests:
@@ -56,7 +58,7 @@
       .wrap
         Show top:
         = text_field_tag('mail_teams', state['mail_teams'] || '10', :size => 2)
-        = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contest_teams', :text => "Go" }
+        = render :partial => "shared/submit_link", :locals => { :name => 'get_leader_emails', :text => "Go" }
     %hr
     .menu_item
       .menu_label Options

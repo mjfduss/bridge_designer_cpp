@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130417134957) do
+ActiveRecord::Schema.define(:version => 20130424030223) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -93,6 +93,15 @@ ActiveRecord::Schema.define(:version => 20130417134957) do
     t.integer  "team_id",                      :default => 0,     :null => false
     t.string   "country",        :limit => 40, :default => "USA"
     t.integer  "rank",                         :default => 0,     :null => false
+  end
+
+  create_table "scoreboards", :force => true do |t|
+    t.string   "category",   :limit => 1
+    t.string   "status",     :limit => 1
+    t.text     "board"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.integer  "admin_id",                :null => false
   end
 
   create_table "sequence_numbers", :force => true do |t|

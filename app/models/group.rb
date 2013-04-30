@@ -4,7 +4,7 @@ class Group < ActiveRecord::Base
 
   attr_accessible :description
 
-  has_many :teams
+  has_many :teams, :dependent => :nullify
 
   validates :description, :uniqueness => true, :length => { :maximum => 40 }
 

@@ -1,5 +1,9 @@
 Wpbdc::Application.routes.draw do
 
+  get "get_leader_emails/edit"
+
+  get "get_leader_emails/update"
+
   namespace :admin do
     resource :frame, :only => [ :new ]
     resource :initial, :only => [ :new ]
@@ -9,6 +13,9 @@ Wpbdc::Application.routes.draw do
     resource :password_change, :only => [ :edit, :update ]
     resource :standings_review, :only => [ :edit, :update ]
     resource :teams_review, :only => [ :edit, :update ]
+    resource :get_any_team, :only => [ :edit, :update ]
+    resource :get_local_contest_team, :only => [:edit, :update ]
+    resource :retrieve_design, :only => [:edit, :update]
     resource :session, :only => [ :new, :create, :destroy ]
     resource :group, :only => [ :edit, :update ]
     resource :local_contest, :only => [ :edit, :update ]
@@ -21,8 +28,9 @@ Wpbdc::Application.routes.draw do
   resources :team_completions, :only => [ :edit, :update ]
   resources :verifications, :only => [ :edit, :update ]
   resources :homes, :only => [ :edit, :update ]
+  resources :standings, :only => [ :show ]
   resource :session, :only => [ :new, :create, :destroy ]
- 
+
   root :to => 'sessions#new'
 
   # The priority is based upon order of creation:

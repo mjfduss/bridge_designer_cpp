@@ -52,9 +52,13 @@
     = f.submit "Delete selected records", :name => 'delete'
     %hr
     = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
-  - if @min_teams > 0
-    .para.bold Only contests with #{@min_teams} or more teams are shown.
+  - the_list = @local_contests.select {|c| c.affiliations.count >= @min_teams }
+  .para.bold
+    - if @min_teams > 0
+      = "#{pluralize(the_list.length, 'contest')} shown (#{@min_teams} or more teams only)."
+    - else
+      = "#{pluralize(the_list.length, 'contest')} shown."
   - if @filter =~ /\S/
     .para.bold Filter '#{@filter}'.
   .para
-    = render @local_contests.select {|c| c.affiliations.count >= @min_teams }
+    = render the_list

@@ -1,0 +1,26 @@
+- if @teams.blank?
+  .notice Sorry. No teams in local contest '#{@local_contest_code}'.
+- else
+  - show_hidden_p = @visible_status.include?('h')
+  - team_items_table = @teams.zip(Team.format_all(@teams, @visible_attributes))
+  %a{ :name => 'top' }
+  .bold
+    = "Local contest #{@local_contest_code}: #{pluralize(@teams.length, 'team')} shown."
+  %hr
+  = form_tag admin_get_any_team_path, :method => :put do
+    = hidden_field_tag 'local_contest_code', @local_contest_code
+    = hidden_field_tag 'standings_cutoff', @standings_cutoff
+    - @visible_status.each do |status|
+      = hidden_field_tag "visible_status[]", status
+    - @visible_attributes.each do |attribute|
+      = hidden_field_tag "visible_attributes[]", attribute
+    = submit_tag 'Process', :name => 'process'
+    = sep
+    = submit_tag 'Retrieve marked bridges', :name => 'retrieve'
+    = sep
+    = button_tag 'Select all', :type => 'button', :onclick => 'select_all_reviewed_teams(true)'.html_safe
+    = button_tag 'Clear all', :type => 'button', :onclick => 'select_all_reviewed_teams(false)'.html_safe
+    - team_items_table.each do |team, items|
+      - if team.rank != :o || show_hidden_p
+        = render :partial => 'shared/team_review_record',
+                 :locals => { :team => team, :team_items => items }

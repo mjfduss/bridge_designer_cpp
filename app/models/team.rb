@@ -1,15 +1,14 @@
 class Team < ActiveRecord::Base
 
   VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  NONE = "[none]"
+  NONE = '[none]'
 
-  attr_accessible :name, :email, :contest
+  attr_accessible :name, :email
   attr_accessible :members_attributes
-  attr_accessible :password, :password_confirmation
   attr_accessible :submits, :improves, :status, :group
 
   attr_accessible :new_local_contest
-  attr_accessor :new_local_contest, :completion_status
+  attr_accessor :new_local_contest, :completion_status, :rank
 
   future_has_secure_password :validations => false
 
@@ -18,6 +17,8 @@ class Team < ActiveRecord::Base
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
   belongs_to :group
+
+  scope :ordered_by_name, :order => "name_key ASC"
 
   accepts_nested_attributes_for :members
 
@@ -55,12 +56,12 @@ class Team < ActiveRecord::Base
   end
 
   def best_design
-    designs.select('score').order('score, sequence ASC').first
+    @best ||= designs.order('score, sequence ASC').first
   end
 
   def best_score
     d = best_design
-    return d ? d.score : nil
+    d ? d.score : nil
   end
 
   def self.synch_standings
@@ -76,7 +77,7 @@ class Team < ActiveRecord::Base
 
   def best_score_for_scenario(scenario)
     d = designs.select('score').where(:scenario => scenario).order('score, sequence ASC').first
-    return d ? d.score : nil
+    d ? d.score : nil
   end
 
   # Compute the registration category from the member categories.
@@ -106,24 +107,157 @@ class Team < ActiveRecord::Base
     return team ? team.try(:authenticate, password) : nil
   end
 
-  def self.get_top_teams(category, statuses, limit)
-    return [] if statuses.empty?
-    return [] unless %w(- e i 2).include?(category)
-    limit = 50 unless limit.to_i > 0
+  def self.get_top_teams(categories, statuses, limit)
+    limit = limit.to_i
+    return [] if statuses.empty? || categories.empty? || limit <= 0
     # PSQL specific
-    Team.find_by_sql("select * from
-      (select distinct on (d.team_id) t.*, d.score, d.sequence
+    Team.find_by_sql(['select * from
+      (select distinct on (d.team_id) t.*, d.score, d.sequence, d.created_at
         from teams t inner join designs d
         on t.id = d.team_id
-        where t.category = '#{category}'
-          and t.status in (#{statuses.map {|s| "'#{s}'"}.join(",") })
+        where t.category in (?) and t.status in (?)
         order by d.team_id, d.score asc, d.sequence asc
-        limit #{limit}) tmp
-      order by score asc, sequence asc")
+        limit ?) tmp
+      order by score asc, sequence asc', categories, statuses, limit])
   end
 
-  def scoreboard_data
-    { }
+  def self.get_teams_by_name(name_likeness, categories, statuses, limit)
+    name_likeness.strip!
+    Team.where('name_key SIMILAR TO ? and category in (?) and status in (?)',
+      name_likeness.blank? ? '%' : name_likeness, categories, statuses).order('name_key ASC').limit(limit.to_i)
+  end
+
+  def self.assign_top_ranks(teams)
+    max_ranked_in_group = 1
+    rank = 0
+    group_counts = Hash.new(0)
+    teams.each do |team|
+      g = team.group
+      team.rank = case team.status
+        when 'a'
+          if g.nil? || (group_counts[g.id] += 1) <= max_ranked_in_group
+            rank += 1
+          else
+            :o
+          end
+        when '-'
+          if g.nil? || group_counts[g.id] <= max_ranked_in_group
+            :x # Would be visible if this alone were selected.
+          else
+            :o # Would be hidden even if accepted.
+          end
+        else
+          :x
+      end
+    end
+    teams
+  end
+
+  def self.assign_unofficial_ranks(teams)
+#    ranks = Standing.all_standings(teams)
+#    teams.zip(ranks).each do |team, rank|
+#      team.rank = rank || :x
+#    end
+    teams.each do |team|
+      team.rank = Standing.rank(team) || :x
+    end
+  end
+
+  def self.get_scoreboard(category, limit = 0, option = '-')
+    sb = {
+      :created_at => Time.now.to_s(:nice),
+      :category => category,
+      :rows => option == 'x' ? nil : # No rows at all if option is 'x'
+        assign_top_ranks(get_top_teams(category == 'c' ? %w(i e) : category, 'a', limit)).
+        select { |t| t.rank.is_a? Integer }.
+        map do |t|
+          team_data = {
+            :rank => t.rank,
+            :team_name => t.name,
+            :category => t.category,
+            :members => t.members.map{|m| m.first_name.strip }.uniq,
+            :city_state => t.members.map{|m| "#{m.city.strip}, #{m.state.strip}" }.uniq,
+            :school => t.members.map{|m| m.school.strip }.uniq,
+            :location => t.members.map{|m| m.school_city.strip }.uniq,
+            :submitted => t.best_design.created_at.to_s(:nice),
+          }
+          team_data[:score] = format("$%.2f", 0.01 * t.best_score) if option == 's';
+          team_data
+        end
+    }
+    sb[:unavailable] = true if option == 'x'
+    # Attach an instance method that knows how to
+    # save this hash to the Scoreboard database table.
+    sb.define_singleton_method :save do |admin_id|
+      r = Scoreboard.create(:admin_id => admin_id, :category => self[:category], :board => self.to_json)
+      if r
+        # Copy key data only
+        self[:created_at] = r.created_at.to_s(:nice)
+        self[:id] = r.id
+      end
+    end
+    # Make scoreboards equal if their team names are equal
+    # sb.define_singleton_method '==', Proc.new {|other| self[:team_name] == other[:team_name]}
+    sb
+  end
+
+  require 'diff_markups'
+
+  def self.splat(pair, key)
+    pair.map{|hash| hash[key]}
+  end
+
+  def self.scoreboard_diff(a, b)
+    diff = {
+      :id => b[:id],
+      :created_at => b[:created_at],
+      :category => b[:category],
+      :unavailable => b[:unavailable],
+      :rows =>
+        if a[:rows].nil? then
+          b[:rows].map {|b_row| b_row.merge(:ins => true)}
+        elsif b[:rows].nil? then
+          a[:rows].map {|a_row| a_row.merge(:del => true)}
+        else
+          a_map = a[:rows].each_with_object({}) { |row, hash| hash[row[:team_name]] = row }
+          diff_rows = b[:rows].map do |b_row|
+            a_row = a_map[b_row[:team_name]]
+            if a_row
+              team_data = {
+                :rank => DiffMarkups.getMarkup(a_row[:rank], b_row[:rank]),
+                :team_name => b_row[:team_name],
+                :category => b_row[:category],
+                :members => DiffMarkups.getMarkedUpPair(a_row[:members], b_row[:members]),
+                :city_state => DiffMarkups.getMarkedUpPair(a_row[:city_state], b_row[:city_state]),
+                :school => DiffMarkups.getMarkedUpPair(a_row[:school], b_row[:school]),
+                :location => DiffMarkups.getMarkedUpPair(a_row[:location], b_row[:location]),
+                :submitted => DiffMarkups.getMarkup(a_row[:submitted], b_row[:submitted]),
+              }
+              if a_row[:score] || b_row[:score]
+                team_data[:score] = DiffMarkups.getMarkup(a_row[:score] || '', b_row[:score] || '')
+              end
+              team_data
+            else
+              b_row.merge(:ins => true)
+            end
+          end
+          # Insert the deleted rows at the correct places
+          b_map = b[:rows].each_with_object({}) { |row, hash| hash[row[:team_name]] = row }
+          n_inserted = 0
+          a[:rows].each do |a_row|
+            unless b_map[a_row[:team_name]]
+              pos = a_row[:rank].to_i + n_inserted
+              if pos < diff_rows.length
+                diff_rows.insert(pos, a_row.merge(:del => true))
+              else
+                diff_rows << a_row.merge(:del => true)
+              end
+              n_inserted += 1
+            end
+          end
+          diff_rows
+        end
+    }
   end
 
   def status_style_id
@@ -139,77 +273,78 @@ class Team < ActiveRecord::Base
   end
 
   def status_formatted
-    ["Review status", TablesHelper::STATUS_MAP[status] || NONE ]
+    ['Review status', TablesHelper::STATUS_MAP[status] || NONE ]
   end
 
   def team_name_formatted
-    ["Team name", name ]
+    ['Team name', name ]
   end
 
   def category_formatted
-    ["Category",  TablesHelper::CATEGORY_MAP[category] || NONE]
+    ['Category',  TablesHelper::CATEGORY_MAP[category] || NONE]
   end
 
   def captain_name_formatted
-    ["Captain name", captain.full_name]
+    ['Captain name', captain.full_name]
   end
 
   def captain_category_formatted
-    ["Captain category", captain.category_formatted]
+    ['Captain category', captain.category_formatted]
   end
 
   def captain_age_grade_formatted
-    ["Captain age/grade", captain.age_grade_formatted]
+    ['Captain age/grade', captain.age_grade_formatted]
   end
 
   def captain_contact_formatted
-    ["Captain contact", captain.contact_formatted]
+    ['Captain contact', captain.contact_formatted]
   end
 
   def captain_school_formatted
-    ["Captain school", captain.school_formatted]
+    ['Captain school', captain.school_formatted]
   end
 
   def captain_demographics_formatted
-    ["Captain demographics", captain.demographics_formatted]
+    ['Captain demographics', captain.demographics_formatted]
   end
 
   def member_name_formatted
-    ["Member name", Team.optional(non_captains.first, :full_name)]
+    ['Member name', Team.optional(non_captains.first, :full_name)]
   end
 
   def member_category_formatted
-    ["Member category", Team.optional(non_captains.first, :category_formatted)]
+    ['Member category', Team.optional(non_captains.first, :category_formatted)]
   end
 
 
   def member_age_grade_formatted
-    ["Member age/grade", Team.optional(non_captains.first, :age_grade_formatted)]
+    ['Member age/grade', Team.optional(non_captains.first, :age_grade_formatted)]
   end
 
   def member_contact_formatted
-    ["Member contact", Team.optional(non_captains.first, :contact_formatted)]
+    ['Member contact', Team.optional(non_captains.first, :contact_formatted)]
   end
 
   def member_school_formatted
-    ["Member school", Team.optional(non_captains.first, :school_formatted)]
+    ['Member school', Team.optional(non_captains.first, :school_formatted)]
   end
 
   def member_demographics_formatted
-    ["Member demographics", Team.optional(non_captains.first, :demographics_formatted)]
+    ['Member demographics', Team.optional(non_captains.first, :demographics_formatted)]
   end
 
   def email_formatted
-    ["Email", email]
+    ['Email', email]
   end
 
   def local_contests_formatted
-    codes = local_contests.map {|t| t.code}
-    ["Local contests", codes.blank? ? NONE : codes]
+    codes = local_contests.pluck(:code)
+    ['Local contests', codes.blank? ? NONE : codes]
   end
 
   def best_score_formatted
-    ["Best score", best_score]
+    s = best_score
+    ['Best score', s ? format("$%.2f", 0.01 * s) : NONE]
   end
 
   protected
@@ -245,11 +380,11 @@ class Team < ActiveRecord::Base
   end
 
   def completed_with_password?
-    return completion_status == :complete_with_fresh_password
+    completion_status == :complete_with_fresh_password
   end
 
   def completed?
-    return [:complete_with_fresh_password, :complete_with_old_password].include?(completion_status)
+    [:complete_with_fresh_password, :complete_with_old_password].include?(completion_status)
   end
 
 end
