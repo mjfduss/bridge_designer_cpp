@@ -10,6 +10,6 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe Admin::GetLeaderEmailsHelper do
+describe Admin::LeaderEmailsHelper do
   pending "add some examples to (or delete) #{__FILE__}"
 end

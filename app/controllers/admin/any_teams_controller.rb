@@ -1,4 +1,4 @@
-class Admin::RetrieveDesignsController < ApplicationController
+class Admin::AnyTeamsController < Admin::ApplicationController
   def edit
   end
 

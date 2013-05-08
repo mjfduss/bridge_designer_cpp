@@ -1,16 +1,15 @@
-class Admin::GetAnyTeamsController < Admin::ApplicationController
+class Admin::LocalContestTeamsController < ApplicationController
   def edit
   end
 
   def update
     if !params[:process].blank?
       update_modified_teams
-      @category = params[:find_category]
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
-      @team_name_likeness = params[:team_name_likeness]
-      @teams = Team.get_teams_by_name(@team_name_likeness, @category, @visible_status, @standings_cutoff)
+      @local_contest_code = params[:local_contest_code]
+      @teams = LocalContest.get_teams(@local_contest_code, @category, @visible_status, @standings_cutoff)
       Team.assign_unofficial_ranks(@teams)
       @groups = Group.all
       render :action => :edit

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::GetLeaderEmailsController do
+describe Admin::AnyTeamsController do
 
   describe "GET 'edit'" do
     it "returns http success" do

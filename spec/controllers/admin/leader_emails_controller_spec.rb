@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::GetLocalContestTeamsController do
+describe Admin::LeaderEmailsController do
 
   describe "GET 'edit'" do
     it "returns http success" do

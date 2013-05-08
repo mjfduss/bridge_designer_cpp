@@ -1,0 +1,42 @@
+# Start servers for development
+See scripts/start
+
+# Precompile assets.
+RAILS_ENV=production bundle exec rake assets:precompile
+
+# Push to Heroku and start server.
+git push heroku master
+
+# Alias heroku.
+alias h=heroku
+
+# Rebuild database.
+heroku run rake db:reset
+
+# Install the default admin account.
+heroku run rake db:seed
+
+# Check server.
+heroku ps
+
+# Read logs.
+heroku logs
+
+# Start a psql session on the Heroku server.
+heroku pg:psql
+
+# Add redis to the app.
+heroku addons:add redistogo
+
+# View Heroku Redis documentation.
+heroku addons:docs redistogo
+
+# View redis dashboard
+heroku addons:open redistogo
+
+# Restart all processes on the server.
+heroku restart
+
+# Configure heroku Time Zone
+heroku config:add TZ=America/New_York
+
