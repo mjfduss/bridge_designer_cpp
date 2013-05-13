@@ -109,7 +109,7 @@ static VALUE rb_api_sketch(VALUE self, VALUE bridge_as_string, VALUE width, VALU
     VALUE hash = rb_hash_new();
 
 	init_compressed_image(compressed_image);
-	sketch(bridge_internal_string, width, height, compressed_image, result);
+	sketch(bridge_internal_string, FIX2INT(width), FIX2INT(height), compressed_image, result);
 
     /*
     struct analysis_result_t {
@@ -125,7 +125,7 @@ static VALUE rb_api_sketch(VALUE self, VALUE bridge_as_string, VALUE width, VALU
     */
     add_analysis_to_hash(hash, result);
     if (result->status == BRIDGE_OK) {
-        rb_hash_aset(hash, rb_str_new2("image"), rb_str_new(compressed_image->data, compressed_image->filled));
+        rb_hash_aset(hash, symbol("image"), rb_str_new(compressed_image->data, compressed_image->filled));
         clear_compressed_image(compressed_image);
     }
     return hash;
@@ -167,7 +167,7 @@ static struct ft_entry {
   FUNCTION_TABLE_ENTRY(local_contest_number_to_id),
 };
 
-#define INT_CONST_TABLE_ENTRY_TABLE_ENTRY(Name) { #Name, Name }
+#define INT_CONST_TABLE_ENTRY(Name) { #Name, Name }
 
 static struct ict_entry {
   char *name;

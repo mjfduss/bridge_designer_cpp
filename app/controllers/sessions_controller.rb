@@ -14,9 +14,10 @@ class SessionsController < ApplicationController
       session[:captain_id] = team.captain.id
       member = team.non_captains.first
       session[:member_id] = member.id if member
-      redirect_to :controller => :verifications, :action => :edit, :id => team.id
+      redirect_to :controller => :verifications, :action => :edit
     else
-      flash.now[:alert] = "Your login failed. If you haven't registered, start the Registration Wizard below. Otherwise try to Log In again."
+      flash.now[:alert] = "Your login failed. If you haven't registered, ' +
+        'start the Registration Wizard below. Otherwise try to Log In again."
       render 'new'
     end
   end

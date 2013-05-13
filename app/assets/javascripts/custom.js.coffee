@@ -140,8 +140,9 @@ window.set_list = (id, selects) ->
   option.selected = selects[i++] for option in getElement(id).options
   undefined
 
-window.select_all_reviewed_teams = (val) ->
-  cb.checked = val for cb in document.forms[0].elements when cb.name.slice(-4) == 'mark'
+# Not used since bridges are now part of review tables.
+#window.select_all_reviewed_teams = (val) ->
+#  cb.checked = val for cb in document.forms[0].elements when cb.name.slice(-4) == 'mark'
 
 commafy = (n) ->
   rtn = ''

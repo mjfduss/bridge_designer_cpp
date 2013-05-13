@@ -1,4 +1,5 @@
 class Admin::AnyTeamsController < Admin::ApplicationController
+
   def edit
   end
 
@@ -20,4 +21,5 @@ class Admin::AnyTeamsController < Admin::ApplicationController
       redirect_to :controller => :initials, :action => :new
     end
   end
+
 end

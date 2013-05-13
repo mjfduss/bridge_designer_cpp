@@ -21,7 +21,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
       if id.blank?
         lc = LocalContest.create(params[:local_contest])
         if lc.valid?
-          flash.now[:alert] = "New local contest '#{params[:local_contest][:code]}' was created."
+          flash.now[:alert] = "New local contest '#{lc.code}' was created."
           @edited_local_contest = LocalContest.new
         else
           flash.now[:alert] = "New local contest could not be created."
@@ -29,8 +29,11 @@ class Admin::LocalContestsController < Admin::ApplicationController
         end
       else
         @edited_local_contest = LocalContest.find(id.to_i)
-        @edited_local_contest.update_attributes(params[:local_contest])
-        flash.now[:alert] = "Local contest '#{params[:local_contest][:code]}' was updated."
+        if @edited_local_contest.update_attributes(params[:local_contest])
+          flash.now[:alert] = "Local contest '#{@edited_local_contest.code}' was updated."
+        else
+          flash.now[:alert] = "Could not update local contest."
+        end
       end
     elsif !params[:delete].blank?
       if s.blank?

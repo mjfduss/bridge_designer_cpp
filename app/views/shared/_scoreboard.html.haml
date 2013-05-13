@@ -20,25 +20,6 @@
       Standings for Open Competition
     - when '2'
       Pending review of contest officials, subject to change
-%table{ :width => 750 }
-  %tr
-    %th Rank
-    %th Team Name
-    - if scoreboard[:category] == 'c'
-      %th Category
-    %th Members
-    %th School/Org
-    %th City/State
-    %th Submitted
-  - if scoreboard[:unavailable]
-    %tr
-      %td.centered.bright.bold{ :colspan => scoreboard[:category] == 'c' ? 7 : 6 }
-        Sorry. Scores are not currently available.
-  - elsif scoreboard[:rows].blank?
-    %tr
-      %td.centered.bright.bold{ :colspan => scoreboard[:category] == 'c' ? 7 : 6 }
-        Sorry. No teams have been ranked.
-  - unless scoreboard[:rows].blank?
-    - scoreboard[:rows].each_with_index do |row, i|
-      = render :partial => 'shared/scoreboard_row',
-               :locals => {:row => row, :i => i, :category => scoreboard[:category] }
+= render :partial => 'shared/scoreboard_table',
+    :locals => { :scoreboard => scoreboard,
+    :show_category_p => (scoreboard[:category] == 'c') }

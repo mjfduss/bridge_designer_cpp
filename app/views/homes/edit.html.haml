@@ -9,7 +9,7 @@
       %ul
         - if @team.rejected?
           %li.status_list.bold.trouble
-            Regretfully, your team has been disqualified by the judges.
+            Regrettably, your team has been disqualified by the judges.
           %li.status_list
             It will not be possible for team '#{@team.name}' to participate
             further in the contest.
@@ -40,13 +40,13 @@
           %script== document.write(standings_graph(#{@standing}, #{@out_of}))
         - else
           %ul
-            - if @result == :get_standings && !@standing
-              %li{ :class => 'msg_list' } Your team must submit a design to have a standing!
-            - if @result == :get_standings && @standing <= 0
-              %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
             - case @result
               - when :get_standings
-                -# Do nothing here. Handled below the %ul
+                - if @standing
+                  - if @standing <= 0
+                    %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
+                - else
+                  %li{ :class => 'msg_list' } Your team must submit a design to have a standing!
               - when :new_best
                 - if @old_best
                   %li{ :class => 'msg_list' }== Well done! You improved your old best #{to_cost(@old_best)} to #{to_cost(@analysis[:score])}.
@@ -83,7 +83,7 @@
               - else
                 %li{ :class => 'msg_list'} [ bad @result = #{@result} ]
 .para
-  = form_for(@design, :url => home_path(@team.id), :method => :put) do |f|
+  = form_for(@design, :url => home_path, :method => :put) do |f|
     - unless @team.rejected?
       .para.bold
         Submit a design (West Point Bridge Designer 2013 only):

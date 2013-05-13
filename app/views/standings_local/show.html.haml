@@ -1,0 +1,15 @@
+%h1 West Point Bridge Design Contest 2013
+.small.bold.bright
+  Local Contest #{@local_contest.code} (#{@local_contest.description})
+  %br
+  as of #{@scoreboard[:created_at]}
+%h2 Point of Contact:
+.small.indent.bottomspace
+  = @local_contest.poc_full_name
+  %br
+  = @local_contest.poc_full_position
+  %br
+  = @local_contest.link_formatted.join(': ').html_safe
+= will_paginate @scoreboard[:teams]
+= render :partial => 'shared/scoreboard_table', :locals => { :scoreboard => @scoreboard, :show_category_p => true }
+= will_paginate @scoreboard[:teams]

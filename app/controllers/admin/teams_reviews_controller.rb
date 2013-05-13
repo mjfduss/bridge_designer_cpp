@@ -10,12 +10,11 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
-      @teams = Team.get_top_teams(@category, @visible_status, @standings_cutoff)
-      Team.assign_top_ranks(@teams)
+      @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :action => :edit
     elsif !params[:retrieve].blank?
-      redirect_to :controller => :retrieve_designs, :action => :new
+      render :controller => :retrieve_designs, :action => :edit
     else
       redirect_to :controller => :initials, :action => :new
     end

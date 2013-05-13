@@ -1,7 +1,5 @@
 class TeamCompletionsController < ApplicationController
 
-  before_filter :require_team_post
-
   def edit
     @team = Team.find(session[:team_id])
     @captain = @team.captain
@@ -18,7 +16,7 @@ class TeamCompletionsController < ApplicationController
       @team.completion_status = :pending_new_password
       render 'edit'
     elsif params.has_key? :cancel
-      redirect_to :controller => :captain_completions, :action => :edit, :id => @captain.id
+      redirect_to :controller => :captain_completions, :action => :edit
     elsif params.has_key? :update
       if do_update
         @team.new_local_contest = nil if @team.errors[:new_local_contest].blank?
@@ -28,7 +26,7 @@ class TeamCompletionsController < ApplicationController
       render 'edit'
     else
       if do_update
-        redirect_to :controller => :homes, :action => :edit, :id => @team.id
+        redirect_to :controller => :homes, :action => :edit
       else
         # Keep the password fields open if they already are
         @team.completion_status = :pending_new_password if params[:team].has_key? :password

@@ -1,6 +1,6 @@
 = content_for :dialog do
   = render :partial => "shared/error_head", :locals => { :obj => @member }
-  = form_for(@member) do |f|
+  = form_for @member, :url => member_path do |f|
     .box
       .big Second Team Member (optional):
       .para.small.subdued.alignright

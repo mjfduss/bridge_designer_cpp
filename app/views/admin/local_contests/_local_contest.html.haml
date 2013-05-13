@@ -10,11 +10,11 @@
       = sep
       %a{ :class => 'review', :href => '#top' }= "[top]"
   - for row in columnize(local_contest.formatted, 2)
-    %tr{ :class => if even = !even then 'plain' else 'stripe' end }
+    %tr{ :class => cycle('plain', 'stripe') }
       - for col in row
         %td.review
           - if col
             %span.bold #{col[0]}:
-            = insert_html_breaks(col[1])
+            = htmlify(col[1])
           - else
             ="&nbsp;".html_safe

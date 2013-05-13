@@ -4,6 +4,9 @@ module DiffMarkups
   DEL_TAG = '<span class="del">'
   END_TAG = '</span>'
 
+# @param [String] a original string
+# @param [String] b modified version of original string
+# @return [String] original marked up with insertions and deletions to obtain modified
   def self.getMarkup(a, b)
     as, bs = a.to_s.split(' '), b.to_s.split(' ')
     out = []
@@ -28,12 +31,18 @@ module DiffMarkups
     out.join(' ').html_safe
   end
 
+  # Return the number of leaf nodes of a non-flat list.
+  # @param [Array] lst possibly nested list
+  # @return [Integer] number of leaves
   def self.deep_length(lst)
     lst.is_a?(Array) ? ( lst.inject(0) { |sum, item| sum += deep_length(item) } ) : 1;
   end
 
   # Args a and b are arrays of 1 or 2 strings.  Produce an array of 1
   # or 2 marked up strings depicting the diff that produces fewest edits.
+  # @param [Array] a array of 1 or 2 original strings
+  # @param [Array] b array of 1 or 2 modified strings
+  # @return [Array] array of 1 or 2 strings marked up with inserts and deletions to make modified out of original
   def self.getMarkedUpPair(a, b)
     if a.length == b.length
       a.zip(b).map {|p| getMarkup(*p)}

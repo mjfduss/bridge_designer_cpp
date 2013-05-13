@@ -7,12 +7,12 @@
         %br
         %span.tiny.gray= format "$%.2f", 0.01 * row[:score]
     %td= row[:team_name]
-    - if category == 'c'
+    - if row[:category]
       %td.centered= TablesHelper::CATEGORY_MAP[row[:category]]
     %td= row[:members][0]
     %td= row[:school][0]
     %td= row[:city_state][0]
-    %td= row[:submitted]
+    %td= row[:submitted] || '--'
 - else # row_height must be 2
   %tr{ :class => row_class }
     %td.centered{ :rowspan => 2 }<
@@ -21,12 +21,12 @@
         %br>
         %span.tiny.gray= row[:score]
     %td{ :rowspan => 2 }= row[:team_name]
-    - if category == 'c'
+    - if row[:category]
       %td.centered{ :rowspan => 2 }= TablesHelper::CATEGORY_MAP[row[:category]]
     = render :partial => 'shared/two_high_cell', :locals => { :i => 0, :contents => row[:members] }
     = render :partial => 'shared/two_high_cell', :locals => { :i => 0, :contents => row[:school] }
     = render :partial => 'shared/two_high_cell', :locals => { :i => 0, :contents => row[:city_state] }
-    %td{ :rowspan => 2 }= row[:submitted]
+    %td{ :rowspan => 2 }= row[:submitted] || '--'
   %tr{ :class => row_class }
     = render :partial => 'shared/two_high_cell', :locals => { :i => 1, :contents => row[:members] }
     = render :partial => 'shared/two_high_cell', :locals => { :i => 1, :contents => row[:school] }

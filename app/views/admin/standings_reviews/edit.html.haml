@@ -1,6 +1,9 @@
-= form_tag admin_standings_review_path, :method => :put do
-  = hidden_field_tag :scoreboard_id, @scoreboard[:id]
-  = hidden_field_tag :scoreboard_category, @scoreboard[:category]
-  = submit_tag "Post Now!"
-%hr
-= render :partial => 'shared/scoreboard', :locals => { :scoreboard => @scoreboard }
+- if @scoreboard[:category] == '-'
+  .notice Please select a category to review.
+- else
+  = form_tag admin_standings_review_path, :method => :put do
+    = hidden_field_tag :scoreboard_id, @scoreboard[:id]
+    = hidden_field_tag :scoreboard_category, @scoreboard[:category]
+    = submit_tag "Post Now!"
+  %hr
+  = render :partial => 'shared/scoreboard', :locals => { :scoreboard => @scoreboard }

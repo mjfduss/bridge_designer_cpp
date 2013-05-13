@@ -4,6 +4,7 @@ class Team < ActiveRecord::Base
   NONE = '[none]'
 
   attr_accessible :name, :email
+  attr_accessible :password, :password_confirmation
   attr_accessible :members_attributes
   attr_accessible :submits, :improves, :status, :group
 
@@ -13,7 +14,8 @@ class Team < ActiveRecord::Base
   future_has_secure_password :validations => false
 
   has_many :members, :order => 'rank ASC', :dependent => :destroy
-  has_many :designs
+  has_many :designs, :order => 'score ASC, sequence ASC', :dependent => :destroy
+  has_one :best_design, :class_name => 'Design', :order => 'score ASC, sequence ASC'
   has_many :affiliations
   has_many :local_contests, :through => :affiliations
   belongs_to :group
@@ -26,11 +28,11 @@ class Team < ActiveRecord::Base
   before_validation :upcase_new_local_contest
   before_save :downcase_email
   before_save :add_new_affiliation
-  
+
   validates :name_key, :uniqueness => true
   validates :name, :presence => true, :length => { :maximum => 32 }
   validates :new_local_contest, :length => { :maximum => 6 }
-  
+
   with_options :if => :completed? do |v|
     v.validates :email, :presence => true, :format => { :with => VALID_EMAIL_ADDRESS }
     v.validates_associated :members
@@ -53,10 +55,6 @@ class Team < ActiveRecord::Base
 
   def non_captains
     self.members[1..-1]
-  end
-
-  def best_design
-    @best ||= designs.order('score, sequence ASC').first
   end
 
   def best_score
@@ -107,18 +105,80 @@ class Team < ActiveRecord::Base
     return team ? team.try(:authenticate, password) : nil
   end
 
+  PER_PAGE = 20
+
+  # @param [Array] categories list of team categories to select from
+  # @param [Array] statuses list of statuses to select from
+  # @param [Integer] limit maximum number of teams to get
   def self.get_top_teams(categories, statuses, limit)
     limit = limit.to_i
     return [] if statuses.empty? || categories.empty? || limit <= 0
     # PSQL specific
-    Team.find_by_sql(['select * from
-      (select distinct on (d.team_id) t.*, d.score, d.sequence, d.created_at
+    Team.find_by_sql ['select * from
+      (select distinct on (d.team_id) t.*, d.score, d.sequence
         from teams t inner join designs d
         on t.id = d.team_id
         where t.category in (?) and t.status in (?)
         order by d.team_id, d.score asc, d.sequence asc
         limit ?) tmp
-      order by score asc, sequence asc', categories, statuses, limit])
+      order by score asc, sequence asc', categories, statuses, limit]
+  end
+
+  SQL = %{with
+    local_contest_teams as
+      (select t.* from teams t
+        inner join affiliations a
+          on t.id = a.team_id
+        inner join local_contests lc
+          on a.local_contest_id = lc.id
+        where lc.code = ?),
+    best_designs_by_team as
+      (select distinct on (d.team_id) lct.*, d.score, d.sequence
+        from local_contest_teams lct inner join designs d
+          on lct.id = d.team_id
+        where lct.status not in ('r')
+        order by d.team_id, d.score asc, d.sequence asc)
+  select * from best_designs_by_team order by score, sequence}
+
+  # Get the teams in a local contest correctly correlated.
+  # Offset and limit are to serve our pagination mechanism,
+  # since we can't use any of the standard gems for scoreboards.
+  # @param [String] code local contest code
+  # @param [Integer] page page of records to return (as for will_paginate)
+  # @return [Array] array of Teams
+  def self.get_local_contest_teams(code, page=1)
+    scenario = WPBDC.local_contest_code_to_id(code)
+    Team.paginate_by_sql scenario ?
+
+      ["select * from
+        (select distinct on (d.team_id) lct.*, d.score, d.sequence
+          from (select t.* from teams t
+                inner join affiliations a
+                  on t.id = a.team_id
+                inner join local_contests lc
+                  on a.local_contest_id = lc.id
+                where lc.code = ?) lct
+          inner join designs d
+            on lct.id = d.team_id
+          where lct.status not in ('r') and d.scenario = ?
+          order by d.team_id, d.score asc, d.sequence asc) tmp
+        order by score, sequence", code, scenario] :
+
+      ["select * from
+        (select distinct on (d.team_id) lct.*, d.score, d.sequence
+          from (select t.* from teams t
+                inner join affiliations a
+                  on t.id = a.team_id
+                inner join local_contests lc
+                  on a.local_contest_id = lc.id
+                where lc.code = ?) lct
+          inner join designs d
+            on lct.id = d.team_id
+          where lct.status not in ('r')
+          order by d.team_id, d.score asc, d.sequence asc) tmp
+        order by score, sequence", code],
+
+        :page => page, :per_page => PER_PAGE
   end
 
   def self.get_teams_by_name(name_likeness, categories, statuses, limit)
@@ -153,14 +213,46 @@ class Team < ActiveRecord::Base
     teams
   end
 
+  def self.assign_simple_ranks(teams, page)
+    base = 1 + [page.to_i - 1, 0].max * PER_PAGE
+    teams.each_with_index { |t, i| t.rank = base + i }
+  end
+
   def self.assign_unofficial_ranks(teams)
 #    ranks = Standing.all_standings(teams)
 #    teams.zip(ranks).each do |team, rank|
 #      team.rank = rank || :x
 #    end
+    # TODO Pipeline or remote script this loop
     teams.each do |team|
       team.rank = Standing.rank(team) || :x
     end
+    # return teams happens due to each
+  end
+
+  def scoreboard_row(score_p=false)
+    bd = best_design
+    row = {
+      :rank => rank,
+      :team_name => name,
+      :category => category,
+      :members => members.map{|m| m.first_name.strip }.uniq,
+      :city_state => members.map{|m| "#{m.city.strip}, #{m.state.strip}" }.uniq,
+      :school => members.map{|m| m.school.strip }.uniq,
+      :location => members.map{|m| m.school_city.strip }.uniq,
+      :submitted => bd ? bd.created_at.to_s(:nice) : '---',
+    }
+    row[:score] = format("$%.2f", 0.01 * best_score) if score_p
+    row
+  end
+
+  def self.get_local_contest_scoreboard(code, page)
+    teams = assign_simple_ranks(get_local_contest_teams(code, page), page)
+    {
+      :created_at => Time.now.to_s(:nice),
+      :teams => teams,
+      :rows => teams.map {|t| t.scoreboard_row }
+    }
   end
 
   def self.get_scoreboard(category, limit = 0, option = '-')
@@ -169,21 +261,7 @@ class Team < ActiveRecord::Base
       :category => category,
       :rows => option == 'x' ? nil : # No rows at all if option is 'x'
         assign_top_ranks(get_top_teams(category == 'c' ? %w(i e) : category, 'a', limit)).
-        select { |t| t.rank.is_a? Integer }.
-        map do |t|
-          team_data = {
-            :rank => t.rank,
-            :team_name => t.name,
-            :category => t.category,
-            :members => t.members.map{|m| m.first_name.strip }.uniq,
-            :city_state => t.members.map{|m| "#{m.city.strip}, #{m.state.strip}" }.uniq,
-            :school => t.members.map{|m| m.school.strip }.uniq,
-            :location => t.members.map{|m| m.school_city.strip }.uniq,
-            :submitted => t.best_design.created_at.to_s(:nice),
-          }
-          team_data[:score] = format("$%.2f", 0.01 * t.best_score) if option == 's';
-          team_data
-        end
+          select { |t| t.rank.is_a? Integer }.map {|t| t.scoreboard_row(option == 's') }
     }
     sb[:unavailable] = true if option == 'x'
     # Attach an instance method that knows how to
@@ -196,8 +274,6 @@ class Team < ActiveRecord::Base
         self[:id] = r.id
       end
     end
-    # Make scoreboards equal if their team names are equal
-    # sb.define_singleton_method '==', Proc.new {|other| self[:team_name] == other[:team_name]}
     sb
   end
 
@@ -207,20 +283,20 @@ class Team < ActiveRecord::Base
     pair.map{|hash| hash[key]}
   end
 
-  def self.scoreboard_diff(a, b)
+  def self.scoreboard_diff(from, to)
     diff = {
-      :id => b[:id],
-      :created_at => b[:created_at],
-      :category => b[:category],
-      :unavailable => b[:unavailable],
+      :id => to[:id],
+      :created_at => to[:created_at],
+      :category => to[:category],
+      :unavailable => to[:unavailable],
       :rows =>
-        if a[:rows].nil? then
-          b[:rows].map {|b_row| b_row.merge(:ins => true)}
-        elsif b[:rows].nil? then
-          a[:rows].map {|a_row| a_row.merge(:del => true)}
+        if from[:rows].nil? then
+          to[:rows].map {|b_row| b_row.merge(:ins => true)}
+        elsif to[:rows].nil? then
+          from[:rows].map {|a_row| a_row.merge(:del => true)}
         else
-          a_map = a[:rows].each_with_object({}) { |row, hash| hash[row[:team_name]] = row }
-          diff_rows = b[:rows].map do |b_row|
+          a_map = from[:rows].each_with_object({}) { |row, hash| hash[row[:team_name]] = row }
+          diff_rows = to[:rows].map do |b_row|
             a_row = a_map[b_row[:team_name]]
             if a_row
               team_data = {
@@ -242,9 +318,9 @@ class Team < ActiveRecord::Base
             end
           end
           # Insert the deleted rows at the correct places
-          b_map = b[:rows].each_with_object({}) { |row, hash| hash[row[:team_name]] = row }
+          b_map = to[:rows].each_with_object({}) { |row, hash| hash[row[:team_name]] = row }
           n_inserted = 0
-          a[:rows].each do |a_row|
+          from[:rows].each do |a_row|
             unless b_map[a_row[:team_name]]
               pos = a_row[:rank].to_i + n_inserted
               if pos < diff_rows.length
@@ -305,7 +381,7 @@ class Team < ActiveRecord::Base
   end
 
   def captain_demographics_formatted
-    ['Captain demographics', captain.demographics_formatted]
+    ['Captain demographics', Team.optional(captain, :demographics_formatted)]
   end
 
   def member_name_formatted
@@ -343,8 +419,12 @@ class Team < ActiveRecord::Base
   end
 
   def best_score_formatted
-    s = best_score
-    ['Best score', s ? format("$%.2f", 0.01 * s) : NONE]
+    d = best_design
+    ['Best score', d ? "#{format("$%.2f", 0.01 * d.score)} @ #{d.created_at.to_s(:nice)}" : NONE]
+  end
+
+  def best_design_formatted
+    ['Best design', best_design || NONE]
   end
 
   protected

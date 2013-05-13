@@ -40,3 +40,10 @@ heroku restart
 # Configure heroku Time Zone
 heroku config:add TZ=America/New_York
 
+# Build judge
+# Update version and date in WPBDC.gemspec
+gem build WPBDC.gemspec
+rm WPBDC-<old.version>.gem
+gem install WPBDC-<new.version>.gem
+gem push WPBDC-<new.version>.gem
+

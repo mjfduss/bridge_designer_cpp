@@ -94,9 +94,9 @@ FactoryGirl.define do
     zip { sprintf "%05d", rand(100000) }
     school { "PS #{1 + rand(1000)}" }
     school_city 'Near Goodtown'
-    sex ''
-    hispanic ''
-    race ''
+    sex '-'
+    hispanic '-'
+    race '-'
     category { generate :team_category }
     school_state { state }
     res_state { state }

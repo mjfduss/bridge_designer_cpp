@@ -68,8 +68,7 @@ tr.stripe {
 }
 
 table.review, table.index {
-  border-style: solid;
-  border-width: 1px;
+  border: 1px solid black;
   border-collapse: collapse;
   margin: 4px 0px 4px 0px;
   width: 100%;
@@ -139,7 +138,7 @@ hr {
   color: #000;
   background-color: #000;
   border-collapse: collapse;
-  height:3px;
+  height:1px;
   width:100%;
 }
 
@@ -148,3 +147,10 @@ topic {
   font-weight: bold;
 }
 
+img.sketch {
+  vertical-align: middle;
+  border: 1px solid black;
+  /* These should match DesignController::SKETCH_WIDTH and _HEIGHT */
+  width: 120px;
+  height: 80px;
+}

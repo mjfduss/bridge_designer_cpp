@@ -16,7 +16,8 @@
         = render :partial => "password", :locals => { :form => f, :team => @team }
       - else
         .para.bold Your password
-        .para= render :partial => "shared/submit_link", :locals => { :name => 'change_password', :text => "Change your team's password." }
+        .para= render :partial => "shared/submit_link",
+          :locals => { :name => 'change_password', :text => "Change your team's password." }
       %hr
       - if @team.category != 'e'
         = f.fields_for :members, @captain do |c|

@@ -19,6 +19,15 @@ h1 {
   font-weight: bold;
 }
 
+h2 {
+  font-size: 100%;
+  font-weight: bold;
+  font-style: italic;
+  margin: 8px 0px 2px 0px;
+  padding: 0px;
+  vertical-align: top;
+}
+
 table, th, td {
   padding: 2px;
   border-spacing: 0px;
@@ -106,6 +115,14 @@ div.banner {
 div.para {
   padding: 1px 0;
   margin: 1px auto 0 0;
+}
+
+div.indent {
+  margin-left: 16px;
+}
+
+div.bottomspace {
+  margin-bottom: 16px;
 }
 
 div.wrap {

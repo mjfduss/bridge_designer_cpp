@@ -3,20 +3,6 @@ class ApplicationController < ActionController::Base
   helper ApplicationHelper
   before_filter :require_valid_session
 
-  protected
-
-  def require_team_post
-    broken_session unless params[:id].blank? || params[:id].to_s == session[:team_id].to_s
-  end
-
-  def require_captain_post
-    broken_session unless params[:id].blank? || params[:id].to_s == session[:captain_id].to_s
-  end
-
-  def require_member_post
-    broken_session unless params[:id].blank? || params[:id].to_s == session[:member_id].to_s
-  end
-
   private
 
   def broken_session

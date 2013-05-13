@@ -1,1 +1,4 @@
-= render :partial => 'shared/scoreboard', :locals => { :scoreboard => @scoreboard }
+- if @scoreboard[:category] == '-'
+  .notice Please select a category to view.
+- else
+  = render :partial => 'shared/scoreboard', :locals => { :scoreboard => @scoreboard }

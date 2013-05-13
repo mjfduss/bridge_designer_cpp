@@ -4,6 +4,10 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 
+# Ignore cached assets.
+/public/assets/*
+/public/standings/*
+
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp

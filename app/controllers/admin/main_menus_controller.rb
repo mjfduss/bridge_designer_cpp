@@ -37,8 +37,7 @@ class Admin::MainMenusController < Admin::ApplicationController
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
-      @teams = Team.get_top_teams(@category, @visible_status, @standings_cutoff)
-      Team.assign_top_ranks(@teams)
+      @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :template => 'admin/teams_reviews/edit'
     elsif !params[:get_groups].blank?
@@ -47,14 +46,12 @@ class Admin::MainMenusController < Admin::ApplicationController
       @groups = Group.fetch @filter
       render :template => 'admin/groups/edit'
     elsif !params[:get_standings_review].blank?
+      @scoreboard = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
+      @scoreboard.save(session[:admin_id])
+      # If diff was requested, replace with the diff whenever a current scoreboard exists.
       if params[:diff_review]
-        sb_new = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
-        sb_new.save(session[:admin_id])
         sb_old = Scoreboard.get_current params[:review_category]
-        @scoreboard = sb_old.nil? ? sb_new : Team.scoreboard_diff(sb_old, sb_new)
-      else
-        @scoreboard = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
-        @scoreboard.save(session[:admin_id])
+        @scoreboard = Team.scoreboard_diff(sb_old, @scoreboard) unless sb_old.nil?
       end
       render :template => 'admin/standings_reviews/edit'
     elsif !params[:get_posted_standings].blank?
@@ -66,10 +63,9 @@ class Admin::MainMenusController < Admin::ApplicationController
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
       @team_name_likeness = params[:team_name_likeness]
-      @teams = Team.get_teams_by_name(@team_name_likeness, @category, @visible_status, @standings_cutoff)
-      Team.assign_unofficial_ranks(@teams)
+      @teams = Team.assign_unofficial_ranks(Team.get_teams_by_name(@team_name_likeness, @category, @visible_status, @standings_cutoff))
       @groups = Group.all
-      render :template => 'admin/get_any_teams/edit'
+      render :template => 'admin/any_teams/edit'
     elsif !params[:get_local_contests].blank?
       @edited_local_contest = LocalContest.new
       @min_teams = params[:min_teams].to_i
@@ -81,12 +77,12 @@ class Admin::MainMenusController < Admin::ApplicationController
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
       @local_contest_code = params[:local_contest_code].strip.upcase
-      @teams = LocalContest.get_teams(@local_contest_code, @category, @visible_status, @standings_cutoff)
-      Team.assign_unofficial_ranks(@teams)
+      @teams = @local_contest_code.blank? ? nil :
+        Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @category, @visible_status, @standings_cutoff))
       @groups = Group.all
-      render :template => 'admin/get_local_contest_teams/edit'
-    elsif !params[:get_leader_emails].blank?
-      render :template => 'admin/get_leader_emails/edit'
+      render :template => 'admin/local_contest_teams/edit'
+    elsif !params[:leader_emails].blank?
+      render :template => 'admin/leader_emails/edit'
     else
       flash.now[:alert] = "Unknown menu function."
       render :template => 'admin/initials/new'

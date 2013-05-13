@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'WPBDC', '2013.1.1'
+gem 'WPBDC', '~> 2013.1'
 gem 'rails', '3.2.13'
 gem 'bootstrap-sass', '2.0.4.0'
 gem 'bcrypt-ruby', '3.0.1'
@@ -11,6 +11,7 @@ gem 'jquery-rails', '2.0.2'
 gem 'nokogiri'
 gem 'thin', '~> 1.5'
 gem 'diff-lcs', '~> 1.2'
+gem 'will_paginate', '~> 3.0'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'

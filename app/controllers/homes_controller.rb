@@ -1,14 +1,14 @@
 class HomesController < ApplicationController
 
-  before_filter :require_team_post
-
   def edit
     @team = Team.find(session[:team_id])
+    @best = @team.best_score
     @design = Design.new
   end
 
   def update
     @team = Team.find(session[:team_id])
+    @best = @team.best_score
 
     # If logout...
     if !params[:logout].blank?
@@ -18,15 +18,18 @@ class HomesController < ApplicationController
     elsif !params[:update_contact].blank?
       case @team.category
         when 'e'
-          redirect_to :controller => :captain_completions, :action => :edit, :id => @team.captain.id
+          redirect_to :controller => :captain_completions, :action => :edit
         when 'i'
-          redirect_to :controller => :team_completions, :action => :edit, :id => @team.id
+          redirect_to :controller => :team_completions, :action => :edit
+        else
+          flash[:alert] = 'System error. Please try again.'
+          redirect_to :controller => :sessions, :action => :new
       end
+
     # Else if get standings...
     elsif !params[:get_standings].blank?
-      @best = @team.best_score
       @design = Design.new
-      (@standing, @out_of) = Standing.standing(@team)
+      @standing, @out_of = Standing.standing(@team)
       @result = :get_standings
       render 'edit'
 
@@ -43,7 +46,7 @@ class HomesController < ApplicationController
       WPBDC.endecrypt(bridge)
       @analysis = WPBDC.analyze(bridge)
 
-      # Approach here is to fill the @analysis with all information
+      # Approach here is to fill the @analysis hash and @result with all information
       # and leave decisions on how to present it to the view.
       case @analysis[:status]
         when WPBDC::BRIDGE_OK
@@ -61,13 +64,11 @@ class HomesController < ApplicationController
               # No duplicate. Build a new design model instance.
               sequence = SequenceNumber.get_next(:design)
               logger.info "Analysis: #{@analysis.inspect}"
-              @design = Design.create(:score => @analysis[:score],
-                                      :sequence => sequence,
-                                      :scenario => @analysis[:scenario],
-                                      :hash_string => @analysis[:hash],
-                                      :bridge => bridge) do |d|
-                d.team = @team
-              end
+              @design = @team.designs.build :score => @analysis[:score],
+                                            :sequence => sequence,
+                                            :scenario => @analysis[:scenario],
+                                            :hash_string => @analysis[:hash],
+                                            :bridge => bridge
               if @design.save
                 Team.increment_counter :submits, @team.id
 
@@ -76,7 +77,7 @@ class HomesController < ApplicationController
                   @old_best = @best
                   @best = @analysis[:score]
                   Team.increment_counter :improves, @team.id
-                  (@standing, @out_of) = Standing.insert(@team, @design)
+                  @standing, @out_of = Standing.insert(@team, @design)
                   logger.info "Inserted standing #{@standing} of #{@out_of}."
                   @result = :new_best
                 else
@@ -91,21 +92,18 @@ class HomesController < ApplicationController
               @result = :no_improvement
             end
           else
-            @design = Design.new
-            (@standing, @out_of) = Standing.interpolated_standing(@team, @analysis[:score])
+            @standing, @out_of = Standing.interpolated_standing(@team, @analysis[:score])
             @result = :duplicate
           end
         when WPBDC::BRIDGE_MALFORMED
-          @design = Design.new
           @result = :bridge_malformed
         when WPBDC::BRIDGE_WRONGVERSION
-          @design = Design.new
           @result = :bridge_wrong_version
         when WPBDC::BRIDGE_FAILEDTEST
-          @design = Design.new
           @result = :bridge_failed_test
       end
       # Edit view responds to contents of @team, @analysis, and @design.
+      @design ||= Design.new
       render 'edit'
     else
       # It was the main submit button, but no design was submitted.

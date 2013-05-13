@@ -1,7 +1,5 @@
 class VerificationsController < ApplicationController
 
-  before_filter :require_team_post
-
   def edit
     @team = Team.find(session[:team_id])
     @captain = @team.captain
@@ -12,13 +10,13 @@ class VerificationsController < ApplicationController
     @team = Team.find(session[:team_id])
     if params.has_key? :cancel
       c = @team.category == 'i' ? :team_completions : :captain_completions
-      redirect_to :controller => c, :action => :edit, :id => session[:captain_id]
+      redirect_to :controller => c, :action => :edit
     else
       if @team.valid?
-        redirect_to :controller => :homes, :action => :edit, :id => params[:id]
+        redirect_to :controller => :homes, :action => :edit
       else
         flash[:error] = "Your registration is not valid. Sorry, you'll have to start again."
-        redirect_do :controller => :sessions, :action => :new
+        redirect_to :controller => :sessions, :action => :new
       end
     end
   end

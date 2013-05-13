@@ -15,8 +15,13 @@ class LocalContest < ActiveRecord::Base
   before_validation :clean_link
 
   validates :code, :uniqueness => true,
-                   :format => { :with => /\A[0-9A-Z]{3}(?:[0-9A-Z]|\d\d[A-D]\Z)/,
+                   :format => { :with => /\A[0-9A-Z]{3}(?:[0-9A-Z]|\d\d[A-D])\Z/,
                                 :message => 'must be a correct 4- or 6-character local contest identifier.'}
+  # Use the judge to check for valid local contest id in 6-character codes only.
+  validates_each :code do |record, attr, code|
+    record.errors.add(attr, 'must end with a proper design scenario.') \
+      if code.length == 6 && WPBDC.local_contest_code_to_id(code).nil?
+  end
   validates :description, :presence => true, :length => { :maximum => 40 }
   validates :poc_first_name, :length => { :maximum => 40 }
   validates :poc_middle_initial, :length => { :maximum => 1 }
@@ -35,8 +40,7 @@ class LocalContest < ActiveRecord::Base
   end
 
   def self.get_teams(code, categories, statuses, limit)
-    local_contest = LocalContest.find_by_code(code.strip.upcase);
-    local_contest.nil? ? [] : local_contest.teams.ordered_by_name
+    LocalContest.find_by_code(code).teams.ordered_by_name
   end
 
   def formatted(visible = %w(description poc poc_position phone link created))
@@ -64,7 +68,7 @@ class LocalContest < ActiveRecord::Base
   end
 
   def created_formatted
-    [ "Created", created_at ]
+    [ "Created", created_at.to_s(:nice) ]
   end
 
   def poc_full_name

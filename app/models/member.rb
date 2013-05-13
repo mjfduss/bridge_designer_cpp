@@ -88,9 +88,10 @@ class Member < ActiveRecord::Base
 
   def demographics_formatted
     rtn = []
-    rtn.push(TablesHelper::SEX_MAP[sex]) if sex
-    rtn.push(["Hispanic:",  TablesHelper::HISPANIC_MAP[hispanic]]) if hispanic
-    rtn.push(["Race:", TablesHelper::RACE_MAP[race]]) if race
-    rtn = "[none given]" if rtn.blank?
+    rtn.push(TablesHelper::SEX_MAP[sex]) unless sex == '-'
+    rtn.push(["Hispanic:",  TablesHelper::HISPANIC_MAP[hispanic]]) unless hispanic == '-'
+    rtn.push(["Race:", TablesHelper::RACE_MAP[race]]) unless race == '-'
+    rtn = Team::NONE if rtn.blank?
+    rtn
   end
 end

@@ -1,8 +1,6 @@
 Wpbdc::Application.routes.draw do
 
-  get "get_leader_emails/edit"
-
-  get "get_leader_emails/update"
+  get "standings_local/show"
 
   namespace :admin do
     resource :frame, :only => [ :new ]
@@ -13,22 +11,27 @@ Wpbdc::Application.routes.draw do
     resource :password_change, :only => [ :edit, :update ]
     resource :standings_review, :only => [ :edit, :update ]
     resource :teams_review, :only => [ :edit, :update ]
-    resource :get_any_team, :only => [ :edit, :update ]
-    resource :get_local_contest_team, :only => [:edit, :update ]
-    resource :retrieve_design, :only => [:edit, :update]
+    resource :any_team, :only => [ :edit, :update ]
+    resource :local_contest_team, :only => [:edit, :update ]
+    resource :leader_emails, :only => [:edit, :update]
     resource :session, :only => [ :new, :create, :destroy ]
     resource :group, :only => [ :edit, :update ]
     resource :local_contest, :only => [ :edit, :update ]
+    resources :designs, :only => [:show]
   end
-  resources :teams, :except => [ :show ]
-  resources :members, :except => [ :show, :destroy ]
-  resources :certifications, :only => [ :edit, :update ]
-  resources :captain_completions, :only => [ :edit, :update ]
-  resources :member_completions, :only => [ :edit, :update ]
-  resources :team_completions, :only => [ :edit, :update ]
-  resources :verifications, :only => [ :edit, :update ]
-  resources :homes, :only => [ :edit, :update ]
+  resource :team, :only => [ :new, :create, :edit, :update ]
+  resource :member, :only => [ :new, :create, :edit, :update ]
+  resource :certification, :only => [ :edit, :update ]
+  resource :captain_completion, :only => [ :edit, :update ]
+  resource :member_completion, :only => [ :edit, :update ]
+  resource :team_completion, :only => [ :edit, :update ]
+  resource :verification, :only => [ :edit, :update ]
+  resource :home, :only => [ :edit, :update ]
   resources :standings, :only => [ :show ]
+  # Can's use a standard resource path here because both local contest
+  # code and page (for pagination) must be in path for cache to work.
+  match 'standings/local/:code(/:page)' => 'standings_local#show'
+
   resource :session, :only => [ :new, :create, :destroy ]
 
   root :to => 'sessions#new'

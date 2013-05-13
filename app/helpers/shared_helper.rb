@@ -7,8 +7,17 @@ module SharedHelper
     Matrix.build(n_rows, n_cols) { |i, j| items[i + n_rows * j] } .to_a
   end
 
-  def insert_html_breaks(obj)
-    if obj.kind_of?(Array) then obj.join(', ').html_safe else obj end
+  def htmlify(obj)
+    case obj
+      when String
+        obj
+      when Array
+        obj.join(', ').html_safe
+      when Design
+        html = image_tag url_for(:controller => 'admin/designs', :action => :show, :id => obj.id), :class => :sketch
+        html << " [#{link_to 'Analysis', { :controller => 'admin/designs', :action => :show, :id => obj.id}, {:class => 'review', :target => 'analysis'}}]".html_safe
+        html << " [#{link_to 'Bridge', {:controller => 'admin/designs', :action => :show, :id => obj.id, :format => :bdc}, {:class => 'review'}}]".html_safe
+    end
   end
 
   def sep
