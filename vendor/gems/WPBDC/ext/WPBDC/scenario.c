@@ -8,7 +8,9 @@
 // The indices do _not_ have to be in order.
 
 // Lookup table is sorted on 10-char ID field for binary search.
+// The search routine will bubble the semifinal row to the right location.
 static TScenarioDescriptor scenario_descriptor_tbl[] = {
+    { 999, SEMIFINAL_SCENARIO_ID, "99Z", 100000.00 },
     {   0, "1050824100", "27A",  99874.40 },
     {   1, "1051220100", "32A", 105140.00 },
     {   2, "1051616100", "36A", 111994.40 },
@@ -427,23 +429,42 @@ char *local_contest_number_to_id(char *number)
 int lookup_scenario_descriptor(TScenarioDescriptor *desc, char *id)
 {
 	static TScenarioDescriptor null_desc = NULL_SCENARIO_DESCRIPTOR;
+	static int initialized_p = 0;
 	int lo = 0;
 	int hi = STATIC_ARRAY_SIZE(scenario_descriptor_tbl) - 1;
-	int cmp, mid;
+	int i, cmp, mid;
 
-	while (lo <= hi) {
-		mid = (unsigned)(lo + hi) >> 1;
-		cmp = strncmp(id, scenario_descriptor_tbl[mid].id, SCENARIO_ID_SIZE);
-		if (cmp < 0)
-			hi = mid - 1;
-		else if (cmp > 0)
-			lo = mid + 1;
-		else {
-			if (desc)
-				*desc = scenario_descriptor_tbl[mid];
-			return mid;
-		}
-	}
+    // Bubble the semifinal scenario to the right position one time.
+    if (!initialized_p) {
+        initialized_p = 1;
+        TScenarioDescriptor semifinal_descriptor = scenario_descriptor_tbl[0];
+        for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl) - 1; i++) {
+            if (strncmp(scenario_descriptor_tbl[i + 1].id, semifinal_descriptor.id, SCENARIO_ID_SIZE) < 0)
+                scenario_descriptor_tbl[i] = scenario_descriptor_tbl[i + 1];
+            else
+                break;
+        }
+        scenario_descriptor_tbl[i] = semifinal_descriptor;
+    }
+
+    // Don't bother searching for the null semifinal scenario.
+    if (strncmp(id, NULL_SEMIFINAL_SCENARIO_ID, SCENARIO_ID_SIZE) != 0) {
+
+        while (lo <= hi) {
+            mid = (unsigned)(lo + hi) >> 1;
+            cmp = strncmp(id, scenario_descriptor_tbl[mid].id, SCENARIO_ID_SIZE);
+            if (cmp < 0)
+                hi = mid - 1;
+            else if (cmp > 0)
+                lo = mid + 1;
+            else {
+                if (desc)
+                    *desc = scenario_descriptor_tbl[mid];
+                return mid;
+            }
+        }
+
+    }
 	if (desc)
 		*desc = null_desc;
 	return -1;

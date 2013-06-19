@@ -1,4 +1,6 @@
 include ActionView::Helpers::FormOptionsHelper
+require 'matrix'
+
 module ApplicationHelper
   include TablesHelper
 
@@ -55,5 +57,34 @@ module ApplicationHelper
 
   def local_contest_list(team)
     team.local_contests.map {|c| c.code}.join(', ')
+  end
+
+  def columnize(items, n_cols)
+    n_rows = (items.length + n_cols - 1) / n_cols
+    Matrix.build(n_rows, n_cols) { |i, j| items[i + n_rows * j] } .to_a
+  end
+
+  def htmlify(obj)
+    case obj
+      when ActiveSupport::TimeWithZone
+        obj.to_s(:nice)
+      when Array
+        obj.join(', ').html_safe
+      when Design
+        html = image_tag url_for(:controller => 'admin/designs', :action => :show, :id => obj.id, :format => :png), :class => :sketch
+        html << " [#{link_to 'Analysis', { :controller => 'admin/designs', :action => :show, :id => obj.id, :format => :html}, {:class => 'review', :target => 'analysis'}}]".html_safe
+        html << " [#{link_to 'Bridge', {:controller => 'admin/designs', :action => :show, :id => obj.id, :format => :bdc}, {:class => 'review'}}]".html_safe
+      else
+        obj
+    end
+  end
+
+  def sep
+    @@sep ||= ('&nbsp;' * 2).html_safe
+  end
+
+  def team_review_group_list_data(groups)
+    pairs = groups ? groups.map { |g| [g.description, g.id] } : []
+    pairs.unshift( ['Select Group',  '-'] )
   end
 end

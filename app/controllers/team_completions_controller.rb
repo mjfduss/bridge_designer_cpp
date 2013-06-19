@@ -26,6 +26,7 @@ class TeamCompletionsController < ApplicationController
       render 'edit'
     else
       if do_update
+        do_login
         redirect_to :controller => :homes, :action => :edit
       else
         # Keep the password fields open if they already are
@@ -41,9 +42,9 @@ private
 
     # Clobber any deleted local contest affiliations
     if params[:deleted_affiliations]
-      @team.affiliations.each do |a| 
+      @team.affiliations.each do |a|
         Affiliation.delete(a.id) if params[:deleted_affiliations].include? a.local_contest.code
-      end 
+      end
     end
 
     # Set a status flag in the model to govern validation
@@ -52,7 +53,7 @@ private
     # Fill in registration fields if the team is not already registered
     @team.register
 
-    # Validate and save if good
+    # Validate, save with new team params and log in if not already done.
     @team.update_attributes(params[:team])
   end
 end

@@ -2,14 +2,18 @@ class LocalContest < ActiveRecord::Base
 
   include ActionView::Helpers::UrlHelper
 
-  default_scope order("code ASC")
+  default_scope order('code ASC')
 
   attr_accessible :code, :description
   attr_accessible :poc_first_name, :poc_middle_initial, :poc_last_name, :poc_position
   attr_accessible :organization, :city, :state, :zip, :phone, :link
 
+  attr_accessor :affiliation_count
+  attr_accessible :affiliation_count
+
   has_many :affiliations
   has_many :teams, :through => :affiliations
+  has_one :best
 
   before_validation :upcase_code
   before_validation :clean_link
@@ -34,13 +38,27 @@ class LocalContest < ActiveRecord::Base
   validates :phone, :length => { :maximum => 16 }
   validates :link, :length => { :maximum => 40 }
 
-  def self.fetch(filter, min_teams)
-    local_contests = filter =~ /\S/ ? LocalContest.where('code SIMILAR TO ?', filter) : LocalContest.all
-    min_teams > 0 ? local_contests.select{|c| c.affiliations.count >= min_teams } : local_contests
+  # Query for the number of teams in this contest and cache the result.
+  def affiliation_count
+    @affiliation_count ||= affiliations.count
   end
 
-  def self.get_teams(code, categories, statuses, limit)
-    LocalContest.find_by_code(code).teams.ordered_by_name
+  # Query by example using the given params, which are keyed on local
+  # contest column names plus the additional key :affiliation_count, which
+  # is treated as the minimum number of teams engaged.
+  def self.qbe(params)
+    q = LocalContest.scoped  # Make null query scope
+    LocalContest.column_names.each do |name|
+      param = params[name.to_s]
+      q = q.where("#{name} ILIKE ?", "%#{param}%") unless param.blank?
+    end
+    ac = params[:affiliation_count].to_i  # this gives 0 for blank or nil param
+    (ac == 0) ? q.all : q.select{ |c| c.affiliation_count >= ac }
+  end
+
+  def self.get_teams(code, statuses, limit)
+    lc = LocalContest.find_by_code(code)
+    lc ? lc.teams.where(:status => statuses).ordered_by_name.limit(limit) : nil
   end
 
   def formatted(visible = %w(description poc poc_position phone link created))
@@ -48,27 +66,27 @@ class LocalContest < ActiveRecord::Base
   end
 
   def description_formatted
-    [ "Description", description ]
+    [ 'Description', description ]
   end
 
   def phone_formatted
-    [ "Phone", phone ]
+    [ 'Phone', phone ]
   end
 
   def poc_formatted
-    [ "POC", poc_full_name ]
+    [ 'POC', poc_full_name ]
   end
 
   def link_formatted
-    link.include?('@') ? ["Email", mail_to(link) ] : ["Web", link_to(link, link) ]
+    link.include?('@') ? ['Email', mail_to(link) ] : ['Web', link_to(link, link) ]
   end
 
   def poc_position_formatted
-    [ "POC position", poc_full_position ]
+    [ 'POC position', poc_full_position ]
   end
 
   def created_formatted
-    [ "Created", created_at.to_s(:nice) ]
+    [ 'Created', created_at.to_s(:nice) ]
   end
 
   def poc_full_name
@@ -92,6 +110,6 @@ class LocalContest < ActiveRecord::Base
   end
 
   def clean_link
-    self.link = "http://" + link unless link.blank? || link =~ /@|https?:\/\//
+    self.link = "http://#{link}" unless link.blank? || link =~ /@|https?:\/\//
   end
 end

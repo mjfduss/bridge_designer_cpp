@@ -10,8 +10,7 @@ class Admin::LocalContestTeamsController < Admin::ApplicationController
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
       @local_contest_code = params[:local_contest_code].strip.upcase
-      @teams = @local_contest_code.blank? ? nil :
-          Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @category, @visible_status, @standings_cutoff))
+      @teams = Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :action => :edit
     elsif !params[:retrieve].blank?

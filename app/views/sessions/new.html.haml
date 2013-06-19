@@ -1,35 +1,91 @@
-- flash.each do |key, msg|
-  %div{:class => key}= msg
-.para.hi.big
-  Welcome Bridge Designer! 
-.para.hi 
-  We're open for individuals who want to test 
-  their skill and for unofficial local contests.
-.para
-  If you've already registered, then log in by 
-  typing your Team Name and Password below.
-.dialog.loginwidth
-  .dialoghead
-    .dialogheadcontent
-      Contest Login
-  .dialogbody
-    = form_for(:session, :url => session_path) do |f|
-      %table
-        %tr
-          %td 
-            = f.label 'Team Name:'
-          %td
-            = f.text_field :name, { :size => 16, :maxlength => 16 }
-        %tr
-          %td
-            = f.label 'Password:'
-          %td
-            = f.password_field :password, { :size => 16, :maxlength => 16 }
-        %tr
-          %td{ :colspan => 2, :align => 'right' }= f.submit 'Log In', { :class => 'btn' }
-%hr
-.para
-  If you have not yet registered, then...
-.para
-  = button_to 'Start the Registration Wizard >>',     |
-  new_team_path, { :method => :get, :class => 'btn' } |
+.pagewidth
+  .para.hi.big
+    Welcome Bridge Designer!
+  - flash.each do |key, msg|
+    %div{:class => key}= msg
+  .indent
+    - case @schedule_state
+      - when Schedule::STATE_CLOSED
+        .vsep
+          %table
+            %tr
+              %td
+                %img{:src => '/assets/uhoh.gif'}
+              %td
+                .indent
+                  .hi Sorry! The contest is currently off line.
+                  .vsep #{@schedule.message.html_safe}
+      - when Schedule::STATE_INITIAL_FREE
+        .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
+        .para
+          The #{WPBDC::CONTEST_YEAR} Qualifying Round will begin #{@schedule.start_quals_prereg.to_s(:nice)} when the
+          %span.bold West Point Bridge Designer #{WPBDC::CONTEST_YEAR}
+          will be available. Until then, we recommend you practice with the old version!
+      - when Schedule::STATE_QUALS_PREREG
+        .vsep.hi We're open for #{WPBDC::CONTEST_YEAR} Qualifying Round pre-registration.
+        .para
+          Download the
+          %span.bold West Point Bridge Designer #{WPBDC::CONTEST_YEAR}
+          and start designing bridges!
+        .para You'll be able to upload bridges for judging starting #{@schedule.start_quals.to_s(:nice)}.
+        .para Good luck in the Contest!
+      - when Schedule::STATE_QUALS
+        .vsep.hi We're open for the #{WPBDC::CONTEST_YEAR} Qualifying Round! It's easy and free to compete!
+        .para
+          %span.bold Quick Start:
+          Register your Team of 1 or 2 using the Wizard button below. Download the free
+          %span.bold West Point Bridge Designer #{WPBDC::CONTEST_YEAR}.
+          Design and upload bridges at your Team Home Page - as many as you want.
+          See your worldwide standing whenever you wish!
+        .para The qualifying round ends #{@schedule.end_quals.to_s(:nice)}.
+        .para Good luck in the Contest!
+      - when Schedule::STATE_QUALS_CLOSED
+        .vsep
+          %table
+            %tr
+              %td
+                %img{:src => '/assets/uhoh.gif'}
+              %td
+                .indent
+                  .hi We're closed for a few hours while we tally the results of the #{WPBDC::CONTEST_YEAR} Qualifying Round.
+                  .vsep The round ended #{@schedule.end_quals.to_s(:nice)}. Come back soon to test your skill or compete in local contests!
+      - when Schedule::STATE_INTERIM_FREE
+        .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
+        .para
+          The #{WPBDC::CONTEST_YEAR} Qualifying Round ended #{@schedule.end_quals.to_s(:nice)} and
+          preparation for the Semi-final Round is in progress.
+        .vsep.hi If you're on a Semi-final team, congratulations!
+        .para
+          You can log in to check your Semi-final Home
+          page beginning #{@schedule.start_semis_prereg.to_s(:nice)}. The round begins #{@schedule.start_semis.to_s(:nice)}.
+      - when Schedule::STATE_SEMIS_PREREG
+        .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
+        .vsep.hi Semi-final teams, congratulations! Please log in to check your Semi-final Home Page.
+        .para The Semi-final round begins #{@schedule.start_semis.to_s(:nice)}.
+      - when Schedule::STATE_SEMIS
+        .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
+        .vsep.hi Semi-finals are in progress!  Stay tuned for results!
+        .para The Semi-final round began #{@schedule.start_semis.to_s(:nice)} and ends #{@schedule.end_semis.to_s(:nice)}.
+      - when Schedule::STATE_POST_FREE
+        .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
+        .para
+          The #{WPBDC::CONTEST_YEAR} Qualifying and Semifinal Rounds ended #{@schedule.end_semis.to_s(:nice)}.
+          You can check the Contest Results tab to see how they turned out!
+  - unless @schedule_state == Schedule::STATE_CLOSED || @schedule_state == Schedule::STATE_QUALS_CLOSED
+    .indent
+      .vsep.hi If you've already registered, then log in by typing your Team Name and Password below.
+      .dialog.loginwidth
+        .dialoghead.dialogheadcontent Contest Login
+        .dialogbody
+          = form_for(:session, :url => session_path) do |f|
+            %table
+              %tr
+                %td= f.label 'Team Name:'
+                %td= f.text_field :name, { :size => 16, :maxlength => 16 }
+              %tr
+                %td= f.label 'Password:'
+                %td= f.password_field :password, { :size => 16, :maxlength => 16 }
+              %tr
+                %td{ :colspan => 2, :align => 'right' }= f.submit 'Log In', { :class => 'btn' }
+      .vsep.hi If you have not yet registered, then...
+      .para= button_to 'Start the Registration Wizard >>', new_team_path, { :method => :get, :class => 'btn' }

@@ -138,7 +138,6 @@ module TablesHelper
       ['Select Category', '-'],
       ['US/PR Students', 'e'],
       ['Open Competition', 'i'],
-      ['Semifinalists', '2'],
     ]
 
   CATEGORY_MAP = Hash[ CATEGORY_PAIRS[1..-1].map{ |p| [p[1], p[0]] } ]
@@ -149,7 +148,7 @@ module TablesHelper
       ['Combined US/PR-Open', 'c'],
       ['US/PR Students', 'e'],
       ['Open Competition', 'i'],
-      ['Semifinalists', '2'],
+      ['Semi-Finalists', '2'],
     ]
 
   STANDINGS_OPTIONS_PAIRS =
@@ -184,6 +183,7 @@ module TablesHelper
       ['Member school', 'member_school'],
       ['Member demographics', 'member_demographics'],
       ['Email', 'email'],
+      ['Registration', 'reg_completed'],
       ['Local contests', 'local_contests'],
       ['Best score', 'best_score'],
       ['Best design', 'best_design']
@@ -196,15 +196,18 @@ module TablesHelper
     email local_contests best_score}
   TEAM_ATTRIBUTE_SELECTED = TEAM_ATTRIBUTE_PAIRS.map { |p| TEAM_ATTRIBUTE_DEFAULTS.include? p[1] }
 
+  # Must keep Hidden last or else update shared/_team_review_record.haml
   STATUS_PAIRS =
     [
       ['Unreviewed', '-'],
-      ['Accepted', 'a'],
       ['Rejected', 'r'],
-      ['Hidden',   'h'],
+      ['Accepted', 'a'],
+      ['Semi-Final', '2'],
+      ['Hidden',   'h'],  # No radio button for this!
     ]
 
-  STATUS_DEFAULTS = %w{- a r h}
+  # What's selected by default in the admin menu.
+  STATUS_DEFAULTS = %w{- r a h}
   STATUS_SELECTED = STATUS_PAIRS.map { |p| STATUS_DEFAULTS.include? p[1] }
   STATUS_MAP = Hash[ STATUS_PAIRS.map{ |p| [p[1], p[0]] } ]
 

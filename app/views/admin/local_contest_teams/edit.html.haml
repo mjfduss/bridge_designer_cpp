@@ -1,6 +1,6 @@
 - if @teams.nil?
-  .notice Please enter a local contest to show.
-- elsif @teams.blank?
+  .notice Sorry. Local contest '#{@local_contest_code}' doesn't exist.
+- elsif @teams.empty?
   .notice Sorry. No teams in local contest '#{@local_contest_code}'.
 - else
   - team_items_table = @teams.zip(Team.format_all(@teams, @visible_attributes))
@@ -11,6 +11,7 @@
   = form_tag admin_local_contest_team_path, :method => :put do
     = hidden_field_tag 'local_contest_code', @local_contest_code
     = hidden_field_tag 'standings_cutoff', @standings_cutoff
+    = hidden_field_tag 'team_category', @category
     - @visible_status.each do |status|
       = hidden_field_tag "visible_status[]", status
     - @visible_attributes.each do |attribute|

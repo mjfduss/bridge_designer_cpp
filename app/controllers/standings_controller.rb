@@ -21,8 +21,7 @@ class StandingsController < ApplicationController
 
   def require_valid_category
     unless ROUTE_ID_TO_CATEGORY[params[:id]]
-      flash[:alert] = "The standings page you requested does not exist."
-      redirect_to :controller => :sessions, :action => :new
+      kill_session 'The standings page you requested does not exist.'
     end
   end
 end

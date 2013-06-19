@@ -11,8 +11,7 @@ class Admin::AnyTeamsController < Admin::ApplicationController
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
       @team_name_likeness = params[:team_name_likeness]
-      @teams = Team.get_teams_by_name(@team_name_likeness, @category, @visible_status, @standings_cutoff)
-      Team.assign_unofficial_ranks(@teams)
+      @teams = Team.assign_unofficial_ranks(Team.get_teams_by_name(@team_name_likeness, @category, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :action => :edit
     elsif !params[:retrieve].blank?

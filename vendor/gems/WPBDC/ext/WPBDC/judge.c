@@ -556,7 +556,6 @@ int main(int argc, char* argv[])
     printf("%d examples read, %d written\n", n_examples_read, n_examples_written);
 #endif
 
-
     return 0;
 }
 

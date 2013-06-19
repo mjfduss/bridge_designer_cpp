@@ -1,5 +1,7 @@
 class Scoreboard < ActiveRecord::Base
+
   attr_accessible :admin_id, :board, :category, :status
+
   default_scope order('created_at ASC')
 
   # Get the current scoreboard.  If empty_p is true, a null

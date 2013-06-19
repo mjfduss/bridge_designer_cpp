@@ -2,9 +2,13 @@
   %h1 Admin Functions
   = form_tag admin_main_menu_path, :method => :put, :target => target do
     .menu_item
-      = render :partial => "shared/submit_link", :locals => { :name => 'change_password', :text => "Change password" }
+      = render :partial => "shared/submit_link", :locals => { :name => 'change_password', :text => 'New password' }
       &nbsp;|&nbsp;
-      = render :partial => "shared/submit_link", :locals => { :name => 'check_servers', :text => "Check servers" }
+      = render :partial => "shared/submit_link", :locals => { :name => 'check_servers', :text => 'Servers' }
+      &nbsp;|&nbsp;
+      = render :partial => "shared/submit_link", :locals => { :name => 'edit_schedule', :text => "Schedule" }
+      &nbsp;|&nbsp;
+      = render :partial => "shared/submit_link", :locals => { :name => 'log_out', :text => "Log out" }
     .menu_item
       .menu_label Review (Accept/Reject) top teams:
       = select_tag('team_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['team_category'] || '-'))
@@ -34,18 +38,12 @@
         = select_tag 'find_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['find_category'] || '-')
         = render :partial => "shared/submit_link", :locals => { :name => 'get_any_team', :text => "Go" }
     .menu_item
-      .menu_label Administer local contests:
-      .wrap
-        Filter:
-        = text_field_tag('local_contest_filter', state['local_contest_filter'] || '', :size => 4)
-        &nbsp;&nbsp;Min # teams:
-        = text_field_tag('min_teams', state['min_teams'] || '0', :size => 2)
+      .menu_label
+        Administer local contests:
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contests', :text => "Go" }
     .menu_item
-      .menu_label Administer groups:
-      .wrap
-        Filter:
-        = text_field_tag('group_filter', state['group_filter'] || '', :size => 4)
+      .menu_label
+        Administer groups:
         = render :partial => "shared/submit_link", :locals => { :name => 'get_groups', :text => "Go" }
     .menu_item
       .menu_label Find teams in local contest:

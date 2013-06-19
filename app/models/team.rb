@@ -2,6 +2,7 @@ class Team < ActiveRecord::Base
 
   VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   NONE = '[none]'
+  PER_PAGE = 20
 
   attr_accessible :name, :email
   attr_accessible :password, :password_confirmation
@@ -16,8 +17,9 @@ class Team < ActiveRecord::Base
   has_many :members, :order => 'rank ASC', :dependent => :destroy
   has_many :designs, :order => 'score ASC, sequence ASC', :dependent => :destroy
   has_one :best_design, :class_name => 'Design', :order => 'score ASC, sequence ASC'
-  has_many :affiliations
+  has_many :affiliations, :dependent => :destroy
   has_many :local_contests, :through => :affiliations
+  has_many :bests, :dependent => :destroy
   belongs_to :group
 
   scope :ordered_by_name, :order => "name_key ASC"
@@ -74,7 +76,7 @@ class Team < ActiveRecord::Base
   end
 
   def best_score_for_scenario(scenario)
-    d = designs.select('score').where(:scenario => scenario).order('score, sequence ASC').first
+    d = designs.select('score').where(:scenario => scenario).order('score ASC, sequence ASC').first
     d ? d.score : nil
   end
 
@@ -84,6 +86,7 @@ class Team < ActiveRecord::Base
     i.nil? ? 'e' : 'i'
   end
 
+  # Mark this team as fully registered. This enables future logins.
   def register
     self.reg_completed = Time.now unless registered?
   end
@@ -100,12 +103,15 @@ class Team < ActiveRecord::Base
     status == 'r'
   end
 
-  def self.authenticate (name, password)
-    team = find_by_name_key(to_name_key(name))
-    return team ? team.try(:authenticate, password) : nil
+  def semifinalist?
+    status == '2'
   end
 
-  PER_PAGE = 20
+  # This is where we check that the team completed registration fully.
+  def self.authenticate (name, password)
+    team = find_by_name_key(to_name_key(name))
+    return team && team.reg_completed ? team.try(:authenticate, password) : nil
+  end
 
   # @param [Array] categories list of team categories to select from
   # @param [Array] statuses list of statuses to select from
@@ -113,41 +119,41 @@ class Team < ActiveRecord::Base
   def self.get_top_teams(categories, statuses, limit)
     limit = limit.to_i
     return [] if statuses.empty? || categories.empty? || limit <= 0
+    includes(:members, :best_design).
+      joins(:bests).
+      where(:bests => { :scenario => nil }, :category => categories, :status => statuses).
+      order('bests.score ASC, bests.sequence ASC').limit(limit)
+=begin
     # PSQL specific
     Team.find_by_sql ['select * from
       (select distinct on (d.team_id) t.*, d.score, d.sequence
         from teams t inner join designs d
         on t.id = d.team_id
         where t.category in (?) and t.status in (?)
-        order by d.team_id, d.score asc, d.sequence asc
-        limit ?) tmp
-      order by score asc, sequence asc', categories, statuses, limit]
+        order by d.team_id, d.score asc, d.sequence asc) tmp
+      order by score asc, sequence asc
+      limit ?', categories, statuses, limit]
+=end
   end
 
-  SQL = %{with
-    local_contest_teams as
-      (select t.* from teams t
-        inner join affiliations a
-          on t.id = a.team_id
-        inner join local_contests lc
-          on a.local_contest_id = lc.id
-        where lc.code = ?),
-    best_designs_by_team as
-      (select distinct on (d.team_id) lct.*, d.score, d.sequence
-        from local_contest_teams lct inner join designs d
-          on lct.id = d.team_id
-        where lct.status not in ('r')
-        order by d.team_id, d.score asc, d.sequence asc)
-  select * from best_designs_by_team order by score, sequence}
 
-  # Get the teams in a local contest correctly correlated.
+  # Get the teams in a local contest correctly sorted by score.
   # Offset and limit are to serve our pagination mechanism,
   # since we can't use any of the standard gems for scoreboards.
-  # @param [String] code local contest code
+  # @param [String] code local contest code or nil for 4-char-code local contests
   # @param [Integer] page page of records to return (as for will_paginate)
   # @return [Array] array of Teams
-  def self.get_local_contest_teams(code, page=1)
-    scenario = WPBDC.local_contest_code_to_id(code)
+  def self.get_local_contest_teams(code, page = 1)
+    includes(:members, :best_design).
+      joins(:bests, :affiliations => :local_contest).
+      # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
+      where(:status => %w{- a 2 h},
+            :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
+            :local_contests => { :code => code }).
+      paginate(:page => page, :per_page => PER_PAGE).
+      order('bests.score ASC, bests.sequence ASC')
+
+=begin
     Team.paginate_by_sql scenario ?
 
       ["select * from
@@ -160,7 +166,7 @@ class Team < ActiveRecord::Base
                 where lc.code = ?) lct
           inner join designs d
             on lct.id = d.team_id
-          where lct.status not in ('r') and d.scenario = ?
+          where lct.status <> 'r' and d.scenario = ?
           order by d.team_id, d.score asc, d.sequence asc) tmp
         order by score, sequence", code, scenario] :
 
@@ -174,16 +180,17 @@ class Team < ActiveRecord::Base
                 where lc.code = ?) lct
           inner join designs d
             on lct.id = d.team_id
-          where lct.status not in ('r')
+          where lct.status <> 'r'
           order by d.team_id, d.score asc, d.sequence asc) tmp
         order by score, sequence", code],
 
         :page => page, :per_page => PER_PAGE
+=end
   end
 
   def self.get_teams_by_name(name_likeness, categories, statuses, limit)
     name_likeness.strip!
-    Team.where('name_key SIMILAR TO ? and category in (?) and status in (?)',
+    Team.where('name_key ILIKE ? and category in (?) and status in (?)',
       name_likeness.blank? ? '%' : name_likeness, categories, statuses).order('name_key ASC').limit(limit.to_i)
   end
 
@@ -194,18 +201,15 @@ class Team < ActiveRecord::Base
     teams.each do |team|
       g = team.group
       team.rank = case team.status
-        when 'a'
+        when 'a', '2'
           if g.nil? || (group_counts[g.id] += 1) <= max_ranked_in_group
             rank += 1
           else
             :o
           end
         when '-'
-          if g.nil? || group_counts[g.id] <= max_ranked_in_group
-            :x # Would be visible if this alone were selected.
-          else
-            :o # Would be hidden even if accepted.
-          end
+          # :x for "Would be visible if this alone were accepted"; :o for "Would be hidden even if accepted"
+          (g.nil? || group_counts[g.id] <= max_ranked_in_group) ? :x : :o
         else
           :x
       end
@@ -226,8 +230,8 @@ class Team < ActiveRecord::Base
     # TODO Pipeline or remote script this loop
     teams.each do |team|
       team.rank = Standing.rank(team) || :x
-    end
-    # return teams happens due to each
+    end if teams
+    teams
   end
 
   def scoreboard_row(score_p=false)
@@ -256,17 +260,29 @@ class Team < ActiveRecord::Base
   end
 
   def self.get_scoreboard(category, limit = 0, option = '-')
-    sb = {
+
+    # Translate scoreboard category into team category and status.
+    team_category = category
+    team_status = 'a'
+    case category
+      when 'c' # combined
+        team_category = %w{i e}
+      when '2' # semifinal
+        team_category = 'e'
+        team_status = '2'
+    end
+
+    scoreboard = {
       :created_at => Time.now.to_s(:nice),
       :category => category,
       :rows => option == 'x' ? nil : # No rows at all if option is 'x'
-        assign_top_ranks(get_top_teams(category == 'c' ? %w(i e) : category, 'a', limit)).
+        assign_top_ranks(get_top_teams(team_category, team_status, limit)).
           select { |t| t.rank.is_a? Integer }.map {|t| t.scoreboard_row(option == 's') }
     }
-    sb[:unavailable] = true if option == 'x'
+    scoreboard[:unavailable] = true if option == 'x'
     # Attach an instance method that knows how to
     # save this hash to the Scoreboard database table.
-    sb.define_singleton_method :save do |admin_id|
+    scoreboard.define_singleton_method :save do |admin_id|
       r = Scoreboard.create(:admin_id => admin_id, :category => self[:category], :board => self.to_json)
       if r
         # Copy key data only
@@ -274,7 +290,7 @@ class Team < ActiveRecord::Base
         self[:id] = r.id
       end
     end
-    sb
+    scoreboard
   end
 
   require 'diff_markups'
@@ -337,7 +353,7 @@ class Team < ActiveRecord::Base
   end
 
   def status_style_id
-    TablesHelper::STATUS_MAP[status].downcase
+    TablesHelper::STATUS_MAP[status].downcase.delete('-')
   end
 
   def formatted(visible)
@@ -411,6 +427,10 @@ class Team < ActiveRecord::Base
 
   def email_formatted
     ['Email', email]
+  end
+
+  def reg_completed_formatted
+    ['Registration', reg_completed ? reg_completed.to_s(:nice) : NONE ]
   end
 
   def local_contests_formatted

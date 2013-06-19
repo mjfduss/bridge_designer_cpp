@@ -8,7 +8,7 @@ class Admin::StandingsReviewsController < Admin::ApplicationController
     if sb
       sb.update_attribute(:status, 'p')
       # Clear old unposted scoreboards for this admin only.
-      Scoreboard.delete_all(['status IS NULL and admin_id = ?', session[:admin_id]])
+      Scoreboard.delete_all(['admin_id = ? and status IS NULL', session[:admin_id]])
       id =  StandingsController::CATEGORY_TO_ROUTE_ID[params[:scoreboard_category]]
       if id
         # Expire the old standings page

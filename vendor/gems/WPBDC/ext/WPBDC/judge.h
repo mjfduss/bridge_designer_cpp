@@ -15,6 +15,10 @@
 #define YEAR_TO_VERSION(Y) (((((Y) % 100) / 10) << 8) | (((Y) % 10) << 4) | 0x400c)
 #define BD_VERSION YEAR_TO_VERSION(CONTEST_YEAR)
 
+// The id for the semifinal scenario including a null value
+#define NULL_SEMIFINAL_SCENARIO_ID "0000000000"
+#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
+
 // Status returns from analyze().
 #define BRIDGE_OK           0
 #define BRIDGE_MALFORMED    1

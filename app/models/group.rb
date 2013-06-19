@@ -8,7 +8,14 @@ class Group < ActiveRecord::Base
 
   validates :description, :uniqueness => true, :length => { :maximum => 40 }
 
-  def self.fetch(filter)
-    filter =~ /\S/ ? Group.where('description SIMILAR TO ?', filter) : Group.all
+  # Query by example using the given params keyed on column names.
+  def self.qbe(params)
+    q = Group.scoped  # Make null query scope
+    Group.column_names.each do |name|
+      param = params[name.to_s]
+      q = q.where("#{name} ILIKE ?", "%#{param}%") unless param.blank?
+    end
+    q.all
   end
+
 end

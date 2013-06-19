@@ -1,0 +1,23 @@
+%table.review
+  %tr
+    %td{ :class => schedule.active? ? 'active_review_head' : 'review_head', :colspan => 2 }
+      = check_box_tag 'select[]', schedule.id
+      = schedule.name
+      - if schedule.active?
+        %span.bold #{sep} (active)
+      = sep
+      %a{ :class => 'review', :href => '#top' }= "[top]"
+  - for row in columnize(schedule.formatted, 2)
+    %tr{ :class => cycle('plain', 'stripe') }
+      - for col in row
+        %td.review
+          - if col
+            %span.bold #{col[0]}:
+            = htmlify(col[1])
+          - else
+            ="&nbsp;".html_safe
+  %tr{ :class => cycle('plain', 'stripe') }
+    %td.review{:colspan => 2}
+      - col = schedule.message_formatted
+      %span.bold #{col[0]}:
+      = htmlify(col[1])

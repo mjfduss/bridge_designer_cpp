@@ -1,6 +1,12 @@
 $menu_labels: #00649C;
 $stripe: #cfc;
 $plain: #e4e4e4;
+$unreviewed: #777;
+$rejected: #a22;
+$accepted: #2a2;
+$hidden:#181;
+$semifinal:#90d;
+$head: #aaa;
 
 body.admin_body {
   height: 96%;
@@ -82,21 +88,25 @@ td.review {
 td.unreviewed {
   @extend td.review;
   width: 24px;
-  background-color: #777;
+  background-color: $unreviewed;
   color: #fff;
   text-align: center;
 }
-td.accepted {
-  @extend td.unreviewed;
-  background-color: #2a2;
-}
 td.rejected {
   @extend td.unreviewed;
-  background-color: #a22;
+  background-color: $rejected;
+}
+td.accepted {
+  @extend td.unreviewed;
+  background-color: $accepted;
 }
 td.hidden {
   @extend td.unreviewed;
-  background-color: #181;
+  background-color: $hidden;
+}
+td.semifinal {
+  @extend td.unreviewed;
+  background-color: $semifinal;
 }
 /* End must match TablesHelper::STATUS_PAIRS */
 
@@ -107,7 +117,12 @@ td.index {
 
 td.review_head {
   @extend td.review;
-  background-color: #aaa;
+  background-color: $head;
+}
+
+td.active_review_head {
+  @extend td.review;
+  background-color: $accepted;
 }
 
 a.review:link, a.review:visited {

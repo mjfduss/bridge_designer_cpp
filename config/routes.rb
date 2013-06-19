@@ -1,7 +1,5 @@
 Wpbdc::Application.routes.draw do
 
-  get "standings_local/show"
-
   namespace :admin do
     resource :frame, :only => [ :new ]
     resource :initial, :only => [ :new ]
@@ -12,12 +10,13 @@ Wpbdc::Application.routes.draw do
     resource :standings_review, :only => [ :edit, :update ]
     resource :teams_review, :only => [ :edit, :update ]
     resource :any_team, :only => [ :edit, :update ]
-    resource :local_contest_team, :only => [:edit, :update ]
-    resource :leader_emails, :only => [:edit, :update]
+    resource :local_contest_team, :only => [ :edit, :update ]
+    resource :leader_email, :only => [ :edit ]
     resource :session, :only => [ :new, :create, :destroy ]
     resource :group, :only => [ :edit, :update ]
     resource :local_contest, :only => [ :edit, :update ]
-    resources :designs, :only => [:show]
+    resources :designs, :only => [ :show ]
+    resource :schedule, :only => [ :edit, :update ]
   end
   resource :team, :only => [ :new, :create, :edit, :update ]
   resource :member, :only => [ :new, :create, :edit, :update ]
@@ -27,6 +26,7 @@ Wpbdc::Application.routes.draw do
   resource :team_completion, :only => [ :edit, :update ]
   resource :verification, :only => [ :edit, :update ]
   resource :home, :only => [ :edit, :update ]
+  resource :semi_final_instruction, :only => [ :edit, :update ]
   resources :standings, :only => [ :show ]
   # Can's use a standard resource path here because both local contest
   # code and page (for pagination) must be in path for cache to work.

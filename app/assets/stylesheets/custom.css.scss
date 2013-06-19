@@ -7,9 +7,13 @@ $font_size: 10pt;
 $link_normal: $box_border;
 $link_hover: $btn_bg;
 $link_active: #000000;
+$canvas: #ffd;
+$subdued:#aa3333;
+$trouble:#ff1111;
+$bright: #4444ff;
 
 body {
-  background-color: #fff;
+  background-color: #ffffff;
   font-family: arial, sans-serif;
   font-size: $font_size;
 }
@@ -32,7 +36,7 @@ table, th, td {
   padding: 2px;
   border-spacing: 0px;
   border: 0px;
-  margin: 0px;
+  margin: 0px 0px 0px 0px;
 }
 
 input {
@@ -68,6 +72,10 @@ a:active {
   color: #000000;
 }
 
+div.pagewidth {
+  width: 800px;
+}
+
 div.stdwidth {
   width: 720px;
 }
@@ -78,7 +86,7 @@ div.loginwidth {
 
 div.dialog {
   background-color: $dialog_bg;
-  margin: 6px auto 0 8px;
+  margin: 6px 0px 0px 0px;
   border: 2px solid $box_border;
 }
 
@@ -113,8 +121,12 @@ div.banner {
 }
 
 div.para {
-  padding: 1px 0;
-  margin: 1px auto 0 0;
+  /*padding: 2px 0 2px 0;*/
+  margin: 6px 0 6px 0;
+}
+
+div.vsep {
+  margin: 18px 0 6px 0;
 }
 
 div.indent {
@@ -185,15 +197,15 @@ hr {
 }
 
 .subdued {
-  color: #aa3333;
+  color: $subdued;
 }
 
 .trouble {
-  color: #881111;
+  color: $trouble;
 }
 
 .bright {
-  color: #44f;
+  color: $bright;
 }
 
 .shr {
@@ -247,22 +259,23 @@ div.match_indicator {
 div.error {
   font-size: 110%;
   font-weight: bold;
-  color: #f22;
+  color: $trouble;
 }
 
 div.alert {
   font-size: 110%;
   font-weight: bold;
-  color: #22f;
-}
-
-div.caption {
-  position: relative;
-  width: 300px;
-  text-align: center;
+  color: $subdued;
 }
 
 div.canvas {
-  @extend div.caption;
+  position: relative;
+  width: 300px;
+  text-align: center;
+  background-color: $canvas;
 }
 
+div.caption {
+  @extend div.canvas;
+  padding-bottom: 16px;
+}

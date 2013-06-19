@@ -2,24 +2,36 @@ require 'tables_helper'
 require 'standing'
 
 module FactoryHelpers
-  def self.read_bridge(key, good = true)
-    path= 'vendor/gems/WPBDC/test/eg/2012'
-    unless defined? @@eg_good
-      entries = Dir.entries(path).reject { |name| name.start_with?('.') }
-      @@eg_good   = entries.reject { |name| name.include? 'failed' }
-      @@eg_failed = entries.select { |name| name.include? 'failed' }
-    end
-    file_name = if good
-                  @@eg_good[key % @@eg_good.length]
-                else
-                  @@eg_failed[key % @@eg_failed.length]
-                end
-    f = File.open "#{path}/#{file_name}", 'rb'
-    if f
-      bridge = f.read
-      WPBDC.endecrypt(bridge);
-      { :bridge => bridge, :analysis => WPBDC.analyze(bridge), :good => good }
-    end
+
+  PATH = 'vendor/gems/WPBDC/test/eg/2012'
+
+  def self.read_bdc_file(entry)
+    f = File.open "#{PATH}/#{entry}", 'rb'
+    bridge = f.read
+    WPBDC.endecrypt(bridge);
+    { :bridge => bridge, :analysis => WPBDC.analyze(bridge) }
+  end
+
+  def self.initialize
+    return if defined? @@designs
+    entries = Dir.entries(PATH).select { |name| name.end_with?('.bdc') }
+    @@designs = entries.map { |entry| read_bdc_file(entry) }
+    @@designs.sort! { |a, b| b[:analysis][:score] <=> a[:analysis][:score] }
+    @@good_designs = @@designs.select { |d| d[:analysis][:status] == WPBDC::BRIDGE_OK }
+    @@bad_designs  = @@designs.select { |d| d[:analysis][:status] != WPBDC::BRIDGE_OK }
+  end
+
+  def self.read_design(key, good = true)
+    initialize
+    return good.nil? ? @@designs[key % @@designs.length] :
+           good ? @@good_designs[key % @@good_designs.length] :
+              @@bad_designs[key % @@bad_designs.length]
+  end
+
+  def self.read_similar_design(i)
+    # Two similar designs (same scenario).  First is cheaper.
+    @@similar_designs ||= %w{similar-01.bdcx similar-02.bdcx}.map { |entry| read_bdc_file(entry) }
+    @@similar_designs[i]
   end
 
   def self.next_local_contest_code
@@ -54,12 +66,12 @@ FactoryGirl.define do
     TablesHelper.keyed_code_from_pairs(n, TablesHelper::STATE_PAIRS)
   end
 
-  sequence :good_bridge do |n|
-    FactoryHelpers.read_bridge(n, true)
+  sequence :good_design do |n|
+    FactoryHelpers.read_design(n, true)
   end
 
-  sequence :bad_bridge do |n|
-    FactoryHelpers.read_bridge(n, false)
+  sequence :bad_design do |n|
+    FactoryHelpers.read_design(n, false)
   end
 
   sequence :phone_number do |n|
@@ -117,6 +129,8 @@ FactoryGirl.define do
     password_confirmation { password }
     email { generate :email }
     category 'e'
+    status 'a'
+    reg_completed { Time.now }
 
     ignore do
       member_count 1
@@ -141,26 +155,40 @@ FactoryGirl.define do
 
   factory :design do
     ignore do
-      bridge_data { generate :good_bridge }
+      the_design { generate :good_design }
     end
-    bridge { bridge_data[:bridge] }
-    score { bridge_data[:analysis][:score] }
+    bridge { the_design[:bridge] }
+    score { the_design[:analysis][:score] }
     sequence(:sequence) { |n| n }
-    scenario { bridge_data[:analysis][:scenario] }
-    hash_string { bridge_data[:analysis][:hash] }
+    scenario { the_design[:analysis][:scenario] }
+    hash_string { the_design[:analysis][:hash] }
     team
 
     after(:create) do |design, e|
-      Standing.insert(e.team, design) if e.bridge_data[:good]
+      Standing.insert(e.team, design) if e.the_design[:analysis][:status] == WPBDC::BRIDGE_OK
     end
 
     trait :bad do
       ignore do
-        bridge_data { generate :bad_bridge }
+        the_design { generate :bad_bridge }
+      end
+    end
+
+    trait :cheap do
+      ignore do
+        the_design { FactoryHelpers.read_similar_design(0) }
+      end
+    end
+
+    trait :expensive do
+      ignore do
+        the_design { FactoryHelpers.read_similar_design(1) }
       end
     end
 
     factory :bad_design, :traits => [:bad]
+    factory :cheap_design, :traits => [:cheap]
+    factory :expensive_design, :traits => [:expensive]
   end
 
 end

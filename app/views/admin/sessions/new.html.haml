@@ -1,10 +1,15 @@
-= form_for :session, :url => admin_session_path do |f|
-  %table.centered_box
-    %tr
-      %td.small= f.label :login, 'Login:'
-      %td.small= f.text_field :login
-    %tr
-      %td.small= f.label :password, 'Password:'
-      %td.small= f.password_field :password
-    %tr
-      %td{ :colspan => 2, :align => :right }= f.submit "Log in", :class => 'btn'
+.pagewidth
+  = form_for :session, :url => admin_session_path do |f|
+    %table.centered_box
+      %tr
+        %td.small= f.label :login, 'Login:'
+        %td.small= f.text_field :login
+      %tr
+        %td.small= f.label :password, 'Password:'
+        %td.small= f.password_field :password
+      %tr
+        %td{ :colspan => 2, :align => :right }= f.submit "Log in", :class => 'btn'
+      - flash.each do |key, msg|
+        %tr
+          %td{ :colspan => 2 }
+            %div{:class => key}= msg

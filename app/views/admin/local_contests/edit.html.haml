@@ -3,14 +3,13 @@
 .bold.menu_label
   Local contest workspace:
 = form_for @edited_local_contest, :url => admin_local_contest_path, :method => :put do |f|
-  = hidden_field_tag :local_contest_filter, @filter
-  = hidden_field_tag :min_teams, @min_teams
   .para
     - if @edited_local_contest.new_record?
-      New local contest:
+      New/query local contest:
     - else
-      Edit local contest:
+      Edit/query local contest:
       = f.hidden_field(:id, :value => @edited_local_contest.id)
+    = hidden_field_tag :ids, @local_contests.map { |c| c.id }.join(',')
   %table
     %tr
       %td= f.label(:code, 'Code:')
@@ -19,6 +18,9 @@
         = sep
         = f.label(:description, 'Description:')
         = f.text_field :description, :size => 40
+        = sep
+        = f.label(:affiliation_count, "# Teams:")
+        = f.text_field :affiliation_count, :size => 3
     %tr
       %td= "POC Name:".html_safe
       %td{ :colspan => 3 }
@@ -26,39 +28,33 @@
         = f.text_field :poc_middle_initial, :size => 1
         = f.text_field :poc_last_name, :size => 30
     %tr
-      %td= f.label("Position:")
+      %td= f.label(:poc_position, "Position:")
       %td= f.text_field :poc_position, :size => 30
-      %td= f.label("Organization:")
+      %td= f.label(:organization, "Organization:")
       %td= f.text_field :organization, :size => 30
     %tr
-      %td= f.label("City:")
+      %td= f.label(:city, "City:")
       %td= f.text_field :city, :size => 30
-      %td= f.label("State:")
+      %td= f.label(:state, "State:")
       %td
         = f.text_field :state, :size => 2
         = sep
-        = f.label("Zip:")
+        = f.label(:zip, "Zip:")
         = f.text_field :zip, :size => 9
     %tr
-      %td= f.label("Email/web:")
+      %td= f.label(:link, "Email/web:")
       %td= f.text_field :link, :size => 30
-      %td= f.label("Phone:")
+      %td= f.label(:phone, "Phone:")
       %td= f.text_field :phone, :size => 30
   .para
     = f.submit @edited_local_contest.new_record? ? "Add record" : "Update record", :name => 'update'
     = sep
-    = f.submit @edited_local_contest.new_record? ? "Get selected record" : "Get new or selected record", :name => 'get'
+    = f.submit 'Get new or selected record', :name => 'get'
     = sep
-    = f.submit "Delete selected records", :name => 'delete'
+    = f.submit 'Delete selected records', :name => 'delete', :confirm => 'Are you absolutely sure you want to delete?'
+    = sep
+    = f.submit 'Query by example', :name => 'query'
     %hr
     = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
-  - the_list = @local_contests.select {|c| c.affiliations.count >= @min_teams }
-  .para.bold
-    - if @min_teams > 0
-      = "#{pluralize(the_list.length, 'contest')} shown (#{@min_teams} or more teams only)."
-    - else
-      = "#{pluralize(the_list.length, 'contest')} shown."
-  - if @filter =~ /\S/
-    .para.bold Filter '#{@filter}'.
-  .para
-    = render the_list
+    .para #{pluralize(@local_contests.length, 'contest')} shown.
+    = render @local_contests

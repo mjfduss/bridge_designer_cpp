@@ -8,7 +8,7 @@
       = select_tag("#{team.id}_group", options_for_select(team_review_group_list_data(@groups), team.group_id || '-'))
       = hidden_field_tag "#{team.id}_group_in", (team.group_id || '-')
       = sep
-      - TablesHelper::STATUS_PAIRS[0..-2].each do |label, param| # Omitting Hidden
+      - TablesHelper::STATUS_PAIRS[0..-2].each do |label, param| # -2 omits Hidden
         = radio_button_tag "#{team.id}_status", param, param == team.status
         = label
       = hidden_field_tag "#{team.id}_status_in", team.status

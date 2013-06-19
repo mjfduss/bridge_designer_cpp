@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130424030223) do
+ActiveRecord::Schema.define(:version => 20130616033053) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -21,12 +21,30 @@ ActiveRecord::Schema.define(:version => 20130424030223) do
     t.text     "session_state"
   end
 
+  add_index "administrators", ["name"], :name => "index_administrators_on_name", :unique => true
+
   create_table "affiliations", :force => true do |t|
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
     t.integer  "team_id",          :default => 0, :null => false
     t.integer  "local_contest_id", :default => 0, :null => false
   end
+
+  add_index "affiliations", ["local_contest_id"], :name => "index_affiliations_on_local_contest_id"
+  add_index "affiliations", ["team_id"], :name => "index_affiliations_on_team_id"
+
+  create_table "bests", :force => true do |t|
+    t.integer  "team_id",                  :null => false
+    t.integer  "design_id",                :null => false
+    t.string   "scenario",   :limit => 10
+    t.integer  "score",                    :null => false
+    t.integer  "sequence",                 :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
+  end
+
+  add_index "bests", ["scenario"], :name => "index_bests_on_scenario"
+  add_index "bests", ["score", "sequence"], :name => "index_bests_on_score_and_sequence"
 
   create_table "designs", :force => true do |t|
     t.integer  "team_id",                   :default => 0,  :null => false
@@ -39,13 +57,8 @@ ActiveRecord::Schema.define(:version => 20130424030223) do
     t.string   "hash_string", :limit => 40
   end
 
-  create_table "environments", :force => true do |t|
-    t.string   "tag",        :limit => 40
-    t.string   "key",        :limit => 16
-    t.string   "value"
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
+  add_index "designs", ["hash_string"], :name => "index_designs_on_hash_string"
+  add_index "designs", ["score", "sequence"], :name => "index_designs_on_score_and_sequence", :unique => true
 
   create_table "groups", :force => true do |t|
     t.string   "description", :limit => 40
@@ -69,6 +82,8 @@ ActiveRecord::Schema.define(:version => 20130424030223) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
   end
+
+  add_index "local_contests", ["code"], :name => "index_local_contests_on_code", :unique => true
 
   create_table "members", :force => true do |t|
     t.string   "first_name",     :limit => 40
@@ -95,6 +110,24 @@ ActiveRecord::Schema.define(:version => 20130424030223) do
     t.integer  "rank",                         :default => 0,     :null => false
   end
 
+  add_index "members", ["team_id"], :name => "index_members_on_team_id"
+
+  create_table "schedules", :force => true do |t|
+    t.string   "name",                 :limit => 40,                    :null => false
+    t.boolean  "active",                             :default => false, :null => false
+    t.boolean  "closed",                                                :null => false
+    t.text     "message",                                               :null => false
+    t.datetime "start_quals_prereg",                                    :null => false
+    t.datetime "start_quals",                                           :null => false
+    t.datetime "end_quals",                                             :null => false
+    t.boolean  "quals_tally_complete",                                  :null => false
+    t.datetime "start_semis_prereg",                                    :null => false
+    t.datetime "start_semis",                                           :null => false
+    t.datetime "end_semis",                                             :null => false
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
+  end
+
   create_table "scoreboards", :force => true do |t|
     t.string   "category",   :limit => 1
     t.string   "status",     :limit => 1
@@ -103,6 +136,8 @@ ActiveRecord::Schema.define(:version => 20130424030223) do
     t.datetime "updated_at",              :null => false
     t.integer  "admin_id",                :null => false
   end
+
+  add_index "scoreboards", ["admin_id", "status"], :name => "index_scoreboards_on_admin_id_and_status"
 
   create_table "sequence_numbers", :force => true do |t|
     t.string   "tag",        :limit => 8,                :null => false
@@ -125,5 +160,7 @@ ActiveRecord::Schema.define(:version => 20130424030223) do
     t.string   "status",          :limit => 1,  :default => "-", :null => false
     t.integer  "group_id"
   end
+
+  add_index "teams", ["name_key"], :name => "index_teams_on_name_key", :unique => true
 
 end

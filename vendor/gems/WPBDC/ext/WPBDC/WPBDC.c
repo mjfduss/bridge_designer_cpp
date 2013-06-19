@@ -173,6 +173,7 @@ static struct ict_entry {
   char *name;
   int val;
 } int_const_table[] = {
+  INT_CONST_TABLE_ENTRY(CONTEST_YEAR),
   INT_CONST_TABLE_ENTRY(BRIDGE_OK),
   INT_CONST_TABLE_ENTRY(BRIDGE_MALFORMED),
   INT_CONST_TABLE_ENTRY(BRIDGE_WRONGVERSION),
@@ -219,6 +220,15 @@ static struct ict_entry {
   INT_CONST_TABLE_ENTRY(SCENARIO_NUMBER_SIZE),
 };
 
+#define STRING_CONST_TABLE_ENTRY(Name) { #Name, Name }
+
+static struct sct_entry {
+  char *name;
+  char *val;
+} string_const_table[] = {
+    STRING_CONST_TABLE_ENTRY(SEMIFINAL_SCENARIO_ID)
+};
+
 void Init_WPBDC(void)
 {
   int i;
@@ -233,5 +243,9 @@ void Init_WPBDC(void)
   for (i = 0; i < STATIC_ARRAY_SIZE(int_const_table); i++) {
     struct ict_entry *e = int_const_table + i;
     rb_define_const(module, e->name, INT2FIX(e->val));
+  }
+  for (i = 0; i < STATIC_ARRAY_SIZE(string_const_table); i++) {
+    struct sct_entry *e = string_const_table + i;
+    rb_define_const(module, e->name, rb_str_new2(e->val));
   }
 }

@@ -1,0 +1,41 @@
+.stdwidth
+  .banner Semi-Final Round Instructions for #{@team.name}
+  .vsep.hi
+    Congratulations on making it to the Bridge Design Contest Semi-Finals for #{WPBDC::CONTEST_YEAR}!
+  .para
+    You've already proved that your team is among the very top of thousands who have entered.
+    Good luck in the Semi-Finals!
+  - if @schedule_state < Schedule::STATE_SEMIS_PREREG
+    .para
+      During the actual Semi-Final Round, important instructions will appear right here!
+    .para
+      You'll also be able to check your
+      %span.bold Semi-Finals Home Page
+      by visiting here beginning #{@schedule.start_semis_prereg.to_s(:nice)}.
+  - elsif @schedule_state == Schedule::STATE_SEMIS_PREREG
+    .para
+      During the actual Semi-Final Round, important instructions will appear right here!
+    .para
+      If you haven't already done so, please check your Semi-Finals Home Page right now.
+      Use the button below.
+    .para
+      Use the other button to go to your regular Team Home Page in order to compete in a local
+      contest or test your own skill.
+    .para
+      The Semi-Final Round starts #{@schedule.start_semis.to_s(:nice)}.
+  - elsif @schedule_state == Schedule::STATE_SEMIS
+    .para
+      Please read the following instructions very carefully.
+    .para
+      Blah blah blah.  Need the real instructions here.
+  - else
+    .para
+      The Semi-final round is over for #{WPBDC::CONTEST_YEAR}.  You can con
+  .vsep
+    %hr
+  = form_tag semi_final_instruction_path, :method => :put do
+    .para.hi
+      Go to your...
+      = sep
+      = submit_tag 'Regular Team Home Page', :name => 'team_home' unless @schedule_state == Schedule::STATE_SEMIS
+      = submit_tag 'Semi-Finals Home Page', :name => 'semis_home' unless @schedule_state < Schedule::STATE_SEMIS_PREREG

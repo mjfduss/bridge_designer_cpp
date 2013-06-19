@@ -9,9 +9,6 @@ class Admin::MainMenusController < Admin::ApplicationController
       :posted_category,
       :team_name_likeness,
       :find_category,
-      :local_contest_filter,
-      :min_teams,
-      :group_filter,
       :local_contest_code,
       :mail_teams,
       :standings_cutoff,
@@ -32,6 +29,8 @@ class Admin::MainMenusController < Admin::ApplicationController
     elsif !params[:change_password].blank?
       @admin = admin
       render :template => 'admin/password_changes/edit'
+    elsif !params[:log_out].blank?
+      kill_session('Logged out.')
     elsif !params[:get_team_review].blank?
       @category = params[:team_category]
       @standings_cutoff = params[:standings_cutoff].to_i
@@ -41,10 +40,7 @@ class Admin::MainMenusController < Admin::ApplicationController
       @groups = Group.all
       render :template => 'admin/teams_reviews/edit'
     elsif !params[:get_groups].blank?
-      @edited_group = Group.new
-      @filter = params[:group_filter]
-      @groups = Group.fetch @filter
-      render :template => 'admin/groups/edit'
+      redirect_to :controller => :groups, :action => :edit
     elsif !params[:get_standings_review].blank?
       @scoreboard = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
       @scoreboard.save(session[:admin_id])
@@ -67,22 +63,20 @@ class Admin::MainMenusController < Admin::ApplicationController
       @groups = Group.all
       render :template => 'admin/any_teams/edit'
     elsif !params[:get_local_contests].blank?
-      @edited_local_contest = LocalContest.new
-      @min_teams = params[:min_teams].to_i
-      @filter =  params[:local_contest_filter]
-      @local_contests = LocalContest.fetch(@filter, @min_teams)
-      render :template => 'admin/local_contests/edit'
+      redirect_to :controller => :local_contests, :action => :edit
     elsif !params[:get_local_contest_teams].blank?
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
       @local_contest_code = params[:local_contest_code].strip.upcase
-      @teams = @local_contest_code.blank? ? nil :
-        Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @category, @visible_status, @standings_cutoff))
+      @teams = Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :template => 'admin/local_contest_teams/edit'
     elsif !params[:leader_emails].blank?
+      @standings_cutoff = params[:standings_cutoff].to_i
       render :template => 'admin/leader_emails/edit'
+    elsif !params[:edit_schedule].blank?
+      redirect_to :controller => :schedules, :action => :edit
     else
       flash.now[:alert] = "Unknown menu function."
       render :template => 'admin/initials/new'

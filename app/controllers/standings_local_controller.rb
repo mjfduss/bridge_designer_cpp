@@ -11,7 +11,7 @@ class StandingsLocalController < ApplicationController
     if @local_contest
       @scoreboard = Team.get_local_contest_scoreboard code, params[:page]
     else
-      flash[:alert] = "The local contest standings page you requested does not exist."
+      flash[:alert] = 'The local contest standings page you requested does not exist.'
       redirect_to :controller => :sessions, :action => :new
     end
   end

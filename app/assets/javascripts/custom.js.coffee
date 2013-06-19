@@ -2,6 +2,11 @@
 getElement = (id) ->
   document.getElementById(id)
 
+# Ensure the page is loaded in the top window (not a frame)
+window.unframe = () ->
+  top.location.href = document.location.href unless top.location == document.location
+  true
+
 # Pop up a new window on the URL given by loc.
 window.popup = (loc) ->
   window.open(loc, '', 'width=640,height=500,scrollbars=yes,resizable=yes,status=no,location=no,menubar=no')
@@ -128,8 +133,9 @@ tick_spacing = (axis_len, max_divisions) ->
   undefined
 
 zero_pad = (n, width) ->
+  rtn = n + ''
   rtn = '0' + rtn while rtn.length < width
-  rtn + ''
+  rtn
 
 window.set_all_in_list = (id, select = true) ->
   option.selected = select for option in getElement(id).options
@@ -163,7 +169,7 @@ right_label = (x, y, w, text) ->
 
 window.standings_graph = (place, n_entries) ->
   return "<div class=\"canvas\">Your team ranks #{place} of #{n_entries}!</div>" if n_entries < 2
-  label_inc = 32
+  label_inc = 28
   label_width = 100
   tick_width = 8
   axis_color = 'blue'
@@ -172,21 +178,24 @@ window.standings_graph = (place, n_entries) ->
   marker_color = 'red'
   marker_width = 20
   place = n_entries if place > n_entries
-  spacing = tick_spacing(n_entries, 4)
+  spacing = tick_spacing(n_entries, 5)
   y0 = 32
   dy = Math.floor(label_inc * (n_entries - 1) / spacing)
   y1 = y0 + dy
   y = y0
-  html = "<div class=\"canvas\" style=\"height:#{y1 + y0}px;\">"
+  html = "<div class=\"canvas\" style=\"height:#{y1 + 16}px;\">"
   last_lbl = 0
   x = label_width
   for lbl in [1..n_entries] by spacing
+    # The #1 label is a special case so we don't have e.g. 1,11,21,...
+    lbl -= 1 unless spacing == 1 or lbl == 1
     # If the second last tick is too close to the bottom, stop now.
     if y1 - y < label_inc / 2
       break
     html += bar(x, y, tick_width, 1, axis_color) + left_label(x, y, label_width, "\##{commafy(lbl)}")
     last_lbl = lbl
-    y += label_inc
+    # The second part of the #1 special case.  Argh this is ugly...
+    y += if spacing == 1 or lbl > 1 then label_inc else label_inc * (spacing - 1) / spacing
   # Draw the bottom tick if necessary.
   if last_lbl != n_entries
     html += bar(x, y1, tick_width, 1, axis_color) + left_label(x, y1, label_width, "\##{commafy(n_entries)}")
@@ -196,5 +205,4 @@ window.standings_graph = (place, n_entries) ->
   y = y0 + Math.floor(dy * (place - 1) / (n_entries - 1))
   html += bar(x, y - Math.floor(pole_size * 0.5), marker_width, pole_size, marker_color)
   html += right_label(x + marker_width, y, label_width, "Your team...")
-  html + "</div><div class=\"caption\">Standing \##{place} of #{n_entries}!</div>"
-
+  html + "</div><div class=\"caption\">Standing \##{commafy(place)} of #{commafy(n_entries)}!</div>"

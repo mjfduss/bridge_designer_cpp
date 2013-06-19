@@ -2,30 +2,31 @@ class Admin::GroupsController < Admin::ApplicationController
 
   def edit
     @edited_group = Group.new
-    @filter = params[:group_filter]
-    @groups = Group.fetch @filter
+    @groups = Group.all
   end
 
   def update
-    s = params[:select]
+    selected = params[:select]
+    ids = params[:ids]
+    ids = ids.split(',') if ids
+
     if !params[:get].blank?
-      if s.blank?
+      if selected.blank?
         @edited_group = Group.new
         flash.now[:alert] = 'New group ready to edit.'
       else
-        @edited_group = Group.find(s[0].to_i)
+        @edited_group = Group.find(selected[0].to_i)
         flash.now[:alert] = 'Selected group ready to edit.'
       end
     elsif !params[:update].blank?
       id = params[:group][:id]
       if id.blank?
-        g = Group.create(params[:group])
-        if g.valid?
+        @edited_group = Group.create(params[:group])
+        if @edited_group.valid?
+          ids << @edited_group.id if ids
           flash.now[:alert] = "New group '#{params[:group][:description]}' was created."
-          @edited_group = Group.new
         else
           flash.now[:alert] = "New group could not be created."
-          @edited_group = g
         end
       else
         @edited_group = Group.find(id.to_i)
@@ -33,16 +34,19 @@ class Admin::GroupsController < Admin::ApplicationController
         flash.now[:alert] = "Group '#{params[:group][:description]}' was updated."
       end
     elsif !params[:delete].blank?
-      if s.blank?
+      if selected.blank?
         flash.now[:alert] = 'No groups were selected for deletion.'
       else
-        Group.destroy(s) # Destroy sets foreign keys in teams to null
+        Group.destroy(selected) # Destroy sets foreign keys in teams to null
         flash.now[:alert] = 'Selected groups were deleted.'
       end
       @edited_group = Group.new
+    elsif !params[:query].blank?
+      @groups = Group.qbe(params[:group])
+      @edited_group = Group.new(params[:group])
+      flash.now[:alert] = 'Query results are shown below.'
     end
-    @filter = params[:group_filter]
-    @groups = Group.fetch @filter
+    @groups ||= ids ? Group.where(:id => ids) : Group.all
     render :action => :edit
   end
 end
