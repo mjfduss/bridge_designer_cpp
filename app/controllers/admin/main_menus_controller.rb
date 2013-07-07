@@ -41,6 +41,8 @@ class Admin::MainMenusController < Admin::ApplicationController
       render :template => 'admin/teams_reviews/edit'
     elsif !params[:get_groups].blank?
       redirect_to :controller => :groups, :action => :edit
+    elsif !params[:get_docs].blank?
+      redirect_to :controller => :documents, :action => :new
     elsif !params[:get_standings_review].blank?
       @scoreboard = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
       @scoreboard.save(session[:admin_id])

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130616033053) do
+ActiveRecord::Schema.define(:version => 20130701193037) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -33,6 +33,19 @@ ActiveRecord::Schema.define(:version => 20130616033053) do
   add_index "affiliations", ["local_contest_id"], :name => "index_affiliations_on_local_contest_id"
   add_index "affiliations", ["team_id"], :name => "index_affiliations_on_team_id"
 
+  create_table "assets", :force => true do |t|
+    t.string   "name"
+    t.string   "type"
+    t.integer  "assetable_id"
+    t.string   "assetable_type"
+    t.integer  "width"
+    t.integer  "height"
+    t.text     "content"
+    t.string   "content_type"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
   create_table "bests", :force => true do |t|
     t.integer  "team_id",                  :null => false
     t.integer  "design_id",                :null => false
@@ -45,6 +58,30 @@ ActiveRecord::Schema.define(:version => 20130616033053) do
 
   add_index "bests", ["scenario"], :name => "index_bests_on_scenario"
   add_index "bests", ["score", "sequence"], :name => "index_bests_on_score_and_sequence"
+
+  create_table "ckeditor_assets", :force => true do |t|
+    t.string   "data_file_name",                  :null => false
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.integer  "assetable_id"
+    t.string   "assetable_type",    :limit => 30
+    t.string   "type",              :limit => 30
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
+  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], :name => "idx_ckeditor_assetable"
+  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], :name => "idx_ckeditor_assetable_type"
+
+  create_table "ckeditor_assets_contents", :force => true do |t|
+    t.integer "ckeditor_asset_id"
+    t.string  "style"
+    t.binary  "file_contents"
+  end
+
+  add_index "ckeditor_assets_contents", ["ckeditor_asset_id"], :name => "index_ckeditor_assets_contents_on_ckeditor_asset_id"
 
   create_table "designs", :force => true do |t|
     t.integer  "team_id",                   :default => 0,  :null => false
@@ -79,8 +116,9 @@ ActiveRecord::Schema.define(:version => 20130616033053) do
     t.string   "zip",                :limit => 9
     t.string   "phone",              :limit => 16
     t.string   "link",               :limit => 40
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                                      :null => false
+    t.datetime "updated_at",                                      :null => false
+    t.integer  "affiliations_count",               :default => 0, :null => false
   end
 
   add_index "local_contests", ["code"], :name => "index_local_contests_on_code", :unique => true

@@ -40,7 +40,8 @@ class LocalContest < ActiveRecord::Base
 
   # Query for the number of teams in this contest and cache the result.
   def affiliation_count
-    @affiliation_count ||= affiliations.count
+    affiliations.size # Uses :counter_cache column
+    # @affiliation_count ||= affiliations.count
   end
 
   # Query by example using the given params, which are keyed on local

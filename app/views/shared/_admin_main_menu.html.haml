@@ -39,12 +39,15 @@
         = render :partial => "shared/submit_link", :locals => { :name => 'get_any_team', :text => "Go" }
     .menu_item
       .menu_label
-        Administer local contests:
+        Local contests:
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contests', :text => "Go" }
     .menu_item
       .menu_label
-        Administer groups:
+        Groups:
         = render :partial => "shared/submit_link", :locals => { :name => 'get_groups', :text => "Go" }
+    .menu_item.menu_label
+      Documents:
+      = render :partial => "shared/submit_link", :locals => { :name => 'get_docs', :text => "Go" }
     .menu_item
       .menu_label Find teams in local contest:
       .wrap

@@ -17,7 +17,10 @@ Wpbdc::Application.routes.draw do
     resource :local_contest, :only => [ :edit, :update ]
     resources :designs, :only => [ :show ]
     resource :schedule, :only => [ :edit, :update ]
+    resource :documents, :only => [ :index, :new, :create, :edit, :update, :destroy ]
   end
+  match '/ckeditor_assets/pictures/:id/:style_basename.:extension' => 'admin/documents#show'
+  resource :session, :only => [ :new, :create, :destroy ]
   resource :team, :only => [ :new, :create, :edit, :update ]
   resource :member, :only => [ :new, :create, :edit, :update ]
   resource :certification, :only => [ :edit, :update ]
@@ -28,11 +31,13 @@ Wpbdc::Application.routes.draw do
   resource :home, :only => [ :edit, :update ]
   resource :semi_final_instruction, :only => [ :edit, :update ]
   resources :standings, :only => [ :show ]
+
   # Can's use a standard resource path here because both local contest
   # code and page (for pagination) must be in path for cache to work.
   match 'standings/local/:code(/:page)' => 'standings_local#show'
 
-  resource :session, :only => [ :new, :create, :destroy ]
+  # CKEditor file upload handler and browser.
+  mount Ckeditor::Engine => '/ckeditor'
 
   root :to => 'sessions#new'
 

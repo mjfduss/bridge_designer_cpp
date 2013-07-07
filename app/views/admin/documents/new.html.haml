@@ -1,0 +1,6 @@
+%h1 Admin::Documents#new
+.para
+  = form_for @document, :url => admin_documents_path do |f|
+    - if @document.id
+      = f.hidden_field :id
+    = f.cktext_area :text

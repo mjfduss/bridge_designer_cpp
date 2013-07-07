@@ -16,6 +16,9 @@
 # If you want it, just write us to explain why.
 /vendor/gems/WPBDC/ext/WPBDC/rc4_key.c
 
+# WPBD gem will be installed from rubygems.org
+*.gem
+
 # Ignore other unneeded files.
 doc/
 *.swp
