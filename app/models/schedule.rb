@@ -70,7 +70,7 @@ class Schedule < ActiveRecord::Base
 
   def self.fetch_cache
     Rails.cache.fetch(Schedule::CACHE_NAME) do
-      find_by_active(true) || Session.new(:closed => true, :message => "We're having a system problem.  Sorry.")
+      find_by_active(true) || Schedule.new(:closed => true, :message => "We're having a system problem.  Sorry.")
     end
   end
 
