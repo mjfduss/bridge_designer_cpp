@@ -11,7 +11,8 @@ Administrator.find_or_create_by_name(:name => 'admin', :password => 'foobarbaz',
   LocalContest.delete_all
   Affiliation.delete_all
   # Reset the design sequence number generator.
-  SequenceNumber.find_by_tag('design').update_attribute(:value, 0)
+  seq = SequenceNumber.find_by_tag('design')
+  seq.update_attribute(:value, 0) if seq
   50.times do |n|
     FactoryGirl.create(:local_contest)
   end
