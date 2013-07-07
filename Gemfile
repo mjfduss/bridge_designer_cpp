@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '1.9.3'
+
 gem 'WPBDC', '~> 2013.1'
 gem 'rails', '3.2.13'
 gem 'jquery-rails', '~> 2.1'
