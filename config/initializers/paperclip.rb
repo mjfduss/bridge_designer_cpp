@@ -22,7 +22,7 @@ module Paperclip
     end
 
     def copy_to_tempfile(src)
-      destination.write(data)
+      destination.write(src)
       destination.rewind
       destination
     end

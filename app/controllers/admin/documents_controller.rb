@@ -8,22 +8,32 @@ class Admin::DocumentsController < Admin::ApplicationController
 
   def create
     @document = Ckeditor::HtmlDocument.create do |doc|
-      doc.data = StringIO.new(params[:html_document][:text] || '')
+      doc.text = params[:html_document][:text] || ''
     end
-    @document.text = @document.data.file_contents('original') if @document
+    unless @document
+      flash.now[:alert] = 'Creation failed.'
+      @document = Ckeditor::HtmlDocument.new
+    end
     render 'new'
   end
 
   def edit
     @document = Ckeditor::HtmlDocument.find(params[:html_document][:id])
-    @document.text = @document.data.file_contents('original') if @document
+    unless @document
+      flash.now[:alert] = 'Edit failed.'
+      @document = Ckeditor::HtmlDocument.new
+    end
   end
 
   def update
     @document = Ckeditor::HtmlDocument.find(params[:html_document][:id])
-    @document.data = StringIO.new(params[:html_document][:text] || '')
-    @document.save
-    @document.text = @document.data.file_contents('original') if @document
+    if @document
+      @document.text = params[:html_document][:text] || ''
+      @document.save
+    else
+      flash.now[:alert] = 'Update failed.'
+      @document = Ckeditor::HtmlDocument.new
+    end
     render 'new'
   end
 
@@ -32,22 +42,31 @@ class Admin::DocumentsController < Admin::ApplicationController
   # Route is in the main config.
   def show
     asset = Ckeditor::Asset.find(params[:id])
-    if asset && asset.data
-      logger.debug "PARAMS=#{params.inspect}"
+    if asset
       style, basename = 'original', params[:style_basename]
       m = /^(\w+)_(\w+)$/.match(basename)
       if m
         style = m[1]
-        basename = m[2]
+        # Not used: basename = m[2]
       end
-      #TODO Remove.
-      logger.debug "REQUEST name=#{basename} style=#{style}"
-      send_data asset.data.file_contents(style), :filename => asset.data_file_name, :type => asset.data_content_type
+      if asset.data_content_type == 'text/html'
+        render :text => asset.data.file_contents(:original)
+      else
+        send_data asset.data.file_contents(style), :filename => asset.data_file_name, :type => asset.data_content_type
+      end
     else
       render :nothing => true
     end
   end
 
   def destroy
+    doc = Ckeditor::HtmlDocument.find(params[:html_document][:id])
+    if doc
+      doc.destroy
+    else
+      flash.now[:alert] = "Destroy failed."
+    end
+    @document = Ckeditor::HtmlDocument.new
+    render 'new'
   end
 end

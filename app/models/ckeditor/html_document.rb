@@ -7,7 +7,16 @@ class Ckeditor::HtmlDocument < Ckeditor::Asset
   validates_attachment_size :data, :less_than => 1.megabytes
   validates_attachment_presence :data
 
-  attr_accessor :text
+  #Pseudo field implemented over Paperclip attachment
+  def text
+    f = data.file_for(:original)
+    f ? f.file_contents : ''
+  end
+
+  def text=(val)
+    self.data = val
+    self.data_content_type = 'text/html'
+  end
 
   def url_thumb
     @url_thumb ||= Ckeditor::Utils.filethumb(filename)

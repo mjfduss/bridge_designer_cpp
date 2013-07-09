@@ -21,7 +21,6 @@ module Paperclip
             ActionController::Base.relative_url_root
           end
         end
-
         ActiveRecord::Base.logger.info("[paperclip] Database Storage Initalized.")
       end
 
@@ -44,7 +43,6 @@ module Paperclip
         #FIXME: This fails when using  set_table_name "<myname>" in your model
         #FIXME: This should be fixed in ActiveRecord...
         instance.class.has_many @paperclip_files, :foreign_key => instance.class.table_name.classify.underscore + '_id'
-
       end
       private :setup_paperclip_files_model
 
