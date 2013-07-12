@@ -2,6 +2,7 @@
 %hr
 .bold.menu_label
   Contest schedule workspace:
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_schedule.errors }
 = form_for @edited_schedule, :url => admin_schedule_path, :method => :put do |f|
   .para
     - if @edited_schedule.new_record?
@@ -34,6 +35,9 @@
       %td= f.label(:start_semis_prereg, 'Start semi login check:')
       %td= f.datetime_select :start_semis_prereg, :minute_step => 5
     %tr
+      %td= f.label(:semis_instructions_id, 'Semifinals instructions:')
+      %td= f.collection_select(:semis_instructions_id, HtmlDocument.order('subject ASC'), :id, :subject, :include_blank => 'Select Document')
+    %tr
       %td= f.label(:start_semis, 'Start semifinals:')
       %td= f.datetime_select :start_semis, :minute_step => 5
     %tr
@@ -52,7 +56,6 @@
     = sep
     = f.submit "Delete selected schedule", :name => 'delete'
     %hr
-    = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_schedule.errors }
   - if @active_schedule
     .para.bold System state: #{Schedule::DESCRIPTIONS[@active_schedule.state]}.
   .para

@@ -17,9 +17,10 @@ Wpbdc::Application.routes.draw do
     resource :local_contest, :only => [ :edit, :update ]
     resources :designs, :only => [ :show ]
     resource :schedule, :only => [ :edit, :update ]
-    resource :documents, :only => [ :index, :new, :create, :edit, :update, :destroy ]
+    resource :html_documents, :only => [ :edit, :update  ]
+    resource :bulk_notice, :only => [ :edit, :update ]
   end
-  match '/ckeditor_assets/pictures/:id/:style_basename.:extension' => 'admin/documents#show'
+  match '/ckeditor_assets/pictures/:id/:style_basename.:extension' => 'admin/html_documents#show'
   resource :session, :only => [ :new, :create, :destroy ]
   resource :team, :only => [ :new, :create, :edit, :update ]
   resource :member, :only => [ :new, :create, :edit, :update ]

@@ -50,7 +50,8 @@ class LocalContest < ActiveRecord::Base
   def self.qbe(params)
     q = LocalContest.scoped  # Make null query scope
     LocalContest.column_names.each do |name|
-      param = params[name.to_s]
+      next if name == 'id'
+      param = params[name]
       q = q.where("#{name} ILIKE ?", "%#{param}%") unless param.blank?
     end
     ac = params[:affiliation_count].to_i  # this gives 0 for blank or nil param

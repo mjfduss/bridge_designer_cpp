@@ -5,6 +5,22 @@ class Admin::ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :require_valid_session
 
+  def disqualified
+    @disqualified ||= []
+  end
+
+  def disqualified=(val)
+    @disqualified = val
+  end
+
+  def qualified
+    @qualified ||= []
+  end
+
+  def qualified=(val)
+    @qualified = val
+  end
+
   protected
 
   # Check for team review controls that have changed from their initial
@@ -18,7 +34,8 @@ class Admin::ApplicationController < ActionController::Base
           when 'group'
             Team.update_all({:group_id => val}, {:id => id}) unless val == params["#{id}_group_in"]
           when 'status'
-            unless val == params["#{id}_status_in"]
+            old_val = params["#{id}_status_in"]
+            unless val == old_val
               Team.update_all({:status => val}, {:id => id})
               # Adjust the REDIS unofficial standings.
               team = Team.find(id)
@@ -27,6 +44,9 @@ class Admin::ApplicationController < ActionController::Base
               else
                 Standing.insert(team, team.best_design) if team.best_design
               end
+              # Send status change emails
+              disqualified << team if old_val != 'r' && val == 'r'
+              qualified << team if old_val == 'r' && (val != 'r' && val != '-')
             end
         end
       end

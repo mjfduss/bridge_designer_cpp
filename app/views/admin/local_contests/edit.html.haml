@@ -2,6 +2,7 @@
 %hr
 .bold.menu_label
   Local contest workspace:
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
 = form_for @edited_local_contest, :url => admin_local_contest_path, :method => :put do |f|
   .para
     - if @edited_local_contest.new_record?
@@ -55,6 +56,5 @@
     = sep
     = f.submit 'Query by example', :name => 'query'
     %hr
-    = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
     .para #{pluralize(@local_contests.length, 'contest')} shown.
     = render @local_contests

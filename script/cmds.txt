@@ -48,3 +48,36 @@ rm WPBDC-<old.version>.gem
 gem install WPBDC-<new.version>.gem
 gem push WPBDC-<new.version>.gem
 bundle install
+
+# Installing Postmark.  This is the full session.
+heroku addons:add postmark:10k
+Adding postmark:10k on bridgecontest... done, v31 (free)
+Welcome to Postmark!
+
+You no longer have to worry about delivering or parsing your application’s important emails. Postmark ensures your transactional emails get to the inbox and provides a simple process to parse incoming messages.
+
+We have set the following environment variables on your application server:
+
+POSTMARK_API_KEY
+POSTMARK_SMTP_SERVER
+POSTMARK_INBOUND_ADDRESS
+
+To get started, run `heroku addons:open postmark` and create your first sender signature.
+
+Need help?
+
+* Email us 24/7: support@postmarkapp.com
+* Chat is open from 9 - 5pm EST on our site.
+* Twitter: @postmarkapp
+* Status: http://status.postmarkapp.com
+
+IMPORTANT: Postmark is for transactional, application based email only. We do not allow marketing or email newsletters through the service. In short, if you can send it via an email marketing service, you should.
+Use `heroku addons:docs postmark:10k` to view documentation.
+eugene-resslers-macbook-pro:wpbdc generessler$ heroku addons:open postmark
+Opening postmark:10k for bridgecontest... done
+
+I set up info@bridgecontest.org
+
+# Turn on worker process
+heroku ps:scale worker=1
+

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130701193037) do
+ActiveRecord::Schema.define(:version => 20130711070908) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -32,19 +32,6 @@ ActiveRecord::Schema.define(:version => 20130701193037) do
 
   add_index "affiliations", ["local_contest_id"], :name => "index_affiliations_on_local_contest_id"
   add_index "affiliations", ["team_id"], :name => "index_affiliations_on_team_id"
-
-  create_table "assets", :force => true do |t|
-    t.string   "name"
-    t.string   "type"
-    t.integer  "assetable_id"
-    t.string   "assetable_type"
-    t.integer  "width"
-    t.integer  "height"
-    t.text     "content"
-    t.string   "content_type"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
 
   create_table "bests", :force => true do |t|
     t.integer  "team_id",                  :null => false
@@ -83,6 +70,22 @@ ActiveRecord::Schema.define(:version => 20130701193037) do
 
   add_index "ckeditor_assets_contents", ["ckeditor_asset_id"], :name => "index_ckeditor_assets_contents_on_ckeditor_asset_id"
 
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
+
   create_table "designs", :force => true do |t|
     t.integer  "team_id",                   :default => 0,  :null => false
     t.integer  "score",                     :default => 0,  :null => false
@@ -101,6 +104,13 @@ ActiveRecord::Schema.define(:version => 20130701193037) do
     t.string   "description", :limit => 40
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
+  end
+
+  create_table "html_documents", :force => true do |t|
+    t.string   "subject",    :null => false
+    t.text     "text",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "local_contests", :force => true do |t|
@@ -151,19 +161,20 @@ ActiveRecord::Schema.define(:version => 20130701193037) do
   add_index "members", ["team_id"], :name => "index_members_on_team_id"
 
   create_table "schedules", :force => true do |t|
-    t.string   "name",                 :limit => 40,                    :null => false
-    t.boolean  "active",                             :default => false, :null => false
-    t.boolean  "closed",                                                :null => false
-    t.text     "message",                                               :null => false
-    t.datetime "start_quals_prereg",                                    :null => false
-    t.datetime "start_quals",                                           :null => false
-    t.datetime "end_quals",                                             :null => false
-    t.boolean  "quals_tally_complete",                                  :null => false
-    t.datetime "start_semis_prereg",                                    :null => false
-    t.datetime "start_semis",                                           :null => false
-    t.datetime "end_semis",                                             :null => false
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
+    t.string   "name",                  :limit => 40,                    :null => false
+    t.boolean  "active",                              :default => false, :null => false
+    t.boolean  "closed",                                                 :null => false
+    t.text     "message",                                                :null => false
+    t.datetime "start_quals_prereg",                                     :null => false
+    t.datetime "start_quals",                                            :null => false
+    t.datetime "end_quals",                                              :null => false
+    t.boolean  "quals_tally_complete",                                   :null => false
+    t.datetime "start_semis_prereg",                                     :null => false
+    t.datetime "start_semis",                                            :null => false
+    t.datetime "end_semis",                                              :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+    t.integer  "semis_instructions_id"
   end
 
   create_table "scoreboards", :force => true do |t|

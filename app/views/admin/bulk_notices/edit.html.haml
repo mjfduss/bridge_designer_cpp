@@ -1,0 +1,21 @@
+.big.bold Send Bulk Notices
+%hr
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => nil }
+.para
+  = form_tag admin_bulk_notice_path, :method => :put do
+    %table
+      %tr
+        %td= label(:request, :message_body_id, 'Document to send:')
+        %td{ :colspan => 2 }= collection_select(:request, :message_body_id, HtmlDocument.order('subject ASC'), :id, :subject, :include_blank => 'Select Document')
+      %tr
+        %td= label(:request, :local_contest_id, 'Local contest:')
+        %td= collection_select(:request, :local_contest_id, LocalContest.order('code ASC'), :id, :description, :include_blank => 'Select Local Contest')
+        %td{ :align => 'right' }= submit_tag 'Send', :name => :to_local_contest
+      %tr
+        %td Semi-finalists:
+        %td= sep
+        %td{ :align => 'right' }= submit_tag 'Send', :name => :to_semi_finalists
+      %tr
+        %td All contestants:
+        %td= sep
+        %td{ :align => 'right' }= submit_tag 'Send', :name => :to_all

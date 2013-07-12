@@ -1,0 +1,26 @@
+.big.bold Administer Documents
+%hr
+.bold.menu_label Documents workspace:
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_document.errors }
+= form_for @edited_document, :url => admin_html_documents_path, :method => :put do |f|
+  .para
+    - if @edited_document.new_record?
+      = f.label(:subject, 'New/query subject:')
+    - else
+      = f.label(:subject, 'Edit/query subject:')
+      = f.hidden_field(:id, :value => @edited_document.id)
+    = hidden_field_tag :ids, @documents.map { |g| g.id }.join(',')
+    = f.text_field :subject, :size => 40
+  .para
+    = f.cktext_area :text, :ckeditor => editor_config
+  .para
+  = f.submit @edited_document.new_record? ? 'Add document' : 'Update document', :name => 'update'
+  = sep
+  = f.submit @edited_document.new_record? ? 'Get selected document' : 'Get new or selected document', :name => 'get'
+  = sep
+  = f.submit 'Delete selected document', :name => 'delete', :confirm => 'Are you absolutely sure you want to delete?'
+  = sep
+  = f.submit 'Query by subject example', :name => 'query'
+  %hr
+    .para #{pluralize(@documents.length, 'document')} shown.
+    = render @documents

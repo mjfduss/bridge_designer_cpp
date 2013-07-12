@@ -26,11 +26,11 @@
   - elsif @schedule_state == Schedule::STATE_SEMIS
     .para
       Please read the following instructions very carefully.
-    .para
-      Blah blah blah.  Need the real instructions here.
+    %hr
+    = @schedule.semis_instructions.text.html_safe
   - else
     .para
-      The Semi-final round is over for #{WPBDC::CONTEST_YEAR}.  You can con
+      The Semi-final round is over for #{WPBDC::CONTEST_YEAR}.
   .vsep
     %hr
   = form_tag semi_final_instruction_path, :method => :put do

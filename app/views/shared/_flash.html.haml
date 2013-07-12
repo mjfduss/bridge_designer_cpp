@@ -1,4 +1,4 @@
-- flash_p = !flash.empty?
+- flash_p = flash && !flash.empty?
 - errs_p = errors && !errors.empty?
 - if flash_p || errs_p
   %ul

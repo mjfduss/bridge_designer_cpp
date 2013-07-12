@@ -6,6 +6,16 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
   def update
     if !params[:process].blank?
       update_modified_teams
+      msg = ''
+      unless disqualified.empty?
+        msg << 'Disqualified notices sent to ' + disqualified.map{|t| "'#{t.name}'"}.to_sentence + '. '
+        disqualified.each{|t| DisqualifiedNotice.delay.to_team(t) }
+      end
+      unless qualified.empty?
+        msg << 'Qualified notices sent to ' + qualified.map{|t| "'#{t.name}'"}.to_sentence  + '. '
+        qualified.each{|t| QualifiedNotice.delay.to_team(t) }
+      end
+      flash[:alert] = msg unless msg.empty?
       @category = params[:team_category]
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []

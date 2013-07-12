@@ -2,9 +2,12 @@ class Schedule < ActiveRecord::Base
 
   attr_accessible :name, :active, :closed, :message
   attr_accessible :start_quals_prereg, :start_quals, :end_quals, :quals_tally_complete
-  attr_accessible :start_semis_prereg, :start_semis, :end_semis
+  attr_accessible :start_semis_prereg, :semis_instructions_id, :start_semis, :end_semis
+
+  belongs_to :semis_instructions, :class_name => 'HtmlDocument'
 
   validates :name, :uniqueness => true
+  validates :semis_instructions, :presence => true
 
   after_initialize :set_reasonable_field_values
 
@@ -118,6 +121,10 @@ class Schedule < ActiveRecord::Base
     [ 'Start semi logins', start_semis_prereg ]
   end
 
+  def semis_instructions_formatted
+    [ 'Semis instructions page', semis_instructions.file_name ]
+  end
+
   def start_semis_formatted
     [ 'Start semis', start_semis ]
   end
@@ -130,15 +137,26 @@ class Schedule < ActiveRecord::Base
 
   def set_reasonable_field_values
     return unless new_record?
-    # Use some reasonable dates based on 2013 schedule.
-    time = Time.now
-    year = time.month >= 6 ? time.year + 1 : time.year
-    self.start_quals_prereg = Time.local(year, 1, 14, 13, 0)
-    self.start_quals = Time.local(year, 1, 15, 13, 0)
-    self.end_quals = Time.local(year, 3, 25, 13, 0)
-    self.start_semis_prereg = Time.local(year, 4, 1, 13, 0)
-    self.start_semis = Time.local(year, 4, 5, 13, 0)
-    self.end_semis = Time.local(year, 4, 5, 15, 0)
+    self.name = 'New Schedule'
+    # Try to get the current active schedule and use its information.
+    active = Schedule.find_by_active(true)
+    if active
+      self.semis_instructions_id = active.semis_instructions_id
+      self.message = active.message
+      [:start_quals_prereg, :start_quals, :end_quals, :start_semis_prereg, :start_semis, :end_semis].each do |f|
+        write_attribute(f, active.send(f).advance(:years => 1))
+      end
+    else
+      # Use some reasonable dates based on 2013 schedule.
+      time = Time.now
+      year = time.month >= 6 ? time.year + 1 : time.year
+      self.start_quals_prereg = Time.local(year, 1, 14, 13, 0)
+      self.start_quals = Time.local(year, 1, 15, 13, 0)
+      self.end_quals = Time.local(year, 3, 25, 13, 0)
+      self.start_semis_prereg = Time.local(year, 4, 1, 13, 0)
+      self.start_semis = Time.local(year, 4, 5, 13, 0)
+      self.end_semis = Time.local(year, 4, 5, 15, 0)
+    end
   end
 
 end

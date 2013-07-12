@@ -1,0 +1,18 @@
+Greetings Team '#{@team.name}', #{@team.members.pluck(:first_name).to_sentence},
+
+We're sorry to inform you that your team has been disqualified from the West Point Bridge Design Contest for #{WPBDC::CONTEST_YEAR}.
+
+The most common reasons for disqualification are:
+
+* Choosing an inappropriate team name. Note that last (family) names as part of your team name are not allowed.  This is to protect your identity.
+* Making other inappropriate entries in the registration page.
+* More than one team with the same members.
+* Evidence of cheating or tampering with the Contest web servers.
+* Requests from teachers.
+
+Write the Contest Judges at #{ApplicationMailer::DEFAULT_EMAIL} if you need more information.
+
+If your team name is the problem, you can change it by selecting *Make changes* at the *Verify contact info* box when you log in. Write the Contest Judges at #{ApplicationMailer::DEFAULT_EMAIL} when you're done, and we'll re-qualify your team.
+
+Best Regards,
+The Judges

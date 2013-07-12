@@ -7,6 +7,7 @@ class Team < ActiveRecord::Base
   attr_accessible :name, :email
   attr_accessible :password, :password_confirmation
   attr_accessible :members_attributes
+  #TODO Status should not be accessible.
   attr_accessible :submits, :improves, :status, :group
 
   attr_accessible :new_local_contest
@@ -26,7 +27,7 @@ class Team < ActiveRecord::Base
 
   accepts_nested_attributes_for :members
 
-  before_validation :set_name_key, :on => :create
+  before_validation :set_name_key
   before_validation :upcase_new_local_contest
   before_save :downcase_email
   before_save :add_new_affiliation

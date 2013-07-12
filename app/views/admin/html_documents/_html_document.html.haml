@@ -1,0 +1,5 @@
+.menu_item
+  = check_box_tag 'select[]', html_document.id
+  = html_document.subject
+  = sep
+  (#{truncate(html_document.plain_text)})

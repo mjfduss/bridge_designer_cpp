@@ -48,6 +48,9 @@
     .menu_item.menu_label
       Documents:
       = render :partial => "shared/submit_link", :locals => { :name => 'get_docs', :text => "Go" }
+      = sep
+      Bulk notices:
+      = render :partial => "shared/submit_link", :locals => { :name => 'get_bulk_notice_menu', :text => "Go" }
     .menu_item
       .menu_label Find teams in local contest:
       .wrap

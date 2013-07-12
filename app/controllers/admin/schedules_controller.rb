@@ -10,7 +10,7 @@ class Admin::SchedulesController < Admin::ApplicationController
     selected = params[:select]
     if !params[:get].blank?
       if selected.blank?
-        @edited_schedule = Schedule.find_by_active(true) || Schedule.new
+        @edited_schedule = Schedule.new
         flash.now[:alert] = 'New schedule ready to edit.'
       else
         @edited_schedule = Schedule.find(selected[0].to_i)

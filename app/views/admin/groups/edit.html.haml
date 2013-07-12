@@ -1,6 +1,7 @@
 .big.bold Administer Groups
 %hr
 .bold.menu_label Groups workspace:
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_group.errors }
 = form_for @edited_group, :url => admin_group_path, :method => :put do |f|
   .para
     - if @edited_group.new_record?
@@ -19,6 +20,5 @@
   = sep
   = f.submit 'Query by example', :name => 'query'
   %hr
-    = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_group.errors }
-    .para #{pluralize(@groups.length, 'contest')} shown.
+    .para #{pluralize(@groups.length, 'group')} shown.
     = render @groups

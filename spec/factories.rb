@@ -127,7 +127,8 @@ FactoryGirl.define do
     name { generate :team_name }
     password 'foobarbaz'
     password_confirmation { password }
-    email { generate :email }
+#    email { generate :email }
+    email 'gene.ressler@gmail.com'
     category 'e'
     status 'a'
     reg_completed { Time.now }

@@ -28,7 +28,7 @@
             - if @best_for_scenario
               %li.status_list== Your current best Semi-Finals design cost is #{to_cost(@best_for_scenario)}.
             - else
-              %li.status_list You have not yet submitted a Semi-Finals design. Go for it!
+              %li.status_list You have not yet submitted a Semi-Finals design.
           - else
             -unless @team.local_contests.empty?
               %li.status_list== Your local contests: #{local_contest_list(@team)}

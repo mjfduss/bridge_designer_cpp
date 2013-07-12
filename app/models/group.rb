@@ -12,7 +12,8 @@ class Group < ActiveRecord::Base
   def self.qbe(params)
     q = Group.scoped  # Make null query scope
     Group.column_names.each do |name|
-      param = params[name.to_s]
+      next if name == 'id'
+      param = params[name]
       q = q.where("#{name} ILIKE ?", "%#{param}%") unless param.blank?
     end
     q.all

@@ -6,6 +6,7 @@
   - show_hidden_p = @visible_status.include?('h')
   - team_items_table = @teams.zip(Team.format_all(@teams, @visible_attributes))
   %a{ :name => 'top' }
+  = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => nil }
   .bold
     = "#{TablesHelper::CATEGORY_MAP[@category] || 'Unknown category'}: #{pluralize(@teams.length, 'team')} shown."
   %table.index

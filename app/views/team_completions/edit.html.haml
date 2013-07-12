@@ -4,7 +4,11 @@
     .box
       .big
         Team info for
-        = @team.name
+        - if @team.status == 'r'
+          = f.text_field :name, :size => 16
+          (you may change your team name while disqualified)
+        - else
+          = @team.name
       .para.small.subdued
         It is important that we have an e-mail address to reach your team. Type it below.
       .para

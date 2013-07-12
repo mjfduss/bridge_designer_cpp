@@ -42,7 +42,7 @@ class Admin::MainMenusController < Admin::ApplicationController
     elsif !params[:get_groups].blank?
       redirect_to :controller => :groups, :action => :edit
     elsif !params[:get_docs].blank?
-      redirect_to :controller => :documents, :action => :new
+      redirect_to :controller => :html_documents, :action => :edit
     elsif !params[:get_standings_review].blank?
       @scoreboard = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
       @scoreboard.save(session[:admin_id])
@@ -79,6 +79,8 @@ class Admin::MainMenusController < Admin::ApplicationController
       render :template => 'admin/leader_emails/edit'
     elsif !params[:edit_schedule].blank?
       redirect_to :controller => :schedules, :action => :edit
+    elsif !params[:get_bulk_notice_menu].blank?
+      redirect_to :controller => :bulk_notices, :action => :edit
     else
       flash.now[:alert] = "Unknown menu function."
       render :template => 'admin/initials/new'
