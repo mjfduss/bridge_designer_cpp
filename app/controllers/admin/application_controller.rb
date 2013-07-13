@@ -44,7 +44,7 @@ class Admin::ApplicationController < ActionController::Base
               else
                 Standing.insert(team, team.best_design) if team.best_design
               end
-              # Send status change emails
+              # Make lists of changes for later processing
               disqualified << team if old_val != 'r' && val == 'r'
               qualified << team if old_val == 'r' && (val != 'r' && val != '-')
             end

@@ -4,7 +4,7 @@ class Admin::LocalContestTeamsController < Admin::ApplicationController
   end
 
   def update
-    if !params[:process].blank?
+    if params.nonblank? :process
       update_modified_teams
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
@@ -13,7 +13,7 @@ class Admin::LocalContestTeamsController < Admin::ApplicationController
       @teams = Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :action => :edit
-    elsif !params[:retrieve].blank?
+    elsif params.nonblank? :retrieve
       redirect_to :controller => :retrieve_designs, :action => :new
     else
       redirect_to :controller => :initials, :action => :new

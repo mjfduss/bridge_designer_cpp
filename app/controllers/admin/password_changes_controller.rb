@@ -14,6 +14,6 @@ class Admin::PasswordChangesController < Admin::ApplicationController
     else
       flash.now[:alert] = 'The current password you gave was incorrect.'
     end
-    render :action => :edit
+    render 'edit'
   end
 end

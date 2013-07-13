@@ -7,8 +7,6 @@ class Team < ActiveRecord::Base
   attr_accessible :name, :email
   attr_accessible :password, :password_confirmation
   attr_accessible :members_attributes
-  #TODO Status should not be accessible.
-  attr_accessible :submits, :improves, :status, :group
 
   attr_accessible :new_local_contest
   attr_accessor :new_local_contest, :completion_status, :rank

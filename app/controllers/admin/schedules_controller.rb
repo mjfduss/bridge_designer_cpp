@@ -8,7 +8,7 @@ class Admin::SchedulesController < Admin::ApplicationController
 
   def update
     selected = params[:select]
-    if !params[:get].blank?
+    if params.nonblank? :get
       if selected.blank?
         @edited_schedule = Schedule.new
         flash.now[:alert] = 'New schedule ready to edit.'
@@ -16,7 +16,7 @@ class Admin::SchedulesController < Admin::ApplicationController
         @edited_schedule = Schedule.find(selected[0].to_i)
         flash.now[:alert] = 'Selected schedule ready to edit.'
       end
-    elsif !params[:update].blank?
+    elsif params.nonblank? :update
       id = params[:schedule][:id]
       if id.blank?
         @edited_schedule = Schedule.create(params[:schedule])
@@ -35,7 +35,7 @@ class Admin::SchedulesController < Admin::ApplicationController
           flash.now[:alert] = 'Could not update schedule.'
         end
       end
-    elsif !params[:delete].blank?
+    elsif params.nonblank? :delete
       if selected.blank?
         flash.now[:alert] = 'No schedules were selected for deletion.'
       elsif selected_includes_active?(selected)

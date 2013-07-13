@@ -18,7 +18,7 @@ class MembersController < ApplicationController
         session[:member_id] = @member.id;
         redirect_to :controller => :certifications, :action => :edit
       else
-        kill_session 'Could not save new member record.'
+        render 'new'
       end
     end
   end
@@ -40,7 +40,7 @@ class MembersController < ApplicationController
       if @member.update_attributes(params[:member])
         redirect_to :controller => :certifications, :action => :edit
       else
-        kill_session 'Could not save new value for existing member record.'
+        render 'new'
       end
     end
   end

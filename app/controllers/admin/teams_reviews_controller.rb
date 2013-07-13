@@ -4,7 +4,7 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
   end
 
   def update
-    if !params[:process].blank?
+    if params.nonblank? :process
       update_modified_teams
       msg = ''
       unless disqualified.empty?
@@ -23,7 +23,7 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
       @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :action => :edit
-    elsif !params[:retrieve].blank?
+    elsif params.nonblank? :retrieve
       render :controller => :retrieve_designs, :action => :edit
     else
       redirect_to :controller => :initials, :action => :new

@@ -24,14 +24,14 @@ class Admin::MainMenusController < Admin::ApplicationController
   def update
     admin = Administrator.find(session[:admin_id])
     admin.update_attribute(:session_state, params.slice(*SESSION_STATE_FIELDS).to_json) if admin
-    if !params[:check_servers].blank?
+    if params.nonblank? :check_servers
       redirect_to :controller => :server_statuses, :action => :edit
-    elsif !params[:change_password].blank?
+    elsif params.nonblank? :change_password
       @admin = admin
       render :template => 'admin/password_changes/edit'
-    elsif !params[:log_out].blank?
+    elsif params.nonblank? :log_out
       kill_session('Logged out.')
-    elsif !params[:get_team_review].blank?
+    elsif params.nonblank? :get_team_review
       @category = params[:team_category]
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
@@ -39,11 +39,11 @@ class Admin::MainMenusController < Admin::ApplicationController
       @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :template => 'admin/teams_reviews/edit'
-    elsif !params[:get_groups].blank?
+    elsif params.nonblank? :get_groups
       redirect_to :controller => :groups, :action => :edit
-    elsif !params[:get_docs].blank?
+    elsif params.nonblank? :get_docs
       redirect_to :controller => :html_documents, :action => :edit
-    elsif !params[:get_standings_review].blank?
+    elsif params.nonblank? :get_standings_review
       @scoreboard = Team.get_scoreboard(params[:review_category], params[:standings_cutoff].to_i, params[:standings_options])
       @scoreboard.save(session[:admin_id])
       # If diff was requested, replace with the diff whenever a current scoreboard exists.
@@ -52,10 +52,10 @@ class Admin::MainMenusController < Admin::ApplicationController
         @scoreboard = Team.scoreboard_diff(sb_old, @scoreboard) unless sb_old.nil?
       end
       render :template => 'admin/standings_reviews/edit'
-    elsif !params[:get_posted_standings].blank?
+    elsif params.nonblank? :get_posted_standings
       @scoreboard = Scoreboard.get_current params[:posted_category]
       render :template => 'standings/show'
-    elsif !params[:get_any_team].blank?
+    elsif params.nonblank? :get_any_team
       @category = params[:find_category]
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
@@ -64,9 +64,9 @@ class Admin::MainMenusController < Admin::ApplicationController
       @teams = Team.assign_unofficial_ranks(Team.get_teams_by_name(@team_name_likeness, @category, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :template => 'admin/any_teams/edit'
-    elsif !params[:get_local_contests].blank?
+    elsif params.nonblank? :get_local_contests
       redirect_to :controller => :local_contests, :action => :edit
-    elsif !params[:get_local_contest_teams].blank?
+    elsif params.nonblank? :get_local_contest_teams
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
@@ -74,12 +74,9 @@ class Admin::MainMenusController < Admin::ApplicationController
       @teams = Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @visible_status, @standings_cutoff))
       @groups = Group.all
       render :template => 'admin/local_contest_teams/edit'
-    elsif !params[:leader_emails].blank?
-      @standings_cutoff = params[:standings_cutoff].to_i
-      render :template => 'admin/leader_emails/edit'
-    elsif !params[:edit_schedule].blank?
+    elsif params.nonblank? :edit_schedule
       redirect_to :controller => :schedules, :action => :edit
-    elsif !params[:get_bulk_notice_menu].blank?
+    elsif params.nonblank? :get_bulk_notice_menu
       redirect_to :controller => :bulk_notices, :action => :edit
     else
       flash.now[:alert] = "Unknown menu function."

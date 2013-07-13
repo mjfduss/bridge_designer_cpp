@@ -10,7 +10,7 @@ class Admin::HtmlDocumentsController < Admin::ApplicationController
     ids = params[:ids]
     ids = ids.split(',') if ids
 
-    if !params[:get].blank?
+    if params.nonblank? :get
       if selected.blank?
         @edited_document = HtmlDocument.new
         flash.now[:alert] = 'New document ready to edit.'
@@ -18,7 +18,7 @@ class Admin::HtmlDocumentsController < Admin::ApplicationController
         @edited_document = HtmlDocument.find(selected[0].to_i)
         flash.now[:alert] = 'Selected document ready to edit.'
       end
-    elsif !params[:delete].blank?
+    elsif params.nonblank? :delete
       if selected.blank?
         flash.now[:alert] = 'No documents were selected for deletion.'
       else
@@ -26,7 +26,7 @@ class Admin::HtmlDocumentsController < Admin::ApplicationController
         flash.now[:alert] = 'Selected documents were deleted.'
       end
       @edited_document = HtmlDocument.new
-    elsif !params[:query].blank?
+    elsif params.nonblank? :query
       @documents = HtmlDocument.qbe(params[:html_document])
       @edited_document = HtmlDocument.new(params[:html_document])
       flash.now[:alert] = 'Query results are shown below.'

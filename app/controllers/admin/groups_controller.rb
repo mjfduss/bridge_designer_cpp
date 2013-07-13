@@ -10,7 +10,7 @@ class Admin::GroupsController < Admin::ApplicationController
     ids = params[:ids]
     ids = ids.split(',') if ids
 
-    if !params[:get].blank?
+    if params.nonblank? :get
       if selected.blank?
         @edited_group = Group.new
         flash.now[:alert] = 'New group ready to edit.'
@@ -18,7 +18,7 @@ class Admin::GroupsController < Admin::ApplicationController
         @edited_group = Group.find(selected[0].to_i)
         flash.now[:alert] = 'Selected group ready to edit.'
       end
-    elsif !params[:update].blank?
+    elsif params.nonblank? :update
       id = params[:group][:id]
       if id.blank?
         @edited_group = Group.create(params[:group])
@@ -33,7 +33,7 @@ class Admin::GroupsController < Admin::ApplicationController
         @edited_group.update_attributes(params[:group])
         flash.now[:alert] = "Group '#{params[:group][:description]}' was updated."
       end
-    elsif !params[:delete].blank?
+    elsif params.nonblank? :delete
       if selected.blank?
         flash.now[:alert] = 'No groups were selected for deletion.'
       else
@@ -41,7 +41,7 @@ class Admin::GroupsController < Admin::ApplicationController
         flash.now[:alert] = 'Selected groups were deleted.'
       end
       @edited_group = Group.new
-    elsif !params[:query].blank?
+    elsif params.nonblank? :query
       @groups = Group.qbe(params[:group])
       @edited_group = Group.new(params[:group])
       flash.now[:alert] = 'Query results are shown below.'

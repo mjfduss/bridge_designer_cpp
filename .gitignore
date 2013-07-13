@@ -7,6 +7,7 @@
 # Ignore cached assets.
 /public/assets/*
 /public/standings/*
+/public/admin/**
 
 # Don't vc the mail account info
 /config/initializers/mail.rb

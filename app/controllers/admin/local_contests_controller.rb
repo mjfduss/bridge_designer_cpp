@@ -11,7 +11,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
     selected = params[:select]
     ids = params[:ids]
     ids = ids.split(',') if ids
-    if !params[:get].blank?
+    if params.nonblank? :get
       if selected.blank?
         @edited_local_contest = LocalContest.new
         flash.now[:alert] = 'New local contest ready to edit.'
@@ -19,7 +19,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
         @edited_local_contest = LocalContest.find(selected[0].to_i)
         flash.now[:alert] = 'Selected local contest ready to edit.'
       end
-    elsif !params[:update].blank?
+    elsif params.nonblank? :update
       id = params[:local_contest][:id]
       if id.blank?
         @edited_local_contest = LocalContest.create(params[:local_contest])
@@ -37,7 +37,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
           flash.now[:alert] = 'Could not update local contest.'
         end
       end
-    elsif !params[:delete].blank?
+    elsif params.nonblank? :delete
       if selected.blank?
         flash.now[:alert] = 'No local contests were selected for deletion.'
       else
@@ -45,7 +45,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
         flash.now[:alert] = 'Selected local contests were deleted.'
       end
       restore_edited
-    elsif !params[:query].blank?
+    elsif params.nonblank? :query
       @local_contests = LocalContest.qbe(params[:local_contest])
       @edited_local_contest = LocalContest.new(params[:local_contest])
       flash.now[:alert] = 'Query results are shown below.'

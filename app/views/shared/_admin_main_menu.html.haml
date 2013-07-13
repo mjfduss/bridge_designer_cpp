@@ -57,12 +57,6 @@
         Local contest code:
         = text_field_tag('local_contest_code', state['local_contest_code'] || '', :size => 4)
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contest_teams', :text => "Go" }
-    .menu_item
-      .menu_label Get email menu for leaders:
-      .wrap
-        Show top:
-        = text_field_tag('mail_teams', state['mail_teams'] || '10', :size => 2)
-        = render :partial => "shared/submit_link", :locals => { :name => 'get_leader_emails', :text => "Go" }
     %hr
     .menu_item
       .menu_label Options
