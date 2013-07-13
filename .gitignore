@@ -5,8 +5,8 @@
 /db/*.sqlite3
 
 # Ignore cached assets.
-/public/assets/*
-/public/standings/*
+/public/assets/**
+/public/standings/**
 /public/admin/**
 
 # Don't vc the mail account info
