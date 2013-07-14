@@ -12,7 +12,7 @@ class TeamCompletionsController < ApplicationController
     @captain = @team.captain
     @member = @team.non_captains.first
     @team.completion_status = :pending_new_password if @team.password_digest.blank?
-    if !params[:change_password].blank?
+    if params.nonblank? :change_password
       @team.completion_status = :pending_new_password
       render 'edit'
     elsif params.has_key? :cancel

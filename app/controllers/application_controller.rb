@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   protected
 
+
   def do_login
     session[:login] = Time.now unless session[:login]
   end

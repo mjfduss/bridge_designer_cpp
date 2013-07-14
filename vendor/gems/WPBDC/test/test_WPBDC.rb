@@ -8,7 +8,7 @@ class WPBDCTest < Test::Unit::TestCase
 
   def test_similarity
     seed = 53535353
-    for fn in Dir.glob("test/eg/#{YEAR}/*.bdc")
+    Dir.glob("test/eg/#{YEAR}/*.bdc").each |fn| do
       bridge = open(fn, "rb") { |f| f.read }
       WPBDC.endecrypt(bridge)
       bridge_result = WPBDC.analyze(bridge)
@@ -20,7 +20,7 @@ class WPBDCTest < Test::Unit::TestCase
       assert(bridge_result[:error], "#{fn}: error missing")
       assert(bridge_result[:score], "#{fn}: score missing")
       assert(bridge_result[:hash], "#{fn}: hash missing")
-      for i in 1 .. N_VARIANTS
+      (1 .. N_VARIANTS).each do |i|
         variant = WPBDC.variant(bridge, seed)
         seed = 0
         variant_result = WPBDC.analyze(variant)
@@ -37,12 +37,12 @@ class WPBDCTest < Test::Unit::TestCase
   end
 
   def test_pass_fail
-    for fn in Dir.glob("test/eg/#{YEAR}/*.bdc")
+    Dir.glob("test/eg/#{YEAR}/*.bdc").each do |fn|
       good_bridge = fn.index('failed').nil?
       bridge = open(fn, "rb") { |f| f.read }
       WPBDC.endecrypt(bridge)
       result = WPBDC.analyze(bridge)
-      assert_includes([WPBDC::BRIDGE_OK, WPBDC::BRIDGE_FAILEDTEST, WPBDC::BRIDGE_WRONGVERSION, WPBDC::BRIDGE_MALFORMED ], result[:status], "bad status")
+      assert_includes([WPBDC::BRIDGE_OK, WPBDC::BRIDGE_FAILEDTEST, WPBDC::BRIDGE_WRONGVERSION, WPBDC::BRIDGE_MALFORMED], result[:status], "bad status")
       assert(result[:status] != WPBDC::BRIDGE_OK || good_bridge, "#{fn}: failed bridge returned ok")
       assert(result[:status] != WPBDC::BRIDGE_FAILEDTEST || !good_bridge, "#{fn}: good bridge returned failed")
       assert_not_equal(result[:status], WPBDC::BRIDGE_WRONGVERSION, "#{fn}: bad report of wrong version")
@@ -52,14 +52,14 @@ class WPBDCTest < Test::Unit::TestCase
 
   def test_compare
     seed = 42424242
-    for fn in Dir.glob("test/eg/#{YEAR}/*.bdc")
-        bridge = open(fn, "rb") { |f| f.read }
-        WPBDC.endecrypt(bridge)
-        for i in 1 .. N_VARIANTS
-          variant = WPBDC.variant(bridge, seed)
-          seed = 0
-          assert_equal(WPBDC.are_same(bridge, variant), true, "#{fn}: variants fail are_same")
-        end
+    Dir.glob("test/eg/#{YEAR}/*.bdc").each do |fn|
+      bridge = open(fn, "rb") { |f| f.read }
+      WPBDC.endecrypt(bridge)
+      for i in 1 .. N_VARIANTS
+        variant = WPBDC.variant(bridge, seed)
+        seed = 0
+        assert_equal(WPBDC.are_same(bridge, variant), true, "#{fn}: variants fail are_same")
+      end
     end
   end
 end

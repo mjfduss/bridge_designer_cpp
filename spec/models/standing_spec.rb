@@ -6,7 +6,7 @@ describe Standing do
     REDIS.flushall
     n_teams = 1000
     @teams = []
-    for id in 1..n_teams
+    (1..n_teams).each do |id|
       team = Team.new
       team.category = 'e'
       team.id = id
@@ -15,7 +15,7 @@ describe Standing do
     @teams.shuffle!
     n_designs = 3000
     @designs = []
-    for id in 1..n_designs
+    (1..n_designs).each do |id|
       design = Design.new
       design.id = id
       design.team_id = @teams[(id - 1) % n_teams].id
@@ -24,9 +24,7 @@ describe Standing do
       @designs << design
     end
     @designs.shuffle!
-    for design in @designs
-      Standing.insert(@teams[(design.id - 1) % n_teams], design)
-    end
+    @designs.each { |design| Standing.insert(@teams[(design.id - 1) % n_teams], design) }
   end
 
   after(:all) do
@@ -44,7 +42,7 @@ describe Standing do
   it "should retrieve all ranks" do
     accum = [:empty]
     saw_nil_standing = false;
-    for team in @teams
+    @teams.each do |team|
       standing = Standing.standing(team).first
       if standing
         accum[standing] = team
@@ -59,7 +57,7 @@ describe Standing do
   it "should interpolate ranks correctly" do
     saw_bad_standing = false
     designs_per_score = (@designs.length + @teams.length - 1) / @teams.length
-    for design in @designs
+    @designs.each do |design|
       team = @teams[(design.id - 1) % @teams.length]
       interpolation = Standing.interpolated_standing(team, design.score).first
       standing = Standing.standing(team).first
@@ -69,9 +67,7 @@ describe Standing do
   end
 
   it "should delete cleanly" do
-    for team in @teams
-      Standing.delete(team)
-    end
+    @teams.each { |team| Standing.delete(team) }
     clean_delete = Standing.team_count('e') == 0 && Standing.score_count('e') == 0
     clean_delete.should be_true
   end

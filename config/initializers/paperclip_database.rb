@@ -81,7 +81,7 @@ module Paperclip
 
       # Returns representation of the data of the file assigned to the given
       # style, in the format most representative of the current storage.
-      def to_file style = default_style
+      def to_file(style = default_style)
         if @queued_for_write[style]
           @queued_for_write[style]
         elsif exists?(style)

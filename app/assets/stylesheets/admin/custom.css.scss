@@ -92,6 +92,11 @@ td.unreviewed {
   color: #fff;
   text-align: center;
 }
+
+span.questionable {
+  color: $rejected
+}
+
 td.rejected {
   @extend td.unreviewed;
   background-color: $rejected;

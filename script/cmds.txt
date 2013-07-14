@@ -81,3 +81,11 @@ I set up info@bridgecontest.org
 # Turn on worker process
 heroku ps:scale worker=1
 
+# Set up scheduler (for stale session deletion).  This is the full session.
+heroku addons:add scheduler:standard
+Adding scheduler:standard on bridgecontest... done, v31 (free)
+This add-on consumes dyno hours, which could impact your monthly bill. To learn more:
+http://devcenter.heroku.com/addons_with_dyno_hour_usage
+To manage scheduled jobs run:
+heroku addons:open scheduler
+Use `heroku addons:docs scheduler:standard` to view documentation.

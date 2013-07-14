@@ -315,17 +315,17 @@ class Team < ActiveRecord::Base
             a_row = a_map[b_row[:team_name]]
             if a_row
               team_data = {
-                :rank => DiffMarkups.getMarkup(a_row[:rank], b_row[:rank]),
+                :rank => DiffMarkups.diff_markup(a_row[:rank], b_row[:rank]),
                 :team_name => b_row[:team_name],
                 :category => b_row[:category],
                 :members => DiffMarkups.getMarkedUpPair(a_row[:members], b_row[:members]),
                 :city_state => DiffMarkups.getMarkedUpPair(a_row[:city_state], b_row[:city_state]),
                 :school => DiffMarkups.getMarkedUpPair(a_row[:school], b_row[:school]),
                 :location => DiffMarkups.getMarkedUpPair(a_row[:location], b_row[:location]),
-                :submitted => DiffMarkups.getMarkup(a_row[:submitted], b_row[:submitted]),
+                :submitted => DiffMarkups.diff_markup(a_row[:submitted], b_row[:submitted]),
               }
               if a_row[:score] || b_row[:score]
-                team_data[:score] = DiffMarkups.getMarkup(a_row[:score] || '', b_row[:score] || '')
+                team_data[:score] = DiffMarkups.diff_markup(a_row[:score] || '', b_row[:score] || '')
               end
               team_data
             else

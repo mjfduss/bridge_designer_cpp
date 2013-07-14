@@ -4,7 +4,12 @@
   %tr
     %td{ :rowspan => 2 + rows.length, :class => team.status_style_id }= "[#{team.rank.to_s}]"
     %td.review_head{ :colspan => 2 }
-      #{team.name_key} [#{Standing.rank(team) || 'x'}]:
+      - markup = DiffMarkups.team_name_check_markup(team.name_key, team.members.map(&:last_name))
+      - if markup
+        %span.bold.questionable= markup
+      - else
+        = team.name_key
+      [#{Standing.rank(team) || 'x'}]:
       = select_tag("#{team.id}_group", options_for_select(team_review_group_list_data(@groups), team.group_id || '-'))
       = hidden_field_tag "#{team.id}_group_in", (team.group_id || '-')
       = sep

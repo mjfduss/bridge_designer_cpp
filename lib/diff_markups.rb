@@ -4,11 +4,30 @@ module DiffMarkups
   DEL_TAG = '<span class="del">'
   END_TAG = '</span>'
 
-# @param [String] a original string
-# @param [String] b modified version of original string
-# @return [String] original marked up with insertions and deletions to obtain modified
-  def self.getMarkup(a, b)
-    as, bs = a.to_s.split(' '), b.to_s.split(' ')
+  # @param [String] team_name team name or name key
+  # @param [Array] family_names list of family names to check
+  # @return [String or nil] marked up team name or nil if no markup was needed
+  def self.team_name_check_markup(team_name, family_names)
+    tn = team_name.downcase.gsub(/[^a-z0-9]/, '').split('')
+    fns = family_names.map{|f| f.downcase.gsub(/[^a-z]/, '').split('') }
+    # Find a family name that can be formed by only adding to the team name, not deleting.  This
+    # means breaking out of the sequence traversal if a '-' is found, i.e. the sequence is okay.
+    fn = fns.find { |f| not Diff::LCS::traverse_sequences(f, tn) {|e| break true if e.action == '-' } }
+    # Return unmarked team name key unless we found a family name with a problem.
+    return fn ? markup(fn, tn).join('').html_safe : nil
+  end
+
+  # @param [String] a original string
+  # @param [String] b modified version of original string
+  # @return [String] original marked up with insertions and deletions to obtain modified
+  def self.diff_markup(a, b)
+    markup(a.to_s.split(' '), b.to_s.split(' ')).join(' ').html_safe
+  end
+
+  # @param [Array] a original list of strings wrt which we must find markup
+  # @param [Array] b modified version of original list
+  # @return [Array] list of strings with HTML markup denoting insertions and deletions
+  def self.markup(as, bs)
     out = []
     action = '='
     Diff::LCS::traverse_sequences(as, bs) do |e|
@@ -28,7 +47,7 @@ module DiffMarkups
       end
     end
     out[-1] << END_TAG unless action == '='
-    out.join(' ').html_safe
+    out
   end
 
   # Return the number of leaf nodes of a non-flat list.
@@ -45,15 +64,15 @@ module DiffMarkups
   # @return [Array] array of 1 or 2 strings marked up with inserts and deletions to make modified out of original
   def self.getMarkedUpPair(a, b)
     if a.length == b.length
-      a.zip(b).map {|p| getMarkup(*p)}
+      a.zip(b).map {|p| diff_markup(*p)}
     elsif a.length == 2 && b.length == 1
       deep_length(Diff::LCS::diff(a[0], b[0])) <= deep_length(Diff::LCS::diff(a[1], b[0])) ?
-        [ getMarkup(a[0], b[0]), "#{DEL_TAG}#{a[1]}#{END_TAG}" ] :
-        [ "#{DEL_TAG}#{a[0]}#{END_TAG}", getMarkup(a[1], b[0]) ]
+        [ diff_markup(a[0], b[0]), "#{DEL_TAG}#{a[1]}#{END_TAG}" ] :
+        [ "#{DEL_TAG}#{a[0]}#{END_TAG}", diff_markup(a[1], b[0]) ]
     elsif a.length == 1 && b.length == 2
       deep_length(Diff::LCS::diff(a[0], b[0])) <= deep_length(Diff::LCS::diff(a[0], b[1])) ?
-        [ getMarkup(a[0], b[0]), "#{DEL_TAG}#{a[1]}#{END_TAG}" ] :
-        [ "#{DEL_TAG}#{b[0]}#{END_TAG}", getMarkup(a[0], b[1]) ]
+        [ diff_markup(a[0], b[0]), "#{DEL_TAG}#{a[1]}#{END_TAG}" ] :
+        [ "#{DEL_TAG}#{b[0]}#{END_TAG}", diff_markup(a[0], b[1]) ]
     end
   end
 end

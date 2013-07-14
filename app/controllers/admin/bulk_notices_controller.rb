@@ -20,7 +20,7 @@ class Admin::BulkNoticesController < Admin::ApplicationController
       flash.now[:alert] = 'No document was selected.'
     else
       msg = HtmlDocument.find(@request.message_body_id.to_i)
-      if !params[:to_local_contest].blank?
+      if params.nonblank? :to_local_contest
         if @request.local_contest_id.blank?
           flash.now[:alert] = 'No local contest was selected.'
         else

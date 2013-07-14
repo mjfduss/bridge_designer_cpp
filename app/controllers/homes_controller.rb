@@ -16,7 +16,7 @@ class HomesController < ApplicationController
     @team = Team.find(session[:team_id], :lock => !params[:design].blank?)
 
     # If logout...
-    if !params[:logout].blank?
+    if params.nonblank? :logout
       kill_session "You've logged out!"
 
     # Else if update contact information...
