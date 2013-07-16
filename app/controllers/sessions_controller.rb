@@ -1,7 +1,7 @@
 class SessionsController < ApplicationController
 
   # Disable check session because this is where we get one!
-  skip_before_filter :require_valid_session, :only => [:new, :create]
+  skip_before_filter :require_valid_session, :only => [:new, :create, :password_reset]
 
   # Disable check schedule because this is where it redirects!
   skip_before_filter :check_schedule
@@ -13,11 +13,7 @@ class SessionsController < ApplicationController
     reset_session # Make sure we're starting fresh. Should not be needed if we're thorough elsewhere.
     team = Team.authenticate(params[:session][:name], params[:session][:password])
     if team
-      session[:team_id] = team.id
-      session[:captain_id] = team.captain.id
-      member = team.non_captains.first
-      session[:member_id] = member.id if member
-      do_login
+      establish_session(team)
       if team.semifinalist? && @schedule_state <= Schedule::STATE_SEMIS
         redirect_to :controller => :semi_final_instructions, :action => :edit
       else
@@ -29,8 +25,31 @@ class SessionsController < ApplicationController
     end
   end
 
+  def password_reset
+    pr = PasswordReset.find_by_key(params[:key])
+    if pr
+      establish_session(pr.team)
+      pr.delete
+      session[:password_reset] = true
+      redirect_to :controller => :team_completions, :action => :edit
+    else
+      flash[:alert] = 'Your reset message is no longer valid. Request a fresh one and try again.'
+      redirect_to :controller => :sessions, :action => :new
+    end
+  end
+
   def destroy
     reset_session
     render 'new'
+  end
+
+  private
+
+  def establish_session(team)
+    session[:team_id] = team.id
+    session[:captain_id] = team.captain.id
+    member = team.non_captains.first
+    session[:member_id] = member.id if member
+    do_login
   end
 end

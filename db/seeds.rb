@@ -16,13 +16,14 @@ if Rails.env.development?
   50.times do |n|
     FactoryGirl.create(:local_contest)
   end
+  lc = LocalContest.all
   195.times do |n|
-    # Team with one member and no designs
-    FactoryGirl.create(:team)
-    # Team with two members and two designs
+    # Team with one member and one designs
+    team = FactoryGirl.create(:team)
+    FactoryGirl.create(:design, :team => team)
+    # Team with two members and one designs
     team = FactoryGirl.create(:team, :member_count => 2)
     FactoryGirl.create(:design, :team => team)
-    FactoryGirl.create(:design, :team => team)
-    team.local_contests << LocalContest.first
+    team.local_contests << lc[rand(lc.size)]
   end
 end

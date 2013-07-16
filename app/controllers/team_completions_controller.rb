@@ -4,7 +4,10 @@ class TeamCompletionsController < ApplicationController
     @team = Team.find(session[:team_id])
     @captain = @team.captain
     @member = @team.non_captains.first
-    @team.completion_status = :pending_new_password if @team.password_digest.blank?
+    if @team.password_digest.blank? or session[:password_reset]
+      @team.completion_status = :pending_new_password
+      session.delete :password_reset
+    end
   end
 
   def update

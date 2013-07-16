@@ -6,6 +6,7 @@
 static VALUE rb_api_endecrypt(VALUE self, VALUE bridge_as_string)
 #define ARGC_endecrypt 1
 {
+    Check_Type(bridge_as_string, T_STRING);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     endecrypt(bridge_internal_string);
     return bridge_as_string;
@@ -49,6 +50,7 @@ static void add_analysis_to_hash(VALUE hash, struct analysis_result_t *result)
 static VALUE rb_api_analyze(VALUE self, VALUE bridge_as_string)
 #define ARGC_analyze 1
 {
+    Check_Type(bridge_as_string, T_STRING);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     struct analysis_result_t result[1];
     VALUE hash = rb_hash_new();
@@ -60,6 +62,8 @@ static VALUE rb_api_analyze(VALUE self, VALUE bridge_as_string)
 static VALUE rb_api_are_same(VALUE self, VALUE bridge_as_string_a, VALUE bridge_as_string_b)
 #define ARGC_are_same 2
 {
+    Check_Type(bridge_as_string_a, T_STRING);
+    Check_Type(bridge_as_string_b, T_STRING);
     INIT_STRING_FROM_VALUE(bridge_internal_string_a, bridge_as_string_a);
     INIT_STRING_FROM_VALUE(bridge_internal_string_b, bridge_as_string_b);
     int cmp = compare(bridge_internal_string_a, bridge_internal_string_b);
@@ -79,6 +83,8 @@ static VALUE c_str_to_value(char *s)
 static VALUE rb_api_variant(VALUE self, VALUE bridge_as_string, VALUE seed)
 #define ARGC_variant 2
 {
+    Check_Type(bridge_as_string, T_STRING);
+    Check_Type(seed, T_FIXNUM);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = variant(bridge_internal_string, FIX2INT(seed));
     return c_str_to_value(result);
@@ -87,6 +93,8 @@ static VALUE rb_api_variant(VALUE self, VALUE bridge_as_string, VALUE seed)
 static VALUE rb_api_failed_variant(VALUE self, VALUE bridge_as_string, VALUE seed)
 #define ARGC_failed_variant 2
 {
+    Check_Type(bridge_as_string, T_STRING);
+    Check_Type(seed, T_FIXNUM);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = failed_variant(bridge_internal_string, FIX2INT(seed));
     return c_str_to_value(result);
@@ -95,6 +103,10 @@ static VALUE rb_api_failed_variant(VALUE self, VALUE bridge_as_string, VALUE see
 static VALUE rb_api_perturbation(VALUE self, VALUE bridge_as_string, VALUE seed, VALUE n_joints, VALUE n_members)
 #define ARGC_perturbation 4
 {
+    Check_Type(bridge_as_string, T_STRING);
+    Check_Type(seed, T_FIXNUM);
+    Check_Type(n_joints, T_FIXNUM);
+    Check_Type(n_members, T_FIXNUM);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = perturbation(bridge_internal_string, FIX2INT(seed), FIX2INT(n_joints), FIX2INT(n_members));
     return c_str_to_value(result);
@@ -103,11 +115,13 @@ static VALUE rb_api_perturbation(VALUE self, VALUE bridge_as_string, VALUE seed,
 static VALUE rb_api_sketch(VALUE self, VALUE bridge_as_string, VALUE width, VALUE height)
 #define ARGC_sketch 3
 {
+    Check_Type(bridge_as_string, T_STRING);
+    Check_Type(width, T_FIXNUM);
+    Check_Type(height, T_FIXNUM);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
 	COMPRESSED_IMAGE compressed_image[1];
 	struct analysis_result_t result[1];
     VALUE hash = rb_hash_new();
-
 	init_compressed_image(compressed_image);
 	sketch(bridge_internal_string, FIX2INT(width), FIX2INT(height), compressed_image, result);
 
@@ -134,6 +148,7 @@ static VALUE rb_api_sketch(VALUE self, VALUE bridge_as_string, VALUE width, VALU
 static VALUE rb_api_analysis_table(VALUE self, VALUE bridge_as_string)
 #define ARGC_analysis_table 1
 {
+    Check_Type(bridge_as_string, T_STRING);
     INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
     char *result = analysis_table(bridge_internal_string);
     return c_str_to_value(result);
@@ -142,8 +157,9 @@ static VALUE rb_api_analysis_table(VALUE self, VALUE bridge_as_string)
 static VALUE rb_api_local_contest_number_to_id(VALUE self, VALUE number_as_string)
 #define ARGC_local_contest_number_to_id 1
 {
+    Check_Type(number_as_string, T_STRING);
     INIT_STRING_FROM_VALUE(number_internal_string, number_as_string);
-    char * result = get_local_contest_number(number_internal_string);
+    char *result = get_local_contest_number(number_internal_string);
     // Don't use c_str_to_value here because result is static.
     return result ? rb_str_new2(result) : Qnil;
 }

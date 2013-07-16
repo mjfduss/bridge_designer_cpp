@@ -1,0 +1,17 @@
+.pagewidth
+  .para.hi.big
+    Reset your password
+  .indent
+    - flash.each do |key, msg|
+      %div{:class => key}= msg
+    .vsep.hi Enter the email address you used to register your team. We'll send a reset message.
+    .dialog.loginwidth
+      .dialoghead.dialogheadcontent Request Password Reset
+      .dialogbody
+        = form_tag password_reset_path do
+          %table
+            %tr
+              %td= 'Team Email:'
+              %td= text_field_tag 'email', '',  :size => 40
+            %tr
+              %td{ :colspan => 2, :align => 'right' }= submit_tag 'Send a reset message...', { :class => 'btn' }

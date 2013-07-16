@@ -20,8 +20,10 @@ Wpbdc::Application.routes.draw do
     resource :html_documents, :only => [ :edit, :update  ]
     resource :bulk_notice, :only => [ :edit, :update ]
   end
-  match '/ckeditor_assets/pictures/:id/:style_basename.:extension' => 'admin/html_documents#show'
+  get '/ckeditor_assets/pictures/:id/:style_basename.:extension' => 'admin/html_documents#show'
   resource :session, :only => [ :new, :create, :destroy ]
+  resource :password_reset, :only => [:new, :create ]
+  get '/password_reset/:key' => 'sessions#password_reset', :as => :password_reset_key
   resource :team, :only => [ :new, :create, :edit, :update ]
   resource :member, :only => [ :new, :create, :edit, :update ]
   resource :certification, :only => [ :edit, :update ]
@@ -35,7 +37,7 @@ Wpbdc::Application.routes.draw do
 
   # Can's use a standard resource path here because both local contest
   # code and page (for pagination) must be in path for cache to work.
-  match 'standings/local/:code(/:page)' => 'standings_local#show'
+  match 'standings/local/:code(/:page)' => 'standings_local#show', :via => :get
 
   # CKEditor file upload handler and browser.
   mount Ckeditor::Engine => '/ckeditor'

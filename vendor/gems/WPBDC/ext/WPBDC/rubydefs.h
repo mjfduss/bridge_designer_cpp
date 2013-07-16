@@ -1,7 +1,7 @@
 #ifndef _RUBYDEFS_H
 #define _RUBYDEFS_H
 
-#if !defined(STAND_ALONE)
+#if !defined(NATIVE_TEST)
 
 #include <ruby.h>
 
@@ -40,6 +40,8 @@
 	} while (0)
 
 #else
+
+#include <stdio.h>
 
 #define New(x,v,n,t)									\
 	do {												\

@@ -51,7 +51,15 @@ FactoryGirl.define do
   end
 
   sequence :team_category do |n|
-     ['u', 'n'][n % 2]
+    %w{e i}[n % 2]
+  end
+
+  sequence :status do |n|
+    %w{a r - 2}[n % 4]
+  end
+
+  sequence :member_category do |n|
+     %w(u n)[n % 2]
   end
 
   sequence :first_name do |n|
@@ -109,7 +117,7 @@ FactoryGirl.define do
     sex '-'
     hispanic '-'
     race '-'
-    category { generate :team_category }
+    category { generate :member_category }
     school_state { state }
     res_state { state }
     rank 0
@@ -129,8 +137,8 @@ FactoryGirl.define do
     password_confirmation { password }
 #    email { generate :email }
     email 'gene.ressler@gmail.com'
-    category 'e'
-    status 'a'
+    category { generate :team_category }
+    status { generate :status }
     reg_completed { Time.now }
 
     ignore do
@@ -146,7 +154,7 @@ FactoryGirl.define do
     end
 
     trait :semifinal do
-      category '2'
+      status '2'
     end
 
     trait :completed do

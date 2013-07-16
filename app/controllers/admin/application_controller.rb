@@ -46,7 +46,7 @@ class Admin::ApplicationController < ActionController::Base
               end
               # Make lists of changes for later processing
               disqualified << team if old_val != 'r' && val == 'r'
-              qualified << team if old_val == 'r' && (val != 'r' && val != '-')
+              qualified << team if ! %w{a 2}.include?(old_val) && %w{a 2}.include?(val)
             end
         end
       end

@@ -36,7 +36,7 @@ class Admin::MainMenusController < Admin::ApplicationController
       @standings_cutoff = params[:standings_cutoff].to_i
       @visible_status = params[:visible_status] || []
       @visible_attributes = params[:visible_attributes] || []
-      @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, @standings_cutoff))
+      @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, nil, @standings_cutoff))
       @groups = Group.all
       render :template => 'admin/teams_reviews/edit'
     elsif params.nonblank? :get_groups

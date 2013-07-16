@@ -10,7 +10,6 @@
 // Lookup table is sorted on 10-char ID field for binary search.
 // The search routine will bubble the semifinal row to the right location.
 static TScenarioDescriptor scenario_descriptor_tbl[] = {
-    { 999, SEMIFINAL_SCENARIO_ID, "99Z", 100000.00 },
     {   0, "1050824100", "27A",  99874.40 },
     {   1, "1051220100", "32A", 105140.00 },
     {   2, "1051616100", "36A", 111994.40 },
@@ -272,6 +271,7 @@ static TScenarioDescriptor scenario_descriptor_tbl[] = {
     { 258, "3091616300", "17C", 108700.00 },
     { 259, "3091616350", "84C", 112200.00 },
     { 260, "3091616351", "88C", 120200.00 },
+    { 999, SEMIFINAL_SCENARIO_ID, "99Z", 100000.00 },
     { 261, "3100804100", "22C",  88840.40 },
     { 262, "3101204060", "54C",  94500.00 },
     { 263, "3101204360", "82C", 106500.00 },
@@ -434,6 +434,8 @@ int lookup_scenario_descriptor(TScenarioDescriptor *desc, char *id)
 	int hi = STATIC_ARRAY_SIZE(scenario_descriptor_tbl) - 1;
 	int i, cmp, mid;
 
+    /*  NOT THREAD SAFE.  DO BY HAND!
+
     // Bubble the semifinal scenario to the right position one time.
     if (!initialized_p) {
         initialized_p = 1;
@@ -446,6 +448,7 @@ int lookup_scenario_descriptor(TScenarioDescriptor *desc, char *id)
         }
         scenario_descriptor_tbl[i] = semifinal_descriptor;
     }
+    */
 
     // Don't bother searching for the null semifinal scenario.
     if (strncmp(id, NULL_SEMIFINAL_SCENARIO_ID, SCENARIO_ID_SIZE) != 0) {
@@ -658,6 +661,8 @@ int test_scenario_table(void)
 	printf("scenario lookup check (find good indices): ");
 	for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++) {
 		printf("%d ", i);
+		if (strncmp(scenario_descriptor_tbl[i].id, NULL_SEMIFINAL_SCENARIO_ID, SCENARIO_ID_SIZE) == 0)
+		    continue;
 		if (lookup_scenario_descriptor(desc, scenario_descriptor_tbl[i].id) < 0) {
 			printf("\nfailed to find scenario id %s (position %d)\n", 
 				scenario_descriptor_tbl[i].id, i);

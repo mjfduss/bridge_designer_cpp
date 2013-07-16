@@ -26,9 +26,9 @@ class Admin::BulkNoticesController < Admin::ApplicationController
         else
           send_to(LocalContest.find(@request.local_contest_id.to_i).teams, msg)
         end
-      elsif !params[:to_semi_finalists].blank?
+      elsif params.nonblank? :to_semi_finalists
         send_to(Team.where(:status => '2'), msg)
-      elsif !params[to_all]
+      elsif params.nonblank? :to_all
         send_to(Team.all, msg)
       end
     end

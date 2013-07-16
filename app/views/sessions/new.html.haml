@@ -1,9 +1,9 @@
 .pagewidth
   .para.hi.big
     Welcome Bridge Designer!
-  - flash.each do |key, msg|
-    %div{:class => key}= msg
   .indent
+    - flash.each do |key, msg|
+      %div{:class => key}= msg
     - case @schedule_state
       - when Schedule::STATE_CLOSED
         .vsep
@@ -87,5 +87,6 @@
                 %td= f.password_field :password, { :size => 16, :maxlength => 16 }
               %tr
                 %td{ :colspan => 2, :align => 'right' }= f.submit 'Log In', { :class => 'btn' }
+      .para= link_to 'Forgot your team name or password?', new_password_reset_path
       .vsep.hi If you have not yet registered, then...
       .para= button_to 'Start the Registration Wizard >>', new_team_path, { :method => :get, :class => 'btn' }

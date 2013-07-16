@@ -69,6 +69,8 @@ class Member < ActiveRecord::Base
         "Attending U.S. K-12 #{reg_state}"
       when 'n'
         "K-12 citizen OCONUS #{reg_state}"
+      when 'o'
+        'Open competitor'
       else
         '[unknown]'
     end

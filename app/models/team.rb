@@ -19,6 +19,7 @@ class Team < ActiveRecord::Base
   has_many :affiliations, :dependent => :destroy
   has_many :local_contests, :through => :affiliations
   has_many :bests, :dependent => :destroy
+  has_one :password_reset, :dependent => :destroy
   belongs_to :group
 
   scope :ordered_by_name, :order => "name_key ASC"
@@ -115,12 +116,12 @@ class Team < ActiveRecord::Base
   # @param [Array] categories list of team categories to select from
   # @param [Array] statuses list of statuses to select from
   # @param [Integer] limit maximum number of teams to get
-  def self.get_top_teams(categories, statuses, limit)
+  def self.get_top_teams(categories, statuses, scenario, limit)
     limit = limit.to_i
     return [] if statuses.empty? || categories.empty? || limit <= 0
     includes(:members, :best_design).
       joins(:bests).
-      where(:bests => { :scenario => nil }, :category => categories, :status => statuses).
+      where(:bests => { :scenario => scenario }, :category => categories, :status => statuses).
       order('bests.score ASC, bests.sequence ASC').limit(limit)
 =begin
     # PSQL specific
@@ -261,21 +262,30 @@ class Team < ActiveRecord::Base
   def self.get_scoreboard(category, limit = 0, option = '-')
 
     # Translate scoreboard category into team category and status.
+    # The mapping is:
+    # Scoreboard             Team
+    # Category               Category                    Status
+    # c-combined             {e-eligible, i-ineligible}  {a-accepted, 2-semifinal}
+    # e-eligible             eliglble                    {a-accepted, 2-semifinal}
+    # i-ineligible (open)
+    # 2-semifinal
     team_category = category
-    team_status = 'a'
+    team_status = %w{a 2}
+    scenario = nil
     case category
       when 'c' # combined
         team_category = %w{i e}
       when '2' # semifinal
         team_category = 'e'
         team_status = '2'
+        scenario = WPBDC::SEMIFINAL_SCENARIO_ID
     end
 
     scoreboard = {
       :created_at => Time.now.to_s(:nice),
       :category => category,
       :rows => option == 'x' ? nil : # No rows at all if option is 'x'
-        assign_top_ranks(get_top_teams(team_category, team_status, limit)).
+        assign_top_ranks(get_top_teams(team_category, team_status, scenario, limit)).
           select { |t| t.rank.is_a? Integer }.map {|t| t.scoreboard_row(option == 's') }
     }
     scoreboard[:unavailable] = true if option == 'x'
@@ -465,7 +475,7 @@ class Team < ActiveRecord::Base
   end
 
   def downcase_email
-    self.email = email.downcase unless email.nil?
+    self.email = email.strip.downcase unless email.nil?
   end
 
   def upcase_new_local_contest

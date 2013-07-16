@@ -41,8 +41,7 @@
       .menu_label
         Local contests:
         = render :partial => "shared/submit_link", :locals => { :name => 'get_local_contests', :text => "Go" }
-    .menu_item
-      .menu_label
+        = sep
         Groups:
         = render :partial => "shared/submit_link", :locals => { :name => 'get_groups', :text => "Go" }
     .menu_item.menu_label

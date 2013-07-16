@@ -14,8 +14,9 @@
       = hidden_field_tag "#{team.id}_group_in", (team.group_id || '-')
       = sep
       - TablesHelper::STATUS_PAIRS[0..-2].each do |label, param| # -2 omits Hidden
-        = radio_button_tag "#{team.id}_status", param, param == team.status
-        = label
+        - unless param == '2' && team.category == 'i' # skip semifinal selector for teams that aren't eligible
+          = radio_button_tag "#{team.id}_status", param, param == team.status
+          = label
       = hidden_field_tag "#{team.id}_status_in", team.status
       = sep
       %a{ :class => 'review', :href => '#top' }= "[top]"

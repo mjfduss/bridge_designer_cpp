@@ -85,6 +85,6 @@ module ApplicationHelper
 
   def team_review_group_list_data(groups)
     pairs = groups ? groups.map { |g| [g.description, g.id] } : []
-    pairs.unshift( ['Select Group',  '-'] )
+    pairs.unshift( ['No group selected',  '-'] )
   end
 end

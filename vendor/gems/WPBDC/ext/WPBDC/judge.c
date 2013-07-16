@@ -206,16 +206,52 @@ char *analysis_table(STRING *bridge_as_string)
 //#define WRITE_EXAMPLES
 
 #ifdef WRITE_EXAMPLES
-#define EG_DIR  "../Eg/2011"
-#define NEW_EG_DIR  "../Eg/2012"
+#define EG_DIR  "../../test/eg/2012"
+#define NEW_EG_DIR  "../../test/eg/2013"
 #else
-#define EG_DIR  "../Eg/2012"
+#define EG_DIR  "../../test/eg/2012"
 #endif
 
-#include <io.h>
+#ifdef WINDOWS
 #include <crtdbg.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <dirent.h>
+
+void strcpyn(char *dst, char *src, int n)
+{
+    while (n-- > 0 && *src)
+        *dst++ = *src++;
+    *dst = '\0';
+}
+
+void split_path(char *path, char *drv, char *dir, char *fname, char *ext)
+{
+    int len = strlen(path);
+    char *colon, *slash, *dot;
+
+    colon = strchr(path, ':');
+    if (colon) {
+        if (drv) strcpyn(drv, path, colon - path + 1);
+        path = colon + 1;
+    }
+    slash = strrchr(path, '/');
+    if (slash) {
+        if (dir) strcpyn(dir, path, slash - path + 1);
+        path = slash + 1;
+    }
+    dot = strrchr(path, '.');
+    if (dot) {
+        if (ext) strcpy(ext, dot);
+        if (fname) strcpyn(fname, path, dot - path);
+    }
+    else {
+        if (ext) strcpy(ext, "");
+        if (fname) strcpy(fname, path);
+    }
+}
 
 void split_fn(char *fn, char *path, char *name, char *ext)
 {
@@ -250,6 +286,7 @@ int main(int argc, char* argv[])
 {
     extern unsigned contest_year;  // ugly hack go read other years' bridge files
 
+    DIR *d;
     FILE *f;
     char fname[256];
     char raw[4*1024];
@@ -259,6 +296,7 @@ int main(int argc, char* argv[])
     char buf[256], path[256], name[256], ext[256];
     char *text;
     struct analysis_result_t result[1];
+    struct dirent *dir_ent;
 
     TBridge bridge[1];
     TBridge copy[1];
@@ -268,7 +306,6 @@ int main(int argc, char* argv[])
     TAnalysis anal[1];
     int i, n, test_case;
     long h;
-    struct _finddata_t file_data[1];
     COMPRESSED_IMAGE compressed_image[1];
 
 #ifdef WRITE_EXAMPLES
@@ -288,6 +325,12 @@ int main(int argc, char* argv[])
     }
 #endif
 
+    d = opendir (EG_DIR "/");
+    if (!d) {
+        perror ("Couldn't open test input directory " EG_DIR);
+        return 17;
+    }
+
     init_bridge(bridge);
     init_bridge(copy);
     init_geometry(geometry);
@@ -302,26 +345,21 @@ int main(int argc, char* argv[])
         return 1;
 
     for (test_case = 1;;test_case++) {
-
-        if (test_case == 1) {
-            h = _findfirst( EG_DIR "/*.bdc", file_data );
-            if (h == -1) {
-                printf( "No bridge files!\n" );
-                return 17;
-            }
+        dir_ent = readdir(d);
+        if (!dir_ent) {
+            closedir(d);
+            test_case--;
+            break;
         }
-        else {
-            if (_findnext(h, file_data) != 0) {
-                _findclose(h);
-                test_case--;
-                break;
-            }
-        }
-        if (strcmp(file_data->name, "A-arch-10-4-1.bdc") != 0) 
+        if (strstr(dir_ent->d_name, ".bdc") == NULL)
             continue;
 
-        printf("Test case %d (%s):\n", test_case, file_data->name);
-        sprintf(fname, EG_DIR "/%s", file_data->name);
+        // SINGLE TEST CASE!
+        if (strcmp(dir_ent->d_name, "semis-01.bdc") != 0)
+            continue;
+
+        printf("Test case %d (%s):\n", test_case, dir_ent->d_name);
+        sprintf(fname, EG_DIR "/%s", dir_ent->d_name);
         f = fopen(fname, "rb");
         if (!f) {
             printf("can't open bridge file\n");
@@ -361,13 +399,13 @@ int main(int argc, char* argv[])
 
 #ifdef WRITE_EXAMPLES
 
-        if (!strstr(file_data->name, "failed")) {
+        if (!strstr(dir_ent->d_name, "failed")) {
 
             struct _stat stat_buf[1];
 
             n_examples_read++;
 
-            split_fn(file_data->name, path, name, ext);
+            split_fn(dir_ent->d_name, path, name, ext);
 
             n = fix_failure(copy, bridge, params);
 
@@ -509,7 +547,7 @@ int main(int argc, char* argv[])
 
         if (text) {
             printf("writing analysis...");
-            _splitpath(file_data->name, 0, path, name, ext);
+            split_path(dir_ent->d_name, 0, path, name, ext);
             sprintf(buf, "Debug/html/%s.htm", name);
             f = fopen(buf, "w");
             if (!f) {
@@ -540,7 +578,7 @@ int main(int argc, char* argv[])
 
         // Do a sketch
         sketch(bridge_str, 300, 300, compressed_image, result);
-        _splitpath(file_data->name, 0, path, name, ext);
+        split_path(dir_ent->d_name, 0, path, name, ext);
         sprintf(buf, "Debug/sketch/%s.png", name);
         f = fopen(buf, "wb");
         if (!f) {
