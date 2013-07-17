@@ -49,11 +49,12 @@ class Design < ActiveRecord::Base
     # Overall best is not to be affected by the semifinal entry.
     if scenario != WPBDC::SEMIFINAL_SCENARIO_ID
 
-      # For the best overall, we need to check.
-      best_overall = Best.find_by_team_id_and_scenario(team.id, nil)
+      # For the best overall, look up or make a new record.
+      best_overall = Best.find_or_initialize_by_team_id_and_scenario(team.id, nil)
 
-      if best_overall.nil? || score < best_overall.score
-        save_best(best_overall || Best.new { |b| b.team_id = team.id })
+      # Save the new record or updated values if score is an improvement.
+      if best_overall.new_record? || score < best_overall.score
+        save_best(best_overall)
       end
     end
     true

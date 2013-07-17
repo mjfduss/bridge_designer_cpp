@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130715001949) do
+ActiveRecord::Schema.define(:version => 20130717042003) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(:version => 20130715001949) do
 
   add_index "bests", ["scenario"], :name => "index_bests_on_scenario"
   add_index "bests", ["score", "sequence"], :name => "index_bests_on_score_and_sequence"
+  add_index "bests", ["team_id"], :name => "index_bests_on_team_id"
 
   create_table "ckeditor_assets", :force => true do |t|
     t.string   "data_file_name",                  :null => false
@@ -98,7 +99,7 @@ ActiveRecord::Schema.define(:version => 20130715001949) do
   end
 
   add_index "designs", ["hash_string"], :name => "index_designs_on_hash_string"
-  add_index "designs", ["score", "sequence"], :name => "index_designs_on_score_and_sequence", :unique => true
+  add_index "designs", ["team_id", "score", "sequence"], :name => "index_designs_on_team_id_and_score_and_sequence"
 
   create_table "groups", :force => true do |t|
     t.string   "description", :limit => 40

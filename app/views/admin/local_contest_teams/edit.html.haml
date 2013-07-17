@@ -18,7 +18,7 @@
       = hidden_field_tag "visible_attributes[]", attribute
     = submit_tag 'Process', :name => 'process'
     = sep
-    = submit_tag 'Retrieve marked bridges', :name => 'retrieve'
+    = submit_tag 'Download as spreadsheet', :name => 'download'
     = sep
     = button_tag 'Select all', :type => 'button', :onclick => 'select_all_reviewed_teams(true)'.html_safe
     = button_tag 'Clear all', :type => 'button', :onclick => 'select_all_reviewed_teams(false)'.html_safe

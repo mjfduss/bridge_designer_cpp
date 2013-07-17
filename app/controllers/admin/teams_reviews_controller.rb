@@ -16,18 +16,24 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
         qualified.each{|t| QualifiedNotice.delay.to_team(t) }
       end
       flash[:alert] = msg unless msg.empty?
-      @category = params[:team_category]
-      @standings_cutoff = params[:standings_cutoff].to_i
-      @visible_status = params[:visible_status] || []
-      @visible_attributes = params[:visible_attributes] || []
-      @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, nil, @standings_cutoff))
+      fetch_params
       @groups = Group.all
       render :action => :edit
-    elsif params.nonblank? :retrieve
-      render :controller => :retrieve_designs, :action => :edit
+    elsif params.nonblank? :download
+      fetch_params
+      send_data Team.format_csv(@teams, @visible_attributes), :filename => 'teams.csv', :type => Mime::CSV
     else
       redirect_to :controller => :initials, :action => :new
     end
   end
 
+  private
+
+  def fetch_params
+    @category = params[:team_category]
+    @standings_cutoff = params[:standings_cutoff].to_i
+    @visible_status = params[:visible_status] || []
+    @visible_attributes = params[:visible_attributes] || []
+    @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, nil, @standings_cutoff))
+  end
 end

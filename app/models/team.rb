@@ -19,7 +19,7 @@ class Team < ActiveRecord::Base
   has_many :affiliations, :dependent => :destroy
   has_many :local_contests, :through => :affiliations
   has_many :bests, :dependent => :destroy
-  has_one :password_reset, :dependent => :destroy
+  has_many :password_resets, :dependent => :destroy
   belongs_to :group
 
   scope :ordered_by_name, :order => "name_key ASC"
@@ -361,99 +361,78 @@ class Team < ActiveRecord::Base
     }
   end
 
+  # @return CSS style name for status.
   def status_style_id
     TablesHelper::STATUS_MAP[status].downcase.delete('-')
   end
 
+  ATTRIBUTE_TAGS = {
+      :status => 'Review status',
+      :team_name => 'Team name',
+      :category => 'Category',
+      :captain_name => 'Captain name',
+      :captain_category => 'Captain category',
+      :captain_age_grade => 'Captain age/grade',
+      :captain_contact => 'Captain contact',
+      :captain_school => 'Captain school',
+      :captain_demographics => 'Captain demographics',
+      :member_name => 'Member name',
+      :member_category => 'Member category',
+      :member_age_grade => 'Member age/grade',
+      :member_contact => 'Member contact',
+      :member_school => 'Member school',
+      :member_demographics => 'Member demographics',
+      :email => 'Email',
+      :reg_completed => 'Registration',
+      :local_contests => 'Local contests',
+      :best_score => 'Best score',
+      :best_design => 'Best design',
+  }
+  def status_formatted;               TablesHelper::STATUS_MAP[status] || NONE end
+  def team_name_formatted;            name end
+  def category_formatted;             TablesHelper::CATEGORY_MAP[category] || NONE end
+  def captain_name_formatted;         captain.full_name end
+  def captain_category_formatted;     captain.category_formatted end
+  def captain_age_grade_formatted;    captain.age_grade_formatted end
+  def captain_contact_formatted;      captain.contact_formatted end
+  def captain_school_formatted;       captain.school_formatted end
+  def captain_demographics_formatted; Team.optional(captain, :demographics_formatted) end
+  def member_name_formatted;          Team.optional(non_captains.first, :full_name) end
+  def member_category_formatted;      Team.optional(non_captains.first, :category_formatted) end
+  def member_age_grade_formatted;     Team.optional(non_captains.first, :age_grade_formatted) end
+  def member_contact_formatted;       Team.optional(non_captains.first, :contact_formatted) end
+  def member_school_formatted;        Team.optional(non_captains.first, :school_formatted) end
+  def member_demographics_formatted;  Team.optional(non_captains.first, :demographics_formatted) end
+  def email_formatted;                email end
+  def reg_completed_formatted;        reg_completed ? reg_completed.to_s(:nice) : NONE end
+  def local_contests_formatted;       codes = local_contests.pluck(:code); codes.blank? ? NONE : codes end
+  def best_score_formatted;           d = best_design; d ? "#{format("$%.2f", 0.01 * d.score)} @ #{d.created_at.to_s(:nice)}" : NONE end
+  def best_design_formatted;          best_design || NONE end
+
+  def formatted_item(item)
+    send("#{item}_formatted")
+  end
+
   def formatted(visible)
-    visible.map { |item| send("#{item}_formatted") }
+    visible.map { |item| [ ATTRIBUTE_TAGS[item.to_sym], formatted_item(item) ] }
   end
 
   def self.format_all(teams, visible)
     teams.map { |t| t.formatted(visible) }
   end
 
-  def status_formatted
-    ['Review status', TablesHelper::STATUS_MAP[status] || NONE ]
-  end
-
-  def team_name_formatted
-    ['Team name', name ]
-  end
-
-  def category_formatted
-    ['Category',  TablesHelper::CATEGORY_MAP[category] || NONE]
-  end
-
-  def captain_name_formatted
-    ['Captain name', captain.full_name]
-  end
-
-  def captain_category_formatted
-    ['Captain category', captain.category_formatted]
-  end
-
-  def captain_age_grade_formatted
-    ['Captain age/grade', captain.age_grade_formatted]
-  end
-
-  def captain_contact_formatted
-    ['Captain contact', captain.contact_formatted]
-  end
-
-  def captain_school_formatted
-    ['Captain school', captain.school_formatted]
-  end
-
-  def captain_demographics_formatted
-    ['Captain demographics', Team.optional(captain, :demographics_formatted)]
-  end
-
-  def member_name_formatted
-    ['Member name', Team.optional(non_captains.first, :full_name)]
-  end
-
-  def member_category_formatted
-    ['Member category', Team.optional(non_captains.first, :category_formatted)]
-  end
-
-
-  def member_age_grade_formatted
-    ['Member age/grade', Team.optional(non_captains.first, :age_grade_formatted)]
-  end
-
-  def member_contact_formatted
-    ['Member contact', Team.optional(non_captains.first, :contact_formatted)]
-  end
-
-  def member_school_formatted
-    ['Member school', Team.optional(non_captains.first, :school_formatted)]
-  end
-
-  def member_demographics_formatted
-    ['Member demographics', Team.optional(non_captains.first, :demographics_formatted)]
-  end
-
-  def email_formatted
-    ['Email', email]
-  end
-
-  def reg_completed_formatted
-    ['Registration', reg_completed ? reg_completed.to_s(:nice) : NONE ]
-  end
-
-  def local_contests_formatted
-    codes = local_contests.pluck(:code)
-    ['Local contests', codes.blank? ? NONE : codes]
-  end
-
-  def best_score_formatted
-    d = best_design
-    ['Best score', d ? "#{format("$%.2f", 0.01 * d.score)} @ #{d.created_at.to_s(:nice)}" : NONE]
-  end
-
-  def best_design_formatted
-    ['Best design', best_design || NONE]
+  def self.format_csv(teams, visible)
+    return '' if teams.empty?
+    v = visible - %w{best_design}
+    CSV.generate do |csv|
+      csv << v.map{|item| ATTRIBUTE_TAGS[item.to_sym] }
+      teams.each do |team|
+        csv << v.map do |item|
+          fi = team.formatted_item(item)
+          fi.kind_of?(Array) ? fi.join(';') : fi
+        end
+      end
+    end
   end
 
   protected

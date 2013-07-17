@@ -20,7 +20,7 @@ class HomesController < ApplicationController
       kill_session "You've logged out!"
 
     # Else if update contact information...
-    elsif !params[:update_contact].blank?
+    elsif params.nonblank? :update_contact
       case @team.category
         when 'e'
           redirect_to :controller => :captain_completions, :action => :edit
@@ -31,7 +31,7 @@ class HomesController < ApplicationController
       end
 
     # Else if get standings...
-    elsif !params[:get_standings].blank?
+    elsif params.nonblank? :get_standings
       @best = @team.best_score
       @design = Design.new
       @standing, @out_of = Standing.standing(@team)
@@ -39,7 +39,7 @@ class HomesController < ApplicationController
       render 'edit'
 
     # Else if a design was uploaded.
-    elsif !params[:design].blank?
+    elsif params.nonblank? :design
 
       # This should never happen because the upload box is not visible.
       # But someone could get clever with a script.
