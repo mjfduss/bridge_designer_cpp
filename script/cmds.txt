@@ -12,6 +12,7 @@ alias h=heroku
 
 # Rebuild database.
 heroku run rake db:reset
+heroku pg:reset
 
 # Install the default admin account.
 heroku run rake db:seed
@@ -89,4 +90,3 @@ http://devcenter.heroku.com/addons_with_dyno_hour_usage
 To manage scheduled jobs run:
 heroku addons:open scheduler
 Use `heroku addons:docs scheduler:standard` to view documentation.
-

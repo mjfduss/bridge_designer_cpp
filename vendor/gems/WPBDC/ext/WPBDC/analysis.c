@@ -509,8 +509,8 @@ char *analysis_to_html(TAnalysis *analysis,
 
 	// Header 
 	Append(
-		"<table border=1 cellspacing=0 cellpadding=2>\n"
-		"<tr><th colspan=15>"
+		"<table class=\"analysis\">\n"
+		"<tr><th class=\"analysis_head\" colspan=15>"
 	);	
 	Append("Load Test Results Report (Design Iteration #");
 	AppendInt(bridge->n_design_iterations);
@@ -526,14 +526,14 @@ char *analysis_to_html(TAnalysis *analysis,
 	Append(
 		")</th></tr>\n"
 		"<tr>\n"
-		" <th colspan=5>Member</th><th>&nbsp;</th><th colspan=4>Compression</th><th>&nbsp;</th><th colspan=4>Tension</th>"
+		" <th class=\"analysis_head\" colspan=5>Member</th><th class=\"analysis_head\">&nbsp;</th><th class=\"analysis_head\" colspan=4>Compression</th><th class=\"analysis_head\" >&nbsp;</th><th class=\"analysis_head\" colspan=4>Tension</th>"
 		"</tr>\n"
 		"<tr>\n"
-		" <th>#</th><th>Size</th><th>Section</th><th>Matl.</th><th>Length<br>(m)</th>\n"
-		" <th>&nbsp;</th>\n"
-		" <th>Force<br>(kN)</th><th>Strength<br>(kN)</th><th>Force/<br>Strength</th><th>Status</th>\n"
-		" <th>&nbsp;</th>\n"
-		" <th>Force<br>(kN)</th><th>Strength<br>(kN)</th><th>Force/<br>Strength</th><th>Status</th>\n"
+		" <th class=\"analysis_head\">#</th><th class=\"analysis_head\">Size</th><th class=\"analysis_head\">Section</th><th class=\"analysis_head\">Matl.</th><th class=\"analysis_head\">Length<br>(m)</th>\n"
+		" <th class=\"analysis_head\">&nbsp;</th>\n"
+		" <th class=\"analysis_head\">Force<br>(kN)</th><th class=\"analysis_head\">Strength<br>(kN)</th><th class=\"analysis_head\">Force/<br>Strength</th><th class=\"analysis_head\">Status</th>\n"
+		" <th class=\"analysis_head\">&nbsp;</th>\n"
+		" <th class=\"analysis_head\">Force<br>(kN)</th><th class=\"analysis_head\">Strength<br>(kN)</th><th class=\"analysis_head\">Force/<br>Strength</th><th class=\"analysis_head\">Status</th>\n"
 		"</tr>\n"
 	);
 

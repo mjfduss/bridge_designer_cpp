@@ -174,3 +174,14 @@ img.sketch {
   width: 120px;
   height: 80px;
 }
+
+table.analysis {
+  @extend body;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+th.analysis_head {
+  font-weight: bold;
+  font-size: 8pt;
+}

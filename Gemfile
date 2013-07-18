@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '1.9.3'
 
-gem 'WPBDC', '~> 2013.1.11'
+gem 'WPBDC', '2013.2.1'
 gem 'rails', '3.2.13'
 gem 'jquery-rails', '~> 2.1'
 gem 'bootstrap-sass', '2.0.4.0'
