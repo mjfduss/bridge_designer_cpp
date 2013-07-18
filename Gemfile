@@ -18,6 +18,7 @@ gem 'ckeditor', '~> 4.0'
 gem 'paperclip', '~> 3.0'
 gem 'paperclip_database', '~> 1.0'
 gem 'delayed_job_active_record', '~> 0.4'
+gem 'postmark-rails', '~> 0.5'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'

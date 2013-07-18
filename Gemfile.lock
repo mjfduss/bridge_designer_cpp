@@ -104,6 +104,12 @@ GEM
       paperclip (>= 2.3.0)
     pg (0.15.1)
     polyglot (0.3.3)
+    postmark (1.0.0)
+      json
+      rake
+    postmark-rails (0.5.1)
+      actionmailer (>= 3.0.0)
+      postmark (~> 1.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -194,6 +200,7 @@ DEPENDENCIES
   paperclip (~> 3.0)
   paperclip_database (~> 1.0)
   pg (~> 0.12)
+  postmark-rails (~> 0.5)
   rails (= 3.2.13)
   redis (= 3.0.2)
   rspec-rails (~> 2.0)
