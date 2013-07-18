@@ -13,8 +13,8 @@ application.js: application-0299b581bb27258a8c059e2dda023e0a.js
 application/index.js: application-0299b581bb27258a8c059e2dda023e0a.js
 html5fix.js: html5fix-4e0488a29c9e866fd9a17441bac1c3e6.js
 html5fix/index.js: html5fix-4e0488a29c9e866fd9a17441bac1c3e6.js
-application.css: application-d2f206361ac4b7a8ec51466fdc268b86.css
-application/index.css: application-d2f206361ac4b7a8ec51466fdc268b86.css
+application.css: application-00e3a1302d1093f5e4f5e84f9739a239.css
+application/index.css: application-00e3a1302d1093f5e4f5e84f9739a239.css
 ckeditor/application.js: ckeditor/application-1f3fd70816d8a061d7b04d29f1e369cd.js
 ckeditor/application/index.js: ckeditor/application-1f3fd70816d8a061d7b04d29f1e369cd.js
 ckeditor/config.js: ckeditor/config-038757e58d8bf4f3fa81b0f0e0b4982d.js
