@@ -2,7 +2,7 @@
 Administrator.delete_all
 Administrator.find_or_create_by_name(:name => 'admin', :password => 'foobarbaz', :password_confirmation => 'foobarbaz')
 # For development, use factory girl to build some records.
-if Rails.env.development?
+if false && Rails.env.development?
   REDIS.flushall
   Team.delete_all
   Member.delete_all

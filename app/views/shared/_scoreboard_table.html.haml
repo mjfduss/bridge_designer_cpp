@@ -18,4 +18,4 @@
         Sorry. No teams have been ranked.
   - unless scoreboard[:rows].blank?
     - scoreboard[:rows].each_with_index do |row, i|
-      = render :partial => 'shared/scoreboard_row', :locals => {:row => row, :i => i }
+      = render :partial => 'shared/scoreboard_row', :locals => {:row => row, :i => i, :show_category_p => show_category_p }

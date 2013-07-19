@@ -62,6 +62,8 @@ class HomesController < ApplicationController
       # Catch uploads of the wrong scenario during semi-finals.
       if session[:is_semis_session] && @analysis[:scenario] != WPBDC::SEMIFINAL_SCENARIO_ID
         @result = :not_semis_scenario
+      elsif !session[:is_semis_session] && @analysis[:scenario] == WPBDC::SEMIFINAL_SCENARIO_ID
+        @result = :bad_semis_scenario
       else
         case @analysis[:status]
 

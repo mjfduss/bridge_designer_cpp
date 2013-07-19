@@ -11,12 +11,14 @@
       = render :partial => "shared/submit_link", :locals => { :name => 'log_out', :text => "Log out" }
     .menu_item
       .menu_label Review (Accept/Reject) top teams:
-      = select_tag('team_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['team_category'] || '-'))
+      = select_tag 'team_category', options_for_select(TablesHelper::CATEGORY_PAIRS, state['team_category'] || '-'),
+                      :onchange => "do_submit('get_team_review')"
       = render :partial => "shared/submit_link", :locals => { :name => 'get_team_review', :text => "Go" }
     .menu_item
       .menu_label Preview new standings from database:
       .wrap
-        = select_tag 'review_category', options_for_select(TablesHelper::STANDINGS_PAIRS, state['review_category'] || '-')
+        = select_tag 'review_category', options_for_select(TablesHelper::STANDINGS_PAIRS, state['review_category'] || '-'),
+                      :onchange => "do_submit('get_standings_review')"
         = render :partial => "shared/submit_link", :locals => { :name => 'get_standings_review', :text => "Go" }
       .wrap
         Options:
@@ -26,7 +28,8 @@
     .menu_item
       .menu_label View currently posted standings:
       .wrap
-        = select_tag('posted_category', options_for_select(TablesHelper::STANDINGS_PAIRS, state['posted_category'] || '-'))
+        = select_tag 'posted_category', options_for_select(TablesHelper::STANDINGS_PAIRS, state['posted_category'] || '-'),
+                      :onchange => "do_submit('get_posted_standings')"
         = render :partial => "shared/submit_link", :locals => { :name => 'get_posted_standings', :text => "Go" }
     .menu_item
       .menu_label Find any team:

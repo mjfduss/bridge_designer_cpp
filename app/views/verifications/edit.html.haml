@@ -5,8 +5,9 @@
       Please check that the information below is correct. 
       We must be able to contact winners!
     .box
-      .membertitle==Team information for Team #{@team.name}
       %table
+        %tr
+          %td{ :colspan => 2, :class => 'membertitle' } Team information for Team #{@team.name}
         %tr
           %td{ :class => 'bold' } Email:&nbsp;
           %td= @team.email
@@ -16,11 +17,11 @@
     .box
       %table{ :width => '100%' }
         %tr
-          %td{ :width => '50%' }= render :partial => 'member_verification', |
-                      :locals => { :tag => 'Captain', :member => @captain } |
+          %td{ :width => '50%' }= render :partial => @team.category == 'e' ? 'eligible_verification' : 'ineligible_verification',
+                      :locals => { :tag => 'Captain', :member => @captain }
           - if @member
-            %td= render :partial => 'member_verification', |
-                        :locals => { :tag => 'Member', :member => @member } |
+            %td= render :partial => @team.category == 'e' ? 'eligible_verification' : 'ineligible_verification',
+                        :locals => { :tag => 'Member', :member => @member }
     .para.alignright
       = submit_tag '<< Make Changes', :name => :cancel, :class => 'btn'
       = submit_tag TablesHelper::ACCEPT, :name => :accept, :class => 'btn'

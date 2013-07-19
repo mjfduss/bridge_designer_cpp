@@ -1,0 +1,10 @@
+%table
+  %tr
+    %td{ :class => 'membertitle', :colspan => 2 }
+      Team #{tag} #{member.full_name}
+  %tr
+    %td{ :class => 'bold' } School/Organization:
+    %td= member.school
+  %tr
+    %td{ :class => 'bold' } Location:
+    %td= member.school_city

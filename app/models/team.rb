@@ -234,6 +234,15 @@ class Team < ActiveRecord::Base
     teams
   end
 
+  # Best information on city and state given team type.
+  def city_state(member)
+    if category == 'e'
+      (member.city && member.state) ? "#{member.city.strip}, #{member.state.strip}" : '--'
+    else
+      member.school_city.strip
+    end
+  end
+
   def scoreboard_row(score_p=false)
     bd = best_design
     row = {
@@ -241,7 +250,7 @@ class Team < ActiveRecord::Base
       :team_name => name,
       :category => category,
       :members => members.map{|m| m.first_name.strip }.uniq,
-      :city_state => members.map{|m| "#{m.city.strip}, #{m.state.strip}" }.uniq,
+      :city_state => members.map{|m| city_state(m) }.uniq,
       :school => members.map{|m| m.school.strip }.uniq,
       :location => members.map{|m| m.school_city.strip }.uniq,
       :submitted => bd ? bd.created_at.to_s(:nice) : '---',

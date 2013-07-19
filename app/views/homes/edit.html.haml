@@ -1,141 +1,145 @@
-.banner
-  - if @is_semis_session
-    Semi-Finals Home Page for Team #{@team.name}
-  -else
-    Home Page for Team #{@team.name}
-%table
-  %tr
-    %td{ :width => '400px', :valign => 'top' }
-      .para.bold Your team status:
-      %ul
-        - if @team.rejected?
-          %li.status_list.bold.trouble
-            Regrettably, your team has been disqualified by the judges.
-          %li.status_list
-            It will not be possible for team '#{@team.name}' to participate
-            further in the contest.
-        -else
-          - case @team.category
-            - when 'e'
-              %li.status_list Registered in US/PR Student Competition.
-              %li.status_list Eligible for national recognition.
-            - when 'i'
-              %li.status_list Registered in Open Competition.
-            - else
-              %li.status_list Hmmm... I don't know your team's category.
-          - if @is_semis_session
-            %li.status_list You made the Semi-Finals. Congratulations!
-            - if @best_for_scenario
-              %li.status_list== Your current best Semi-Finals design cost is #{to_cost(@best_for_scenario)}.
-            - else
-              %li.status_list You have not yet submitted a Semi-Finals design.
-          - else
-            -unless @team.local_contests.empty?
-              %li.status_list== Your local contests: #{local_contest_list(@team)}
-            - if @best
-              %li.status_list== Your current best design's cost is #{to_cost(@best)}.
-            - else
-              %li.status_list You have not yet submitted a design. Go for it!
-    %td{ :width => '400px', :valign => 'top' }
-      - if @result.nil?
-        = sep
-      - else
-        .para.bold
-          Messages for your team:
-        - if @result == :get_standings && @standing && @standing > 0
-          %script== document.write(standings_graph(#{@standing}, #{@out_of}))
-        - else
-          %ul
-            - case @result
-              - when :not_semis_scenario
-                %li{ :class => 'msg_list' }
-                  The design you uploaded was not a Semi-Finals scenario!  Please re-read
-                  the Semi-Finals Instructions. Ensure you are using the West Point Bridge
-                  Designer #{WPBDC::CONTEST_YEAR} and that you've entered the correct 10-digit
-                  scenario code:
-                  %span.bold #{WPBDC::SEMIFINAL_SCENARIO_ID}.
-              - when :get_standings
-                - if @standing
-                  - if @standing <= 0
-                    %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
-                - else
-                  %li{ :class => 'msg_list' } Your team must submit a design to have a standing!
-              - when :new_best
-                - if @is_semis_session
-                  %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best)} is a new Semi-Finals best for your team.
-                  - if @old_best
-                    %li{ :class => 'msg_list' } It improves on your old Semi-Finals best of #{to_cost(@old_best)}.
-                - else
-                  - if @old_best
-                    %li{ :class => 'msg_list' } Well done! You improved your old best #{to_cost(@old_best)} to #{to_cost(@best)}.
-                  -else
-                    %li{ :class => 'msg_list' } Well done! Your first design is a success!
-                  - if @standing
-                    %li{ :class => 'msg_list' } Your new standing is #{@standing} out of #{@out_of} teams.
-              - when :not_new_best
-                - if @is_semis_session
-                  %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best_for_scenario)} is a new Semi-Finals best for your team.
-                  - if @old_best_for_scenario
-                    %li{ :class => 'msg_list' } It improves on your old Semi-Finals best of #{to_cost(@old_best_for_scenario)}.
-                - else
-                  %li{ :class => 'msg_list' } Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
-                  - if @old_best_for_scenario
-                    %li{ :class => 'msg_list' } You improved the old cost of #{to_cost(@old_best_for_scenario)} for this scenario.
-                  %li{ :class => 'msg_list' } But your team's overall best remains the same.
-              - when :no_improvement
-                - if @is_semis_session
-                  %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for the Semi-Finals.
-                - else
-                  %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
-                %li{ :class => 'msg_list' } The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.
-              - when :duplicate
-                %li{ :class => 'msg_list' } Oh, no! This bridge is the same as one already submitted.
-                - if !@is_semis_session && @standing
-                  %li{ :class => 'msg_list' } With its cost of #{to_cost(@analysis[:score])}, your team would stand #{@standing} out of #{@out_of} teams if it weren't a duplicate.
-              - when :no_bridge
-                %li{ :class => 'msg_list' } Oops! You forgot to choose a bridge file before pressing Submit.
-                %li{ :class => 'msg_list' } Please choose your bridge file and Submit again.
-              - when :bridge_malformed
-                %li{ :class => 'msg_list' } Ouch! The file you submitted is not a bridge!
-                %li{ :class => 'msg_list' } Choose your WPBD #{WPBDC::CONTEST_YEAR} bridge file and Submit again.
-              - when :bridge_wrong_version
-                %li{ :class => 'msg_list' } Ugh! The file you submitted is from the wrong version of the West Point Bridge Designer!
-                %li{ :class => 'msg_list' } Choose your WPBD #{WPBDC::CONTEST_YEAR} bridge file and Submit again.
-              - when :bridge_failed_test
-                %li{ :class => 'msg_list' } Drat! Your bridge failed the Load Test!
-                %li{ :class => 'msg_list' } Go back to the drawing board, build a bridge that passes the Load Test, Save, and Submit again.
-              - when :save_failed
-                %li{ :class => 'msg_list' } Something went wrong saving your bridge. Sorry. Try again and contact the contest officials if it doesn't work.
-              - else
-                %li{ :class => 'msg_list'} [ bad @result = #{@result} ]
-.para
+.pagewidth
+  .banner
+    - if @is_semis_session
+      Semi-Finals Home Page for Team #{@team.name}
+    -else
+      Home Page for Team #{@team.name}
   = form_for(@design, :url => home_path, :method => :put) do |f|
-    - if @team.rejected?
-      .para.bold Design submission has been disabled.
-    - elsif @schedule_state == Schedule::STATE_QUALS_PREREG
-      .para.bold When the Qualifying Round begins #{@schedule.start_quals.to_s(:nice)}, you'll be able to submit your bridge designs right here!
-    - elsif @is_semis_session && @schedule_state == Schedule::STATE_SEMIS_PREREG
-      .para.bold When the Semi-Final Round begins #{@schedule.start_semis.to_s(:nice)}, you'll be able to submit your bridge designs right here!
-    - else
-      - if @is_semis_session
-        .para.bold Submit a Semi-Finals design (scenario code #{WPBDC::SEMIFINAL_SCENARIO_ID}):
-      - else
-        .para.bold Submit a design (West Point Bridge Designer #{WPBDC::CONTEST_YEAR} only):
-      .para= f.file_field :bridge
-      .para= f.submit 'Submit your design', :class => 'btn'
+    %table
+      %tr
+        %td{ :class => 'home_left_column' }
+          .para.bold Your team status:
+          %ul
+            - if @team.rejected?
+              %li.status_list.bold.trouble
+                Regrettably, your team has been disqualified by the judges.
+              %li.status_list
+                It will not be possible for team '#{@team.name}' to participate
+                further in the contest.
+            -else
+              - case @team.category
+                - when 'e'
+                  %li.status_list Registered in US/PR Student Competition.
+                  %li.status_list Eligible for national recognition.
+                - when 'i'
+                  %li.status_list Registered in Open Competition.
+                - else
+                  %li.status_list Hmmm... I don't know your team's category.
+              - if @is_semis_session
+                %li.status_list You made the Semi-Finals. Congratulations!
+                - if @best_for_scenario
+                  %li.status_list== Your current best Semi-Finals design cost is #{to_cost(@best_for_scenario)}.
+                - else
+                  %li.status_list You have not yet submitted a Semi-Finals design.
+              - else
+                -unless @team.local_contests.empty?
+                  %li.status_list== Your local contests: #{local_contest_list(@team)}
+                - if @best
+                  %li.status_list== Your current best design's cost is #{to_cost(@best)}.
+                - else
+                  %li.status_list You have not yet submitted a design. Go for it!
+          .para.vsep
+            - if @team.rejected?
+              .para.bold Design submission has been disabled.
+            - elsif @schedule_state == Schedule::STATE_QUALS_PREREG
+              .para.bold When the Qualifying Round begins #{@schedule.start_quals.to_s(:nice)}, you'll be able to submit your bridge designs right here!
+            - elsif @is_semis_session && @schedule_state == Schedule::STATE_SEMIS_PREREG
+              .para.bold When the Semi-Final Round begins #{@schedule.start_semis.to_s(:nice)}, you'll be able to submit your bridge designs right here!
+            - else
+              - if @is_semis_session
+                .para.bold Submit a Semi-Finals design (scenario code #{WPBDC::SEMIFINAL_SCENARIO_ID}):
+              - else
+                .para.bold Submit a design (West Point Bridge Designer #{WPBDC::CONTEST_YEAR} only):
+              .para= f.file_field :bridge
+              .para= f.submit 'Submit your design', :class => 'btn'
+        %td{ :width => '400px', :valign => 'top' }
+          - if @result.nil?
+            = sep
+          - else
+            .para.bold
+              Messages for your team:
+            - if @result == :get_standings && @standing && @standing > 0
+              %script== document.write(standings_graph(#{@standing}, #{@out_of}))
+            - else
+              %ul
+                - case @result
+                  - when :not_semis_scenario
+                    %li{ :class => 'msg_list' }
+                      The design you uploaded was not a Semi-Finals scenario!  Please re-read
+                      the Semi-Finals Instructions. Ensure you are using the West Point Bridge
+                      Designer #{WPBDC::CONTEST_YEAR} and that you've entered the correct 10-digit
+                      scenario code:
+                      %span.bold #{WPBDC::SEMIFINAL_SCENARIO_ID}.
+                  - when :bad_semis_scenario
+                    %li{ :class => 'msg_list' }
+                      The design you uploaded was a custom scenario, which is not permitted.
+                  - when :get_standings
+                    - if @standing
+                      - if @standing <= 0
+                        %li{ :class => 'msg_list' } Sorry. Standings aren't available right now. Try again later.
+                    - else
+                      %li{ :class => 'msg_list' } Your team must submit a design to have a standing!
+                  - when :new_best
+                    - if @is_semis_session
+                      %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best)} is a new Semi-Finals best for your team.
+                      - if @old_best
+                        %li{ :class => 'msg_list' } It improves on your old Semi-Finals best of #{to_cost(@old_best)}.
+                    - else
+                      - if @old_best
+                        %li{ :class => 'msg_list' } Well done! You improved your old best #{to_cost(@old_best)} to #{to_cost(@best)}.
+                      -else
+                        %li{ :class => 'msg_list' } Well done! Your first design is a success!
+                      - if @standing
+                        %li{ :class => 'msg_list' } Your new standing is #{@standing} out of #{@out_of} teams.
+                  - when :not_new_best
+                    - if @is_semis_session
+                      %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best_for_scenario)} is a new Semi-Finals best for your team.
+                      - if @old_best_for_scenario
+                        %li{ :class => 'msg_list' } It improves on your old Semi-Finals best of #{to_cost(@old_best_for_scenario)}.
+                    - else
+                      %li{ :class => 'msg_list' } Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
+                      - if @old_best_for_scenario
+                        %li{ :class => 'msg_list' } You improved the old cost of #{to_cost(@old_best_for_scenario)} for this scenario.
+                      %li{ :class => 'msg_list' } But your team's overall best remains the same.
+                  - when :no_improvement
+                    - if @is_semis_session
+                      %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for the Semi-Finals.
+                    - else
+                      %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
+                    %li{ :class => 'msg_list' } The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.
+                  - when :duplicate
+                    %li{ :class => 'msg_list' } Oh, no! This bridge is the same as one already submitted.
+                    - if !@is_semis_session && @standing
+                      %li{ :class => 'msg_list' } With its cost of #{to_cost(@analysis[:score])}, your team would stand #{@standing} out of #{@out_of} teams if it weren't a duplicate.
+                  - when :no_bridge
+                    %li{ :class => 'msg_list' } Oops! You forgot to choose a bridge file before pressing Submit.
+                    %li{ :class => 'msg_list' } Please choose your bridge file and Submit again.
+                  - when :bridge_malformed
+                    %li{ :class => 'msg_list' } Ouch! The file you submitted is not a bridge!
+                    %li{ :class => 'msg_list' } Choose your WPBD #{WPBDC::CONTEST_YEAR} bridge file and Submit again.
+                  - when :bridge_wrong_version
+                    %li{ :class => 'msg_list' } Ugh! The file you submitted is from the wrong version of the West Point Bridge Designer!
+                    %li{ :class => 'msg_list' } Choose your WPBD #{WPBDC::CONTEST_YEAR} bridge file and Submit again.
+                  - when :bridge_failed_test
+                    %li{ :class => 'msg_list' } Drat! Your bridge failed the Load Test!
+                    %li{ :class => 'msg_list' } Go back to the drawing board, build a bridge that passes the Load Test, Save, and Submit again.
+                  - when :save_failed
+                    %li{ :class => 'msg_list' } Something went wrong saving your bridge. Sorry. Try again and contact the contest officials if it doesn't work.
+                  - else
+                    %li{ :class => 'msg_list'} [ bad @result = #{@result} ]
     %hr
     .para.bold Menu options
     %table
       - unless @team.rejected? or @team.semifinalist?
         %tr
-          %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
-                                              :locals => { :name => 'update_contact', :text => "Update contact information" } |
+          %td{ :class => 'link_menu'}= render :partial => "shared/submit_link",
+                                              :locals => { :name => 'update_contact', :text => "Update contact information" }
           %td{ :class => 'link_menu'} So we can find you when you win!
         %tr
-          %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
-                                              :locals => { :name => 'get_standings', :text => "Check team standings" } |
+          %td{ :class => 'link_menu'}= render :partial => "shared/submit_link",
+                                              :locals => { :name => 'get_standings', :text => "Check team standings" }
           %td{ :class => 'link_menu'} To see how your team's best design is doing in the national contest.
       %tr
-        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link", |
-                                            :locals => { :name => 'logout', :text => "Log out" } |
+        %td{ :class => 'link_menu'}= render :partial => "shared/submit_link",
+                                            :locals => { :name => 'logout', :text => "Log out" }
         %td{ :class => 'link_menu'} To secure your home page from unintended use by others.

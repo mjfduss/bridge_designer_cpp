@@ -103,6 +103,7 @@ div.dialoghead {
   font-weight: bold;
   margin-bottom: 4px;
   padding-left: 8px;
+  width: 95%;
 }
 
 div.dialogbody {
@@ -278,4 +279,9 @@ div.canvas {
 div.caption {
   @extend div.canvas;
   padding-bottom: 16px;
+}
+
+td.home_left_column {
+  vertical-align: top;
+  width: 400px;
 }

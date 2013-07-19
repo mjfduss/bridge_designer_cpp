@@ -66,9 +66,9 @@ class Member < ActiveRecord::Base
   def category_formatted
     case category
       when 'u'
-        "Attending U.S. K-12 #{reg_state}"
+        "Attending U.S. K-12, #{reg_state}"
       when 'n'
-        "K-12 citizen OCONUS #{reg_state}"
+        "K-12 citizen OCONUS, #{reg_state}"
       when 'o'
         'Open competitor'
       else
@@ -77,11 +77,11 @@ class Member < ActiveRecord::Base
   end
 
   def age_grade_formatted
-    "#{age} Yrs / Grade #{grade}"
+    age == 0 ? '--' : "#{age} Yrs / Grade #{grade}"
   end
 
   def contact_formatted
-    [street, "#{city}, #{state} #{zip} #{country}", "Ph: #{phone}"]
+    street ? [street, "#{city}, #{state} #{zip} #{country}", "Ph: #{phone}"] : '--'
   end
 
   def school_formatted
@@ -89,10 +89,11 @@ class Member < ActiveRecord::Base
   end
 
   def demographics_formatted
+    return '--' unless sex
     rtn = []
     rtn.push(TablesHelper::SEX_MAP[sex]) unless sex == '-'
-    rtn.push(["Hispanic:",  TablesHelper::HISPANIC_MAP[hispanic]]) unless hispanic == '-'
-    rtn.push(["Race:", TablesHelper::RACE_MAP[race]]) unless race == '-'
+    rtn.push("Hispanic: #{TablesHelper::HISPANIC_MAP[hispanic]}") unless hispanic == '-'
+    rtn.push("Race: #{TablesHelper::RACE_MAP[race]}") unless race == '-'
     rtn = Team::NONE if rtn.blank?
     rtn
   end

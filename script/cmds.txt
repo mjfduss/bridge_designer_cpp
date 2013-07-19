@@ -11,8 +11,7 @@ git push heroku master
 alias h=heroku
 
 # Rebuild database.
-heroku run rake db:reset
-heroku pg:reset
+heroku pg:reset DATABASE
 
 # Install the default admin account.
 heroku run rake db:seed

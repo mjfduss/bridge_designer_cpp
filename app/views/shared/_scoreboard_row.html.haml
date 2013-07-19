@@ -7,7 +7,7 @@
         %br
         %span.tiny.gray= format "$%.2f", 0.01 * row[:score]
     %td= row[:team_name]
-    - if row[:category]
+    - if show_category_p
       %td.centered= TablesHelper::CATEGORY_MAP[row[:category]]
     %td= row[:members][0]
     %td= row[:school][0]
@@ -21,7 +21,7 @@
         %br>
         %span.tiny.gray= row[:score]
     %td{ :rowspan => 2 }= row[:team_name]
-    - if row[:category]
+    - if show_category_p
       %td.centered{ :rowspan => 2 }= TablesHelper::CATEGORY_MAP[row[:category]]
     = render :partial => 'shared/two_high_cell', :locals => { :i => 0, :contents => row[:members] }
     = render :partial => 'shared/two_high_cell', :locals => { :i => 0, :contents => row[:school] }

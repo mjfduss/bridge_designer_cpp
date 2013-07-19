@@ -9,7 +9,7 @@
   = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => nil }
   .bold
     = "#{TablesHelper::CATEGORY_MAP[@category] || 'Unknown category'}: #{pluralize(@teams.length, 'team')} shown."
-  %table.index
+  %table{ :class => team_items_table.size < 30 ? nil : 'index' }
     - for row_team_items in team_items_table.each_slice(30)
       %tr
         - for team, items in row_team_items

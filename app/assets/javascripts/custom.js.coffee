@@ -112,13 +112,20 @@ window.update_indicators = () ->
 set_field_value = (field, val) ->
   getElement(field).value = val
 
-last_name = null
+add_hidden = (name, i = 0) ->
+  input = document.createElement('input')
+  input.type = 'hidden'
+  input.name = name
+  input.value = 1
+  document.forms[i].appendChild(input)
+  input
 
-window.do_submit = (name) ->
-  eval("document.forms[0].#{last_name}.value = null") if last_name
-  last_name = name
-  eval("document.forms[0].#{name}.value = 1")
-  document.forms[0].submit()
+last_added_hidden = null
+
+window.do_submit = (name, i = 0) ->
+  last_added_hidden.remove() if last_added_hidden
+  last_added_hidden = add_hidden(name)
+  document.forms[i].submit()
 
 tick_spacing = (axis_len, max_divisions) ->
   axis_len = -axis_len if axis_len < 0
