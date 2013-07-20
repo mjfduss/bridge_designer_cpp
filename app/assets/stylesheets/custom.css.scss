@@ -47,17 +47,24 @@ a {
   text-decoration: none;
 }
 
-a:link, a:visited {
+a:link, a:visited, input[type="submit"]:link.link_submit, input[type="submit"]:visited.link_submit {
   color: $link_normal;
 }
 
-a:hover {
+a:hover, input[type="submit"]:hover.link_submit {
   color: $link_hover;
 }
 
 a:active {
   color: $link_active;
-} 
+}
+
+input[type="submit"].link_submit {
+  border: none;
+  background-color: white;
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+}
 
 .link_menu {
   padding: 4pt;
