@@ -1,0 +1,7 @@
+function marker(x, y) {
+    var arrow = '<%= asset_path 'marker.gif' %>'
+    return '<img style="position:absolute;width:32px;height:7px;margin:0px;padding:0px;left:' + x +
+           'px;top:' + (y-1) +
+           'px;border:none;" src=' + arrow +  '>'
+}
+

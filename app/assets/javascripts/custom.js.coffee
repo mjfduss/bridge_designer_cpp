@@ -163,6 +163,13 @@ left_label = (x, y, w, text) ->
 right_label = (x, y, w, text) ->
   "<div style=\"position:absolute;left:#{x+4}px;top:#{y}px;width:#{w}px;line-height:0px;text-align:left;\">#{text}</div>"
 
+bangs = (place, n_entries) ->
+  frac = 3  # 1/(this number) of top standings get bangs.
+  good = if n_entries > frac then Math.floor(n_entries / frac) else 1
+  max = 5           # Max possible bangs
+  n = Math.floor((1 - max) / (good - 1) * (place - 1) + max)
+  new Array(1 + if n < 0 then 0 else n).join('!')
+
 window.standings_graph = (place, n_entries) ->
   return "<div class=\"canvas\">Your team ranks #{place} of #{n_entries}!</div>" if n_entries < 2
   label_inc = 28
@@ -172,7 +179,7 @@ window.standings_graph = (place, n_entries) ->
   pole_size = 4
   marker_margin = 4
   marker_color = 'red'
-  marker_width = 20
+  marker_width = 32
   place = n_entries if place > n_entries
   spacing = tick_spacing(n_entries, 5)
   y0 = 32
@@ -199,6 +206,6 @@ window.standings_graph = (place, n_entries) ->
   html += bar(x, y0, pole_size, dy + 1, axis_color)
   x += pole_size + marker_margin
   y = y0 + Math.floor(dy * (place - 1) / (n_entries - 1))
-  html += bar(x, y - Math.floor(pole_size * 0.5), marker_width, pole_size, marker_color)
-  html += right_label(x + marker_width, y, label_width, "Your team...")
-  html + "</div><div class=\"caption\">Standing \##{commafy(place)} of #{commafy(n_entries)}!</div>"
+  html += marker(x, y)
+  html += right_label(x + marker_width, y, 8*label_width, "\##{commafy(place)} of #{commafy(n_entries)}#{bangs(place, n_entries)}")
+  html + "</div><div class=\"caption\">Your team's standing</div>"
