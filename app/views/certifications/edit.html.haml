@@ -1,5 +1,5 @@
 = content_for :dialog do
-  = form_tag(certification_path(@team.id), :method => :put) do 
+  = form_tag certification_path, :method => :put do
     .big Certify Your Team's Eligiblity
     .para.small.subdued
       Please check that the information below is true and correct. 

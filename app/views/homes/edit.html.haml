@@ -4,7 +4,7 @@
       Semi-Finals Home Page for Team #{@team.name}
     -else
       Home Page for Team #{@team.name}
-  = form_for(@design, :url => home_path, :method => :put) do |f|
+  = form_for @design, :url => home_path, :method => :put  do |f|
     %table
       %tr
         %td{ :class => 'home_left_column' }
