@@ -165,7 +165,8 @@ right_label = (x, y, w, text) ->
 
 bangs = (place, n_entries) ->
   frac = 3  # 1/(this number) of top standings get bangs.
-  good = if n_entries > frac then Math.floor(n_entries / frac) else 1
+  return '' if n_entries < 2 * frac
+  good = Math.floor(n_entries / frac)
   max = 5           # Max possible bangs
   n = Math.floor((1 - max) / (good - 1) * (place - 1) + max)
   new Array(1 + if n < 0 then 0 else n).join('!')
