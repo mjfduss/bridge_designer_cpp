@@ -19,7 +19,9 @@ class Admin::SchedulesController < Admin::ApplicationController
     elsif params.nonblank? :update
       id = params[:schedule][:id]
       if id.blank?
+        logger.debug "PARAMS #{params[:schedule].inspect}"
         @edited_schedule = Schedule.create(params[:schedule])
+        logger.debug "CREATED #{@edited_schedule.inspect}"
         if @edited_schedule.valid?
           reset_active(@edited_schedule)
           flash.now[:alert] = "New schedule '#{@edited_schedule.name}' was created."
@@ -45,7 +47,7 @@ class Admin::SchedulesController < Admin::ApplicationController
         flash.now[:alert] = 'Selected schedules were deleted.'
       end
       id = params[:schedule][:id]
-      @edited_schedule = id.blank? ? Schedule.new : (Schedule.find(id.to_i) || Schedule.new)
+      @edited_schedule = id.blank? ? Schedule.new : (Schedule.where(['id = ?', id.to_i]).first || Schedule.new)
     end
     @schedules = Schedule.order('active DESC, name ASC')
     @active_schedule = @schedules.find { |schedule| schedule.active? }

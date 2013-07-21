@@ -8,6 +8,7 @@ class Schedule < ActiveRecord::Base
 
   validates :name, :uniqueness => true
   validates :semis_instructions, :presence => true
+  validates_presence_of :start_quals_prereg, :start_quals, :end_quals, :start_semis_prereg, :start_semis, :end_semis
 
   after_initialize :set_reasonable_field_values
 
@@ -16,6 +17,10 @@ class Schedule < ActiveRecord::Base
   # Makes sure the date/times are a time line.
   class ScheduleValidator < ActiveModel::Validator
     def validate(schedule)
+
+      return unless schedule.start_quals_prereg && schedule.start_quals && schedule.end_quals &&
+          schedule.start_semis_prereg && schedule.start_semis && schedule.end_semis
+
       unless schedule.start_quals >= schedule.start_quals_prereg
         schedule.errors[:start_quals] << 'Qualifying round must start after early registration'
       end
@@ -51,7 +56,7 @@ class Schedule < ActiveRecord::Base
     'Team logins disabled with "closed" message displayed',
     'Open for free play, qualifying round not begun',
     'Early registration for qualifying round',
-    'Qualifying round',
+    'Qualifying round in progress',
     'Tallying results of qualifying round',
     'Open for free play between qualifying round and semis',
     'Semifinal login checks while also open for free play',
@@ -136,8 +141,7 @@ class Schedule < ActiveRecord::Base
   private
 
   def set_reasonable_field_values
-    return unless new_record?
-    self.name = 'New Schedule'
+    return unless new_record? && name.nil?
     # Try to get the current active schedule and use its information.
     active = Schedule.find_by_active(true)
     if active

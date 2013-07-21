@@ -11,10 +11,15 @@ git push heroku master
 alias h=heroku
 
 # Rebuild database.
+# First command drops all tables. Second builds schema.
 heroku pg:reset DATABASE
+heroku rake db:schema:load
 
 # Install the default admin account.
 heroku run rake db:seed
+
+# Running a rails console.  (   Can use to query REDIS.)
+heroku run console
 
 # Check server.
 heroku ps
