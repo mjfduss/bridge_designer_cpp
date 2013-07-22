@@ -6,7 +6,7 @@ $hr_color: $box_border;
 $font_size: 10pt;
 $link_normal: $box_border;
 $link_hover: $btn_bg;
-$link_active: #000000;
+$link_active: $box_border;
 $canvas: #ffd;
 $subdued:#aa3333;
 $trouble:#ff1111;
@@ -55,11 +55,13 @@ a:hover, input[type="submit"]:hover.link_submit {
   color: $link_hover;
 }
 
-a:active {
+a:active, input[type="submit"]:active.link_submit {
   color: $link_active;
 }
 
 input[type="submit"].link_submit {
+  font-size: $font_size;
+  color: $link_normal;
   border: none;
   background-color: transparent;
   padding: 0px 0px 0px 0px;
