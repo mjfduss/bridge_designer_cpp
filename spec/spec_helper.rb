@@ -36,19 +36,19 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
 
-def goto_team_registration_page
+def goto_team_registration_page(args)
   visit root_path
   click_button "Start the Registration Wizard >>"
 end
 
-def fill_in_member_partial(cat_string = 'u')
-  fill_in("first_name", :with => 'Zoom')
-  fill_in("last_name", :with => 'Farr')
-  choose("category_#{cat_string}")
+def fill_in_member_partial(args = {})
+  fill_in("first_name", :with => 'Jane')
+  fill_in("last_name", :with => 'Smith')
+  choose("category_#{args[:category] || 'u'}")
   select('Pennsylvania', :from => "school_state")
 end
 
-def fill_in_member_completion
+def fill_in_member_completion(args={})
   select("13", :from => "member_age")
   select("7", :from => "member_grade")
   fill_in("member_street", :with => "107A Washington Road")
@@ -61,20 +61,26 @@ def fill_in_member_completion
   fill_in("member_school_city", :with => "Northampton")
 end
 
-def goto_member_registration_page(captain_cat_string = 'u')
-  goto_team_registration_page
-  fill_in('team_name', :with => 'Beat Air Force!')
-  fill_in_member_partial(captain_cat_string)
+def fill_in_team_completion(args={})
+  fill_in('team_email', :with => 'gene.ressler@gmail.com')
+  fill_in('team_password', :with => 'foobarbaz')
+  fill_in('team_password_confirmation', :with => 'foobarbaz')
+end
+
+def goto_member_registration_page(args={})
+  goto_team_registration_page(args)
+  fill_in('team_name', :with => args[:team_name] || 'Beat Air Force!')
+  fill_in_member_partial(args.merge(:category => args[:captain_category]))
   click_button 'Accept and Continue >>'
 end
 
-def goto_certification_page(captain_cat_string = 'u', member_cat_string = nil)
-  goto_member_registration_page(captain_cat_string)
-  if member_cat_string.nil?
+def goto_certification_page(args)
+  goto_member_registration_page(args)
+  unless args[:member_category]
     click_button "Continue >>"
   else
     click_button "Accept and Continue >>"
-    fill_in_member_partial(member_cat_string)
+    fill_in_member_partial(args.merge[:category => args[:member_category]])
     click_button "Accept and Continue >>"
   end
 end
@@ -119,15 +125,16 @@ def it_should_have_member_completion_errors
   it { html.should match "School city can't be blank" }
 end
 
-def goto_captain_completion_page
-  goto_certification_page
+def goto_captain_completion_page(args={})
+  goto_certification_page(args)
   click_button I_CERTIFY
 end
 
-def goto_member_completion_page
-  goto_certification_page('n', 'n')
+def goto_member_completion_page(args={})
+  goto_certification_page(:captain_category => 'n', :member_category => 'n')
+  puts html.inspect
   click_button I_CERTIFY
-  fill_in_member_completion
+  fill_in_member_completion(args)
   click_button "Accept and Continue >>"
 end
 

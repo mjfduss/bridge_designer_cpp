@@ -3,12 +3,12 @@
   = form_for @team, :url => team_completion_path do |f|
     .box
       .big
-        Team info for
         - if @team.status == 'r'
+          = f.label :name, 'Team info for'
           = f.text_field :name, :size => 16
           (you may change your team name while disqualified)
         - else
-          = @team.name
+          Team info for #{@team.name}
       .para.small.subdued
         It is important that we have an e-mail address to reach your team. Type it below.
       .para

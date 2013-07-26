@@ -15,7 +15,6 @@ describe "Registration" do
     before { goto_team_registration_page }
     it_should_have_standard_title
     it { should have_selector('div', :text => 'Team Name:') }
-    it { should have_selector('div', :text => 'Contest selection') }
     it { should have_selector('div', :text => 'Team Captain') }
     it_should_have_member_partial
   end
@@ -82,7 +81,7 @@ describe "Registration" do
       goto_captain_completion_page
       click_button ACCEPT
     }
-    it { should match('Personal Info for Team Captain') }
+    it { html.should match(/Personal Info for Jane Smith/) }
     it_should_have_member_completion_errors
   end
 
@@ -91,7 +90,7 @@ describe "Registration" do
       goto_member_completion_page
       click_button ACCEPT
     }
-    it { should match('Personal Info for Team Member') }
+    it { html.should match(/Personal Info for Jane Smith/) }
     it_should_have_member_completion_errors
   end
 

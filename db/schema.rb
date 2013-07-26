@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130717042003) do
+ActiveRecord::Schema.define(:version => 20130725120931) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(:version => 20130717042003) do
     t.integer  "team_id",                  :null => false
     t.integer  "design_id",                :null => false
     t.string   "scenario",   :limit => 10
-    t.integer  "score",                    :null => false
+    t.integer  "score",      :limit => 8,  :null => false
     t.integer  "sequence",                 :null => false
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(:version => 20130717042003) do
 
   create_table "designs", :force => true do |t|
     t.integer  "team_id",                   :default => 0,  :null => false
-    t.integer  "score",                     :default => 0,  :null => false
+    t.integer  "score",       :limit => 8,  :default => 0,  :null => false
     t.integer  "sequence",                  :default => 0,  :null => false
     t.string   "scenario",    :limit => 10, :default => "", :null => false
     t.text     "bridge"

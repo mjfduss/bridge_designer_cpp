@@ -1,6 +1,6 @@
 .big.bold Change Password
-%hr
 .bold.menu_label Password workspace:
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @admin.errors }
 = form_for @admin, :url => admin_password_change_path, :method => :put do |f|
   %table
     %tr
@@ -17,11 +17,3 @@
   .para
   = f.submit "Change password", :name => 'change'
   %hr
-- unless flash.empty?
-  Results:
-  %ul
-    - flash.each do |key, val|
-      %li== #{val}
-    - if @admin.errors.any?
-      - @admin.errors.full_messages.each do |msg|
-        %li== #{msg}

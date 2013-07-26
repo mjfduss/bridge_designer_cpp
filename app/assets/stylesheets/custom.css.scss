@@ -48,7 +48,7 @@ a {
 }
 
 a:link, a:visited, input[type="submit"]:link.link_submit, input[type="submit"]:visited.link_submit {
-  cogmaillor: $link_normal;
+  color: $link_normal;
 }
 
 a:hover, input[type="submit"]:hover.link_submit {
