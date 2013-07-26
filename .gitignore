@@ -4,6 +4,9 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 
+# Ignore the RDIS test database
+/db/*.rdb
+
 # Ignore cached assets.
 /public/standings/**
 /public/admin/**
