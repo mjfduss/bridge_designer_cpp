@@ -1,9 +1,9 @@
 class Admin::BulkNoticesController < Admin::ApplicationController
 
-  # A little class to let us use form_for in the template.
+  # A little class to let us load the params hash.
   # TODO Could do this in the main menu to simplify much code
   class Request
-    attr_accessor :message_body_id, :local_contest_id
+    attr_accessor :message_body_id, :local_contest_id, :test_email
 
     def initialize(params = {})
       params.each { |k,v| instance_variable_set("@#{k}", v) unless v.nil? }
@@ -16,20 +16,37 @@ class Admin::BulkNoticesController < Admin::ApplicationController
 
   def update
     @request = Request.new(params[:request])
-    if @request.message_body_id.blank?
-      flash.now[:alert] = 'No document was selected.'
+    if params.nonblank? :clear_reminder_requests
+      ReminderRequest.destroy_all
+      flash.now[:alert] = 'All reminder requests have been deleted.'
     else
-      msg = HtmlDocument.find(@request.message_body_id.to_i)
-      if params.nonblank? :to_local_contest
-        if @request.local_contest_id.blank?
-          flash.now[:alert] = 'No local contest was selected.'
-        else
-          send_to(LocalContest.find(@request.local_contest_id.to_i).teams, msg)
+      if @request.message_body_id.blank?
+        flash.now[:alert] = 'No document was selected.'
+      else
+        msg = HtmlDocument.find(@request.message_body_id)
+        if params.nonblank? :to_test_email
+          if @request.test_email =~ Team::VALID_EMAIL_ADDRESS
+            team = Team.new(:name => 'Test Team', :email => @request.test_email)
+            team.members << Member.new(:first_name => 'Jane')
+            # Delayed job does not work with this skeleton team.
+            BulkNotice.to_team(team, msg).deliver
+            flash.now[:alert] = "Test email was sent to #{team.email}."
+          else
+            flash.now[:alert] = 'Test email address is invalid.'
+          end
+        elsif params.nonblank? :to_reminder_requestors
+          send_to_reminder_requestors(msg)
+        elsif params.nonblank? :to_local_contest
+          if @request.local_contest_id.blank?
+            flash.now[:alert] = 'No local contest was selected.'
+          else
+            send_to(LocalContest.find(@request.local_contest_id.to_i).teams, msg)
+          end
+        elsif params.nonblank? :to_semi_finalists
+          send_to(Team.where(:status => '2'), msg)
+        elsif params.nonblank? :to_all
+          send_to(Team.all, msg)
         end
-      elsif params.nonblank? :to_semi_finalists
-        send_to(Team.where(:status => '2'), msg)
-      elsif params.nonblank? :to_all
-        send_to(Team.all, msg)
       end
     end
     render :action => :edit
@@ -46,4 +63,13 @@ class Admin::BulkNoticesController < Admin::ApplicationController
     flash.now[:alert] = "Sent #{pluralize(n, 'email message')}."
   end
 
+  def send_to_reminder_requestors(msg)
+    n = 0
+    ReminderRequest.find_each do |request|
+      BulkNotice.delay.to_any_address(request.email, msg)
+      n += 1
+    end
+    flash.now[:alert] = "Sent #{pluralize(n, 'email message')}."
+  end
 end
+

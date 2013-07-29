@@ -1,7 +1,6 @@
 .big.bold Administer Local Contests
 %hr
-.bold.menu_label
-  Local contest workspace:
+.bold.menu_label Local contest workspace:
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => @edited_local_contest.errors }
 = form_for @edited_local_contest, :url => admin_local_contest_path, :method => :put do |f|
   .para

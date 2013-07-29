@@ -6,16 +6,45 @@
     %table
       %tr
         %td= label(:request, :message_body_id, 'Document to send:')
-        %td{ :colspan => 2 }= collection_select(:request, :message_body_id, HtmlDocument.order('subject ASC'), :id, :subject, :include_blank => 'Select Document')
+        %td{ :colspan => 3 }= collection_select(:request, :message_body_id, HtmlDocument.order('subject ASC'), :id, :subject, :include_blank => 'Select Document')
+      %tr
+        %td= label(:request, :test_email, 'Test email:')
+        %td= text_field_tag('request[test_email]')
+        %td{ :align => 'right' }= submit_tag 'Send', :name => :to_test_email
+        %td= sep
+      %tr
+        %td Reminder requestors:
+        %td= sep
+        %td{ :align => 'right' }= submit_tag 'Send', :name => :to_reminder_requestors
+        %td= submit_tag 'Clear all reminder requests', :name => :clear_reminder_requests, :confirm => 'This action cannot be undone! Are you absolutely sure you want to clear all reminder requests?'
       %tr
         %td= label(:request, :local_contest_id, 'Local contest:')
         %td= collection_select(:request, :local_contest_id, LocalContest.order('code ASC'), :id, :description, :include_blank => 'Select Local Contest')
         %td{ :align => 'right' }= submit_tag 'Send', :name => :to_local_contest
+        %td= sep
       %tr
         %td Semi-finalists:
         %td= sep
         %td{ :align => 'right' }= submit_tag 'Send', :name => :to_semi_finalists
+        %td= sep
       %tr
-        %td All contestants:
+        %td All teams:
         %td= sep
         %td{ :align => 'right' }= submit_tag 'Send', :name => :to_all
+        %td= sep
+%hr
+.vsep.big.bold Reminder Request Exemplar
+.para
+  %iframe{ :src => new_reminder_request_path, :name => 'reminder_request',
+    :style => 'width:540px;height:72px;border:1px solid black;overflow:hidden;background-color:transparent' }
+%hr
+.vsep.big.bold Placing Reminders
+.para
+  This HTML code can be pasted into any web page to provide the reminder support service.
+  Pick a unique TAG_VALUE for each one to allow tracking request sources.
+  Of course you can substitute any desired style attributes.
+  %pre
+    :escaped
+      <iframe name="reminder_request"
+            src="/reminder_requests/new?tag=TAG_VALUE"
+            style="width:540px;height:72px;border:none;overflow:hidden;background-color:transparent"></iframe>

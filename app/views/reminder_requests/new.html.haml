@@ -1,0 +1,16 @@
+.bold.hi Want a reminder when the Bridge Contest qualifying round starts?
+- if @schedule_state == Schedule::STATE_CLOSED
+  .para Oops! The reminder service is off line. We'll be back as soon as possible.
+- if @schedule_state < Schedule::STATE_QUALS
+  .para Enter your address to receive email when the qualifying round starts for #{WPBDC::CONTEST_YEAR}.
+  = form_for @reminder_request do |f|
+    = f.hidden_field :tag
+    = f.label :email, 'Email:'
+    = f.text_field :email, :size => 30
+    = f.submit 'Go!'
+- elsif @schedule_state == Schedule::STATE_QUALS
+  .para
+    This year's qualifying round is in progress.
+    This service will return when next year's West Point Bridge Design Contest schedule is ready to go.
+- else
+  .para This service will return when next year's West Point Bridge Design Contest schedule is ready to go.

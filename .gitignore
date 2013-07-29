@@ -25,8 +25,12 @@
 # WPBD gem will be installed from rubygems.org
 *.gem
 
+# Ignore auto-generated files but track manual sources.
+/doc/**
+!manual.tex
+!manual.pdf
+
 # Ignore other unneeded files.
-doc/
 *.swp
 *.bat
 *.cmd

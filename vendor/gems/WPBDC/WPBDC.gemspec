@@ -7,6 +7,7 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Gene Ressler"]
   spec.email       = 'gene.ressler@gmail.com'
   spec.homepage    = 'http://rubygems.org/gems/wpbdc_judge'
+  spec.license     = 'GPL-2'
 
   spec.files       = Dir.glob('lib/**/*.rb') + Dir.glob('ext/**/*.{c,h,rb}')
   spec.extensions  = ['ext/WPBDC/extconf.rb']

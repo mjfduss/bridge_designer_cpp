@@ -58,7 +58,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
 
   def restore_edited
     id = params[:local_contest][:id]
-    @edited_local_contest = id.blank? ? LocalContest.new : (LocalContest.find(id.to_i) || LocalContest.new)
+    @edited_local_contest = id.blank? ? LocalContest.new : (LocalContest.where(:id => id).first || LocalContest.new)
   end
 
 end

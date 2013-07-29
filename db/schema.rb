@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130725120931) do
+ActiveRecord::Schema.define(:version => 20130727192301) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -170,6 +170,14 @@ ActiveRecord::Schema.define(:version => 20130725120931) do
 
   add_index "password_resets", ["key"], :name => "index_password_resets_on_key", :unique => true
   add_index "password_resets", ["team_id"], :name => "index_password_resets_on_team_id", :unique => true
+
+  create_table "reminder_requests", :force => true do |t|
+    t.string   "referer"
+    t.string   "tag"
+    t.string   "email"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "schedules", :force => true do |t|
     t.string   "name",                  :limit => 40,                    :null => false

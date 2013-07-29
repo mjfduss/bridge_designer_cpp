@@ -1,6 +1,7 @@
 Wpbdc::Application.routes.draw do
 
   namespace :admin do
+    root :to => 'admin/sessions#new'
     resource :frame, :only => [ :new ]
     resource :initial, :only => [ :new ]
     resource :main_menu, :only => [ :edit, :update ]
@@ -34,6 +35,7 @@ Wpbdc::Application.routes.draw do
   resource :home, :only => [ :edit, :update ]
   resource :semi_final_instruction, :only => [ :edit, :update ]
   resources :standings, :only => [ :show ]
+  resources :reminder_requests, :only => [ :new, :create ]
 
   # Can's use a standard resource path here because both local contest
   # code and page (for pagination) must be in path for cache to work.

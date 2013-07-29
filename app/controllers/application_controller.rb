@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper ApplicationHelper
   before_filter :require_valid_session, :load_schedule, :check_schedule
+  attr_reader :schedule, :schedule_state
 
   protected
 

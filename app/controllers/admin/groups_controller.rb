@@ -15,7 +15,7 @@ class Admin::GroupsController < Admin::ApplicationController
         @edited_group = Group.new
         flash.now[:alert] = 'New group ready to edit.'
       else
-        @edited_group = Group.find(selected[0].to_i)
+        @edited_group = Group.find(selected[0])
         flash.now[:alert] = 'Selected group ready to edit.'
       end
     elsif params.nonblank? :update
@@ -29,7 +29,7 @@ class Admin::GroupsController < Admin::ApplicationController
           flash.now[:alert] = "New group could not be created."
         end
       else
-        @edited_group = Group.find(id.to_i)
+        @edited_group = Group.find(id)
         @edited_group.update_attributes(params[:group])
         flash.now[:alert] = "Group '#{params[:group][:description]}' was updated."
       end

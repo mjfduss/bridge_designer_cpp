@@ -1,0 +1,14 @@
+!!! 5
+%html
+  %head
+    %title West Point Bridge Design Contest
+    = csrf_meta_tags
+    :css
+      body { font-family: arial, sans-serif; font-size: 9pt; }
+      .bold { font-weight: bold; }
+      .hi { color: #006699; }
+      .para { margin: 2px 0px 2px 0px; }
+  %body
+    %img{:src => '/assets/logo.gif', :style => 'float:left'}
+    %div{:style => 'margin-left:64px;'}
+      = yield

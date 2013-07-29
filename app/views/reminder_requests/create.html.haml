@@ -1,0 +1,10 @@
+.bold.hi Your reminder request for the West Point Bridge Design Contest...
+- if @reminder_request.errors.empty?
+  .para
+    %span.bold ...was successful!
+    We'll send you a note at '#{@reminder_request.email}' when the qualifying round starts.
+- else
+  .para
+    %span.bold ...had a problem:
+    #{@reminder_request.errors.full_messages[0]}
+  .para= link_to 'Try again', :action => :new
