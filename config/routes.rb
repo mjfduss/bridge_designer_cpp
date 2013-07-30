@@ -1,7 +1,7 @@
 Wpbdc::Application.routes.draw do
 
   namespace :admin do
-    root :to => 'admin/sessions#new'
+    root :to => 'sessions#new'
     resource :frame, :only => [ :new ]
     resource :initial, :only => [ :new ]
     resource :main_menu, :only => [ :edit, :update ]
