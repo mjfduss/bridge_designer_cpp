@@ -13,7 +13,7 @@ class HomesController < ApplicationController
     @is_semis_session = session[:is_semis_session]
 
     # Get the team and grab a lock if a design was submitted.
-    @team = Team.find(session[:team_id], :lock => !params[:design].blank?)
+    @team = Team.find(session[:team_id], :lock => params.nonblank?(:design))
 
     # If logout...
     if params.nonblank? :logout
@@ -98,15 +98,13 @@ class HomesController < ApplicationController
                     @old_best = @best
                     @best = @analysis[:score]
                     @team.improves = @team.improves + 1
-                    Team.increment_counter :improves, @team.id
                     @standing, @out_of = Standing.insert(@team, @design)
                     logger.info "Inserted standing #{@standing} of #{@out_of}."
                     @result = :new_best
                   else
                     @result = :not_new_best
                   end
-                  # TODO I don't think there's anything to save here!
-                  # @team.save!
+                  @team.save!
                 else
                   logger.error "design save failed #{@design.errors.messages.inspect}: #{@design.inspect}"
                   @result = :save_failed

@@ -25,16 +25,16 @@ class Schedule < ActiveRecord::Base
         schedule.errors[:start_quals] << 'Qualifying round must start after early registration'
       end
       unless schedule.end_quals > schedule.start_quals
-        schedule.errors[:start_quals] << 'Qualifying round must end later than it starts'
+        schedule.errors[:end_quals] << 'Qualifying round must end later than it starts'
       end
       unless schedule.start_semis_prereg > schedule.end_quals
-        schedule.errors[:start_quals] << 'Semifinal login check must start after qualifiers end'
+        schedule.errors[:start_semis_prereg] << 'Semifinal login check must start after qualifiers end'
       end
       unless schedule.start_semis >= schedule.start_semis_prereg
-        schedule.errors[:start_quals] << 'Semifinals must start after login checks'
+        schedule.errors[:start_semis] << 'Semifinals must start after login checks'
       end
       unless schedule.end_semis >= schedule.start_semis
-        schedule.errors[:start_quals] << 'Semifinals must end later than they start'
+        schedule.errors[:end_semis] << 'Semifinals must end later than they start'
       end
     end
   end

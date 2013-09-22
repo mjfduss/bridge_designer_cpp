@@ -4,7 +4,7 @@ class Design < ActiveRecord::Base
   attr_accessible :score, :sequence, :scenario, :hash_string, :bridge
 
   belongs_to :team
-  has_many :bests # Actually has_0-2: can be best of one national and one local contest
+  has_many :bests
   after_save :update_bests
 
   validates :bridge, :presence => true
