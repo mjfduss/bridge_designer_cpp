@@ -104,6 +104,7 @@ class HomesController < ApplicationController
                   else
                     @result = :not_new_best
                   end
+                  # Record counter increments.
                   @team.save!
                 else
                   logger.error "design save failed #{@design.errors.messages.inspect}: #{@design.inspect}"
