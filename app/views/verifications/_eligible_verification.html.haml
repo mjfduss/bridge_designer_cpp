@@ -32,12 +32,12 @@
   - if member.sex
     %tr
       %td{ :class => 'bold' } Sex:
-      %td= member.sex
+      %td= TablesHelper::SEX_MAP[member.sex]
   - if member.hispanic
     %tr
       %td{ :class => 'bold' } Hispanic:
-      %td= member.hispanic
+      %td= TablesHelper::HISPANIC_MAP[member.hispanic]
   - if member.race
     %tr
       %td{ :class => 'bold' } Race:
-      %td= member.race
+      %td= TablesHelper::RACE_MAP[member.race]
