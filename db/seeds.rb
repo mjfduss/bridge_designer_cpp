@@ -1,6 +1,6 @@
 # Make and administrator account.
 Administrator.delete_all
-Administrator.find_or_create_by_name(:name => 'admin', :password => 'foobarbaz', :password_confirmation => 'foobarbaz')
+%w{gene steve cathy}.each {|name| Administrator.find_or_create_by_name(:name => name, :password => 'foobarbaz', :password_confirmation => 'foobarbaz') }
 # For development, use factory girl to build some records.
 if false && Rails.env.development?
   REDIS.flushall
