@@ -17,8 +17,8 @@ html5fix.js: html5fix-4e0488a29c9e866fd9a17441bac1c3e6.js
 html5fix/index.js: html5fix-4e0488a29c9e866fd9a17441bac1c3e6.js
 admin.css: admin-6d1b5acbbb674ade78ed5453b1858f45.css
 admin/index.css: admin-6d1b5acbbb674ade78ed5453b1858f45.css
-application.css: application-e9e9f24d2dbf7c7d5fa094752ad82372.css
-application/index.css: application-e9e9f24d2dbf7c7d5fa094752ad82372.css
+application.css: application-f06afa803e1c4997403200ad126deb2b.css
+application/index.css: application-f06afa803e1c4997403200ad126deb2b.css
 ckeditor/application.js: ckeditor/application-1f3fd70816d8a061d7b04d29f1e369cd.js
 ckeditor/application/index.js: ckeditor/application-1f3fd70816d8a061d7b04d29f1e369cd.js
 ckeditor/config.js: ckeditor/config-038757e58d8bf4f3fa81b0f0e0b4982d.js

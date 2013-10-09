@@ -69,12 +69,20 @@ module Standing
     return [1 + rank, 1 + len]
   end
 
+  # Re-insert team's best design if the standings database is missing it.
+  # This will fix up standings if REDIS is down when a new best bridge is posted.
+  def self.missing_standing(team)
+    best_design = team.best_design
+    return Standing.insert(team, best_design) if best_design
+    [nil, REDIS.hlen(to_teams_key(team))]
+  end
+
   # Return the current standing of the given team.
   def self.standing(team)
     scores_key = to_scores_key(team)
     teams_key = to_teams_key(team)
     seq = REDIS.hget(teams_key, team.id)
-    return [nil, REDIS.hlen(teams_key)] unless seq
+    return missing_standing(team) unless seq
     (rank, len) = REDIS.pipelined do
       REDIS.zrank(scores_key, seq)
       REDIS.hlen(teams_key)
@@ -122,5 +130,4 @@ module Standing
     #(seq >> 24).chr + ((seq >> 16) & 0xff).chr + ((seq >> 8) & 0xff).chr + (seq & 0xff).chr 
     [seq].pack('U')
   end
-
 end

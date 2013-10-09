@@ -92,6 +92,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     multi_json (1.7.7)
+    newrelic_rpm (3.6.7.159)
     nokogiri (1.5.9)
     orm_adapter (0.4.0)
     paperclip (3.4.2)
@@ -196,6 +197,7 @@ DEPENDENCIES
   factory_girl_rails (= 4.0.0)
   haml-rails (= 0.3.4)
   jquery-rails (~> 2.1)
+  newrelic_rpm
   nokogiri (~> 1.5)
   paperclip (~> 3.0)
   paperclip_database (~> 1.0)
