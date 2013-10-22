@@ -1,5 +1,5 @@
 desc "Clean both the PostgreSQL and REDIS database."
-task :clean_abandoned_registrations => :environment do
+task :clear_all => :environment do
   REDIS::flushall
   Affiliation.delete_all
   Best.delete_all
