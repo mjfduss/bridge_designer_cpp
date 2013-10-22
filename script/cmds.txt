@@ -95,3 +95,17 @@ http://devcenter.heroku.com/addons_with_dyno_hour_usage
 To manage scheduled jobs run:
 heroku addons:open scheduler
 Use `heroku addons:docs scheduler:standard` to view documentation.
+
+# Provision production database. Note: Heroku web page has snapshot-based migration instructions.
+heroku addons:add heroku-postgresql:basic
+heroku maintenance:on
+# Migrate data here if old level has some.
+heroku pg:promote HEROKU_POSTGRESQL_SILVER
+heroku rake db:schema:load
+heroku addons:upgrade redistogo:mini
+# If you migrated data, must update seed to preserve or reload standings.
+heroku run rake db:seed
+
+# Setting up log tracker.
+heroku addons:add papertrail:choklad
+heroku addons:open papertrail

@@ -34,7 +34,7 @@ class HomesController < ApplicationController
     elsif params.nonblank? :get_standings
       @best = @team.best_score
       @design = Design.new
-      @standing, @out_of = Standing.standing(@team)
+      @standing, @out_of = @best ? Standing.standing(@team) : [nil, Standing.max_standing(@team)]
       @result = :get_standings
       render 'edit'
 
