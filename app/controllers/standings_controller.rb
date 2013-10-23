@@ -2,7 +2,6 @@ class StandingsController < ApplicationController
 
   skip_before_filter :require_valid_session
   before_filter :require_valid_category
-  before_filter :set_cache_buster
 
   caches_page :show
 
@@ -16,6 +15,7 @@ class StandingsController < ApplicationController
 
   def show
     @scoreboard = Scoreboard.get_current ROUTE_ID_TO_CATEGORY[params[:id]]
+    expires_in 1, :public => true
   end
 
   private
@@ -24,11 +24,5 @@ class StandingsController < ApplicationController
     unless ROUTE_ID_TO_CATEGORY[params[:id]]
       kill_session 'The standings page you requested does not exist.'
     end
-  end
-
-  def set_cache_buster
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 end
