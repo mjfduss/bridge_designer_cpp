@@ -3,7 +3,7 @@ class Admin::ApplicationController < ActionController::Base
   layout 'admin/application'
 
   protect_from_forgery
-  before_filter :require_valid_session
+  before_filter :add_no_cache_headers, :require_valid_session
 
   def disqualified
     @disqualified ||= []
@@ -66,4 +66,9 @@ class Admin::ApplicationController < ActionController::Base
     kill_session("You don't have a valid session.") unless session[:admin_id]
   end
 
+  def add_no_cache_headers
+    response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
+  end
 end

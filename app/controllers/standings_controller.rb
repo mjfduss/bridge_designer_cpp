@@ -15,7 +15,6 @@ class StandingsController < ApplicationController
 
   def show
     @scoreboard = Scoreboard.get_current ROUTE_ID_TO_CATEGORY[params[:id]]
-    expires_in 1, :public => true
   end
 
   private

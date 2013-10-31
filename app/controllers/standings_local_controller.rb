@@ -14,6 +14,5 @@ class StandingsLocalController < ApplicationController
       flash[:alert] = 'The local contest standings page you requested does not exist.'
       redirect_to :controller => :sessions, :action => :new
     end
-    expires_in 1, :public => true
   end
 end

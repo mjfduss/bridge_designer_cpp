@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper ApplicationHelper
-  before_filter :require_valid_session, :load_schedule, :check_schedule
+  before_filter :add_no_cache_headers, :require_valid_session, :load_schedule, :check_schedule
+
   attr_reader :schedule, :schedule_state
 
   protected
@@ -53,5 +54,11 @@ class ApplicationController < ActionController::Base
         session[:last_touch] = now
       end
     end
+  end
+
+  def add_no_cache_headers
+    response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
   end
 end
