@@ -2,7 +2,7 @@ class StandingsLocalController < ApplicationController
 
   skip_before_filter :require_valid_session
 
-  # TODO Uncomment me.  For debugging only.
+  # Won't work on Heroku!
   #caches_page :show
 
   def show

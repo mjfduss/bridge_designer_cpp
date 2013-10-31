@@ -3,7 +3,8 @@ class StandingsController < ApplicationController
   skip_before_filter :require_valid_session
   before_filter :require_valid_category
 
-  caches_page :show
+  # Doesn't work on Heroku!
+  # caches_page :show
 
   ROUTE_ID_TO_CATEGORY = {
     'combined' => 'c',
