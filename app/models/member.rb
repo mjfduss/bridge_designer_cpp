@@ -43,6 +43,12 @@ class Member < ActiveRecord::Base
     v.validates_inclusion_of :race, :in => TablesHelper::RACES, :message => "is invalid"
   end
 
+  # Force category to be updated first so pseudo-attributes can see it.
+  def update_attributes(attributes)
+    self.category = attributes[:category] if attributes[:category]
+    super
+  end
+
   def full_name
     middle_initial.blank? ? "#{first_name} #{last_name}" : "#{first_name} #{middle_initial}. #{last_name}"
   end
