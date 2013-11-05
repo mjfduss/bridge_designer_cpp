@@ -66,7 +66,7 @@ class Team < ActiveRecord::Base
 
   def self.synch_standings
     Team.all.each do |team|
-      if team.status == 'x'
+      if team.rejected?
         Standing.delete(team)
       else
         d = team.best_design
@@ -82,8 +82,13 @@ class Team < ActiveRecord::Base
 
   # Compute the registration category from the member categories.
   def registration_category
-    i = members.index {|m| m.category == 'o'}
-    i.nil? ? 'e' : 'i'
+    if members.all? {|m| m.middle_school? }
+      'm'
+    elsif members.all? {|m| m.high_school? }
+      'h'
+    else
+      'i'
+    end
   end
 
   # Mark this team as fully registered. This enables future logins.

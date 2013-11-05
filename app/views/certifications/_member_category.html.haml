@@ -1,9 +1,10 @@
-- case category
+- case member.category
 - when 'u'
-  Student, age 13 through grade 12, currently enrolled in a U.S. school 
+  Student, currently enrolled in a US #{member.school_level_formatted}
   or legally home-schooled. Eligible for national recognition.
 - when 'n'
-  U.S. citizen, age 13 through grade 12 (or equivalent), currently 
-  attending a school outside the U.S. Eligible for national recognition.
+  US citizen, grade 6 to 12 (or equivalent), currently
+  attending a #{member.school_level_formatted} outside
+  the US. Eligible for national recognition.
 - when 'o'
   Open Competitor. Not eligible for national recognition.

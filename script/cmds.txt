@@ -109,3 +109,7 @@ heroku run rake db:seed
 # Setting up log tracker.
 heroku addons:add papertrail:choklad
 heroku addons:open papertrail
+
+# To clear Safari copy of application.js to make Coffeescript changes visible:
+bundle exec rake assets:clean
+# Selection Safari | Reset... and Ok

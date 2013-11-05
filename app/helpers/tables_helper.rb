@@ -4,7 +4,7 @@ module TablesHelper
 
     STATE_PAIRS =
       [
-       ['-- Select here --', '-'],
+       ['- Select -', '-'],
        ['Alabama', 'AL'],
        ['Alaska', 'AK'],
        ['American Samoa', 'AS'],
@@ -68,7 +68,11 @@ module TablesHelper
 
     AGE_PAIRS =
       [
-       ['-- Select here --', '-'],
+       ['- Select -', '-'],
+       ['Under 10', 9],
+       ['10', 10],
+       ['11', 11],
+       ['12', 12],
        ['13', 13],
        ['14', 14],
        ['15', 15],
@@ -77,12 +81,12 @@ module TablesHelper
        ['18', 18],
        ['19', 19],
        ['20', 20],
-       ['Other', 21],
+       ['Over 20', 21],
       ]
 
     GRADE_PAIRS =
       [
-       ['-- Select here --', '-'],
+       ['- Select -', '-'],
        [ '6',  6],
        [ '7',  7],
        [ '8',  8],
@@ -94,7 +98,7 @@ module TablesHelper
 
     SEX_PAIRS =
       [
-       ['-- Select here --', '-'],
+       ['- Select -', '-'],
        [ 'Male', 'M' ],
        [ 'Female', 'F' ],
       ]
@@ -103,7 +107,7 @@ module TablesHelper
 
     HISPANIC_PAIRS =
       [
-       ['-- Select here --', '-'],
+       ['- Select -', '-'],
        ['No. Not Spanish/Hispanic/Latino.', 'N'],
        ['Yes. Mexican, Mexican Am., Chicano.', 'M'],
        ['Yes. Puerto Rican.', 'P'],
@@ -115,7 +119,7 @@ module TablesHelper
 
     RACE_PAIRS =
       [
-       ['-- Select here --', '-'],
+       ['- Select -', '-'],
        ['White', 'W'],
        ['Black or African American', 'B'],
        ['Native American or Alaska Native', 'A'],

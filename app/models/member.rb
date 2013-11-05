@@ -3,10 +3,12 @@ class Member < ActiveRecord::Base
   include ValidationHelper
 
   attr_accessible :first_name, :middle_initial, :last_name
-  attr_accessible :category, :age, :grade, :phone
+  attr_accessible :category, :phone
   attr_accessible :street, :city, :state, :zip, :country
   attr_accessible :school, :school_city
   attr_accessible :school_state, :res_state
+  attr_accessible :res_age, :nonres_age
+  attr_accessible :res_grade, :nonres_grade
   attr_accessible :sex, :hispanic, :race
   attr_accessor :completed
   
@@ -20,16 +22,27 @@ class Member < ActiveRecord::Base
             :length => { :maximum => 1 }
   validates_inclusion_of :school_state, :in => TablesHelper::STATES, :message => "is invalid"
   validates_inclusion_of :res_state,    :in => TablesHelper::STATES, :message => "is invalid"
+  validates_inclusion_of :res_age,      :in => TablesHelper::AGES, :message => "is invalid"
+  validates_inclusion_of :nonres_age,   :in => TablesHelper::AGES, :message => "is invalid"
+  validates_inclusion_of :res_grade,    :in => TablesHelper::GRADES, :message => "is invalid"
+  validates_inclusion_of :nonres_grade, :in => TablesHelper::GRADES, :message => "is invalid"
 
   validates_each :school_state, :res_state do |record, attr, value|
     record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_state_selector(record.category)
   end
 
+  validates_each :res_age, :nonres_age do |record, attr, value|
+    logger.debug "AGE VALIDATION: r.res_age=#{record.res_age} attr=#{attr} value=#{value} age_sel=#{ValidationHelper.to_age_selector(record.category)} record=#{record.inspect}"
+    record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_age_selector(record.category)
+  end
+
+  validates_each :res_grade, :nonres_grade do |record, attr, value|
+    record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_grade_selector(record.category)
+  end
+
   # TODO USA-specific validations.
 
   with_options :if => :completed do |v|
-    v.validates_inclusion_of :age, :in => TablesHelper::VALID_AGES, :message => "must be selected"
-    v.validates_inclusion_of :grade, :in => TablesHelper::VALID_GRADES, :message => "must be selected"
     v.validates :street, :presence => true, :length => { :maximum => 40 }
     v.validates :phone, :presence => true, :length => { :maximum => 16 }
     v.validates :city, :presence => true, :length => { :maximum => 40 }
@@ -54,7 +67,7 @@ class Member < ActiveRecord::Base
   end
 
   def school_state
-    return category == 'u' ? reg_state : '-';
+    category == 'u' ? reg_state : '-'
   end
 
   def school_state=(val)
@@ -62,19 +75,75 @@ class Member < ActiveRecord::Base
   end
 
   def res_state
-    return category == 'n' ? reg_state : '-';
+    category == 'n' ? reg_state : '-'
   end
 
   def res_state=(val)
     self.reg_state = val if category == 'n'
   end
 
+  def res_age
+    category == 'u' && age > 0 ? age : '-'
+  end
+
+  def res_age=(val)
+    self.age = val if category == 'u'
+    logger.debug "SET RES_AGE: val=#{val} cat=#{category} age=#{age}"
+  end
+
+  def nonres_age
+    category == 'n' && age > 0 ? age : '-'
+  end
+
+  def nonres_age=(val)
+    logger.debug "SET NONRES_AGE: val=#{val} cat=#{category}"
+    self.age = val if category == 'n'
+  end
+
+  def res_grade
+    category == 'u' && grade > 0 ? grade : '-'
+  end
+
+  def res_grade=(val)
+    self.grade = val if category == 'u'
+  end
+
+  def nonres_grade
+    category == 'n' && grade > 0 ? grade : '-'
+  end
+
+  def nonres_grade=(val)
+    self.grade = val if category == 'n'
+  end
+
+  def coppa?
+    0 < age && age < 13
+  end
+
+  def high_school?
+    grade >= 9
+  end
+
+  def middle_school?
+    0 < grade && grade <= 8
+  end
+
+  def school_level_formatted
+    if middle_school?
+      'Middle School'
+    elsif high_school?
+      'High School'
+    else
+      'No School'
+    end
+  end
+
   def category_formatted
     case category
       when 'u'
-        "Attending U.S. K-12, #{reg_state}"
+        "In US #{school_level_formatted}, #{reg_state}"
       when 'n'
-        "K-12 citizen OCONUS, #{reg_state}"
+        "In non-US #{school_level_formatted}, #{reg_state} citizen"
       when 'o'
         'Open competitor'
       else

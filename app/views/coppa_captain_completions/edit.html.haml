@@ -1,0 +1,8 @@
+= content_for :dialog do
+  = render :partial => "shared/error_head", :locals => { :obj => @member }
+  = form_for @member, :url => coppa_captain_completion_path do |f|
+    = render :partial => "shared/member_completion",
+             :locals => { :f => f, :member => @member, :label => 'Captain' }
+    .para.alignright
+      .inline
+        = f.submit TablesHelper::ACCEPT, { :class => 'btn' }

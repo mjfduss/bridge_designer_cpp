@@ -25,8 +25,9 @@ class CertificationsController < ApplicationController
   # This falls through if the team's category is not already correctly set.
   def redirect_to_category_completion(team)
     case team.category
-      when 'e'
-        redirect_to :controller => :captain_completions, :action => :edit
+      when 'm', 'h'
+        controller = team.captain.coppa? ? :coppa_captain_completions : :captain_completions
+        redirect_to :controller => controller, :action => :edit
         true
       when 'i'
         redirect_to :controller => :team_completions, :action => :edit

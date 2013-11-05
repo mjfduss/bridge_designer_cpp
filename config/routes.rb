@@ -30,6 +30,8 @@ Wpbdc::Application.routes.draw do
   resource :certification, :only => [ :edit, :update ]
   resource :captain_completion, :only => [ :edit, :update ]
   resource :member_completion, :only => [ :edit, :update ]
+  resource :coppa_captain_completion, :only => [ :edit, :update ]
+  resource :coppa_member_completion, :only => [ :edit, :update ]
   resource :team_completion, :only => [ :edit, :update ]
   resource :verification, :only => [ :edit, :update ]
   resource :home, :only => [ :edit, :update ]

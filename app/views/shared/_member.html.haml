@@ -22,20 +22,32 @@
   != oops_on(member, :category)
 %hr
 .para
-  = mf.radio_button :category, :u, { :id => 'category_u', :onclick => 'window.category_onclick(this)' }
-  = mf.label :category, MembersHelper::US_STUDENT, :for => 'category_u'
+  != mf.radio_button :category, :u, { :id => 'category_u', :onclick => 'window.category_onclick(this)' }
+  != mf.label :category, MembersHelper::US_STUDENT, :for => 'category_u'
 .para.small.alignright
-  != oops_on(member, :school_state)
-  My school is located in:
+  != oops_on(member, [:school_state, :res_age, :res_grade])
+  My school is in:
   = school_state_select(mf, member)
+  &nbsp;&nbsp;&nbsp;
+  My age is:
+  != res_age_select(mf, member)
+  &nbsp;&nbsp;&nbsp;
+  I am in grade:
+  != res_grade_select(mf, member)
 %hr
 .para
-  = mf.radio_button :category, :n, { :id => 'category_n', :onclick => 'window.category_onclick(this)' }
-  = mf.label :category_n, MembersHelper::US_CITIZEN, :for => 'category_n'
+  != mf.radio_button :category, :n, { :id => 'category_n', :onclick => 'window.category_onclick(this)' }
+  != mf.label :category_n, MembersHelper::US_CITIZEN, :for => 'category_n'
 .para.small.alignright
-  != oops_on(member, :res_state)
-  My permanent residence is in:
-  = res_state_select(mf, member)
+  != oops_on(member, [:res_state, :nonres_age, :nonres_grade])
+  My US residence is in:
+  != res_state_select(mf, member)
+  &nbsp;&nbsp;&nbsp;
+  My age is:
+  != nonres_age_select(mf, member)
+  &nbsp;&nbsp;&nbsp;
+  I am in grade:
+  != nonres_grade_select(mf, member)
 %hr
 .para
   = mf.radio_button :category, :o, { :id => 'category_o', :onclick => 'window.category_onclick(this)' }

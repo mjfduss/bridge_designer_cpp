@@ -17,20 +17,39 @@ window.show = (msg) ->
   window.status = msg
   true
 
-window.school_state_change = (doc) ->
-  getElement('category_u').checked = 1
-  getElement('res_state').selectedIndex = 0
+list_change = (check, clear) ->
+  getElement(check).checked = 1
+  getElement(tag).selectedIndex = 0 for tag in clear
   true
 
-window.res_state_change = (doc) ->
-  getElement('category_n').checked = 1
-  getElement('school_state').selectedIndex = 0
-  true
+res_lists = [
+  'school_state'
+  'res_age'
+  'res_grade'
+]
+
+nonres_lists = [
+  'res_state'
+  'nonres_age'
+  'nonres_grade'
+]
+
+window.res_list_change = (doc) ->
+  list_change('category_u', nonres_lists)
+
+window.nonres_list_change = (doc) ->
+  list_change('category_n', res_lists)
 
 # Handler for changes to all three radio buttons.
 window.category_onclick = (doc) ->
-  getElement('school_state').selectedIndex = 0
-  getElement('res_state').selectedIndex = 0
+  getElement(tag).selectedIndex = 0 for tag in [
+    'school_state'
+    'res_state'
+    'res_age'
+    'nonres_age'
+    'res_grade'
+    'nonres_grade'
+  ]
   true
 
 # Handler for gain focus of local contest code text field.

@@ -1,8 +1,8 @@
 module MembersHelper
 
-  US_CITIZEN = "I am a U.S. citizen, age 13 through grade 12 (or equivalent), currently attending a school outside the U.S."
+  US_CITIZEN = "I am a US citizen in grade 6 to 12 (or equivalent) of a school outside the US."
 
-  US_STUDENT = "I am a student, age 13 through grade 12, currently enrolled in a U.S. school or am legally home-schooled."
+  US_STUDENT = "I am in grade 6 to 12 of a US school or legal home school."
 
   OTHER = "I am not in one of the two categories above, so I am not eligible for national recognition."
 
