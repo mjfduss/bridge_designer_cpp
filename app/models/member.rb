@@ -13,6 +13,7 @@ class Member < ActiveRecord::Base
   attr_accessor :completed
   
   belongs_to :team
+  has_one :parent
 
   validates :first_name, :presence => true, :length => { :maximum => 40 }
   validates :middle_initial, :length => { :maximum => 1 }
@@ -58,7 +59,7 @@ class Member < ActiveRecord::Base
 
   # Force category to be updated first so pseudo-attributes can see it.
   def update_attributes(attributes)
-    self.category = attributes[:category] if attributes[:category]
+    self.category = attributes[:category] if attributes && attributes[:category]
     super
   end
 
@@ -128,6 +129,10 @@ class Member < ActiveRecord::Base
     0 < grade && grade <= 8
   end
 
+  def parent_formatted
+    parent ? "#{parent.full_name}, #{parent.email}" : '--'
+  end
+
   def school_level_formatted
     if middle_school?
       'Middle School'
@@ -141,9 +146,9 @@ class Member < ActiveRecord::Base
   def category_formatted
     case category
       when 'u'
-        "In US #{school_level_formatted}, #{reg_state}"
+        "US #{school_level_formatted}, #{reg_state}"
       when 'n'
-        "In non-US #{school_level_formatted}, #{reg_state} citizen"
+        "Non-US #{school_level_formatted}, #{reg_state} citizen"
       when 'o'
         'Open competitor'
       else
@@ -160,7 +165,7 @@ class Member < ActiveRecord::Base
   end
 
   def school_formatted
-    "#{school}, #{school_city}"
+    school && school_city ? "#{school}, #{school_city}" : '--  '
   end
 
   def demographics_formatted

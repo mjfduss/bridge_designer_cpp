@@ -241,10 +241,10 @@ class Team < ActiveRecord::Base
 
   # Best information on city and state given team type.
   def city_state(member)
-    if category == 'e'
-      (member.city && member.state) ? "#{member.city.strip}, #{member.state.strip}" : '--'
-    else
+    if category == 'i'
       member.school_city.strip
+    else
+      (member.city && member.state) ? "#{member.city.strip}, #{member.state.strip}" : '--'
     end
   end
 
@@ -256,8 +256,8 @@ class Team < ActiveRecord::Base
       :category => category,
       :members => members.map{|m| m.first_name.strip }.uniq,
       :city_state => members.map{|m| city_state(m) }.uniq,
-      :school => members.map{|m| m.school.strip }.uniq,
-      :location => members.map{|m| m.school_city.strip }.uniq,
+      :school => members.map{|m| m.school ? m.school.strip : '--'}.uniq,
+      :location => members.map{|m| m.school_city ? m.school_city.strip : '--' }.uniq,
       :submitted => bd ? bd.created_at.to_s(:nice) : '---',
     }
     row[:score] = format("$%.2f", 0.01 * best_score) if score_p
@@ -279,8 +279,9 @@ class Team < ActiveRecord::Base
     # The mapping is:
     # Scoreboard             Team
     # Category               Category                    Status
-    # c-combined             {e-eligible, i-ineligible}  {a-accepted, 2-semifinal}
-    # e-eligible             eliglble                    {a-accepted, 2-semifinal}
+    # c-combined             {h-HS, m-MS, i-ineligible}  {a-accepted, 2-semifinal}
+    # h-HS                   h-HS                        {a-accepted, 2-semifinal}
+    # m-MS                   m-MS                        {a-accepted, 2-semifinal}
     # i-ineligible (open)
     # 2-semifinal
     team_category = category
@@ -288,9 +289,9 @@ class Team < ActiveRecord::Base
     scenario = nil
     case category
       when 'c' # combined
-        team_category = %w{i e}
+        team_category = %w{i h m}
       when '2' # semifinal
-        team_category = 'e'
+        team_category = %w{h m}
         team_status = '2'
         scenario = WPBDC::SEMIFINAL_SCENARIO_ID
     end
@@ -305,7 +306,7 @@ class Team < ActiveRecord::Base
     scoreboard[:unavailable] = true if option == 'x'
     # Attach an instance method that knows how to
     # save this hash to the Scoreboard database table.
-    scoreboard.define_singleton_method :save do |admin_id|
+    def scoreboard.save(admin_id)
       r = Scoreboard.create(:admin_id => admin_id, :category => self[:category], :board => self.to_json)
       if r
         # Copy key data only
@@ -390,12 +391,14 @@ class Team < ActiveRecord::Base
       :captain_contact => 'Captain contact',
       :captain_school => 'Captain school',
       :captain_demographics => 'Captain demographics',
+      :captain_parent => 'Captain parent',
       :member_name => 'Member name',
       :member_category => 'Member category',
       :member_age_grade => 'Member age/grade',
       :member_contact => 'Member contact',
       :member_school => 'Member school',
       :member_demographics => 'Member demographics',
+      :member_parent => 'Member parent',
       :email => 'Email',
       :reg_completed => 'Registration',
       :local_contests => 'Local contests',
@@ -411,12 +414,14 @@ class Team < ActiveRecord::Base
   def captain_contact_formatted;      captain.contact_formatted end
   def captain_school_formatted;       captain.school_formatted end
   def captain_demographics_formatted; Team.optional(captain, :demographics_formatted) end
+  def captain_parent_formatted;       Team.optional(captain, :parent_formatted) end
   def member_name_formatted;          Team.optional(non_captains.first, :full_name) end
   def member_category_formatted;      Team.optional(non_captains.first, :category_formatted) end
   def member_age_grade_formatted;     Team.optional(non_captains.first, :age_grade_formatted) end
   def member_contact_formatted;       Team.optional(non_captains.first, :contact_formatted) end
   def member_school_formatted;        Team.optional(non_captains.first, :school_formatted) end
   def member_demographics_formatted;  Team.optional(non_captains.first, :demographics_formatted) end
+  def member_parent_formatted;        Team.optional(non_captains.first, :parent_formatted) end
   def email_formatted;                email end
   def reg_completed_formatted;        reg_completed ? reg_completed.to_s(:nice) : NONE end
   def local_contests_formatted;       codes = local_contests.pluck(:code); codes.blank? ? NONE : codes end

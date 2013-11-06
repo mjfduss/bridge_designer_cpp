@@ -1,0 +1,17 @@
+%table
+  %tr
+    %td{ :class => 'membertitle', :colspan => 2 }
+      Team #{tag} #{member.full_name}
+  %tr
+    %td{ :class => 'bold' } Age:
+    %td= member.age
+  %tr
+    %td{ :class => 'bold' } Grade:
+    %td= member.grade
+  %tr
+    %td{ :class => 'bold' } Parent's Name:
+    %td= member.parent.full_name
+  %tr
+    %td{ :class => 'bold' } Parent's Email:
+    %td= member.parent.email
+

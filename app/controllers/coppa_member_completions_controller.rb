@@ -2,16 +2,17 @@ class CoppaMemberCompletionsController < ApplicationController
 
   def edit
     @member = Member.find(session[:member_id])
+    @parent = @member.parent || Parent.new
   end
 
   def update
-    @member = Member.find(session[:member_id])
     if params.has_key? :cancel
-      redirect_to :controller => :captain_completions, :action => :edit
+      controller = Member.find(session[:captain_id]).coppa? ? :coppa_captain_completions : :captain_completions
+      redirect_to :controller => controller, :action => :edit
     else
-      # Cause all validations to occur.
-      @member.completed = true
-      if @member.update_attributes(params[:member])
+      @member = Member.find(session[:member_id])
+      @parent = @member.parent || @member.build_parent
+      if @parent.update_attributes(params[:parent])
         redirect_to :controller => :team_completions, :action => :edit
       else
         render 'edit'

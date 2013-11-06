@@ -22,8 +22,9 @@ class HomesController < ApplicationController
     # Else if update contact information...
     elsif params.nonblank? :update_contact
       case @team.category
-        when 'e'
-          redirect_to :controller => :captain_completions, :action => :edit
+        when 'm', 'h'
+          controller = @team.captain.coppa? ? :coppa_captain_completions : :captain_completions
+          redirect_to :controller => controller, :action => :edit
         when 'i'
           redirect_to :controller => :team_completions, :action => :edit
         else

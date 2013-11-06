@@ -142,7 +142,8 @@ module TablesHelper
     CATEGORY_PAIRS =
       [
         ['Select Category', '-'],
-        ['US/PR Students', 'e'],
+        ['US/PR High School', 'h'],
+        ['US/PR Middle School', 'm'],
         ['Open Competition', 'i'],
       ]
 
@@ -151,8 +152,9 @@ module TablesHelper
     STANDINGS_PAIRS =
       [
         ['Select Standings', '-'],
-        ['Combined US/PR-Open', 'c'],
-        ['US/PR Students', 'e'],
+        ['Combined All', 'c'],
+        ['US/PR High School', 'h'],
+        ['US/PR Middle School', 'm'],
         ['Open Competition', 'i'],
         ['Semi-Finalists', '2'],
       ]
@@ -182,12 +184,14 @@ module TablesHelper
         ['Captain contact', 'captain_contact'],
         ['Captain school', 'captain_school'],
         ['Captain demographics', 'captain_demographics'],
+        ['Captain parent', 'captain_parent'],
         ['Member name', 'member_name'],
         ['Member category', 'member_category'],
         ['Member age/grade', 'member_age_grade'],
         ['Member contact', 'member_contact'],
         ['Member school', 'member_school'],
         ['Member demographics', 'member_demographics'],
+        ['Member parent', 'member_parent'],
         ['Email', 'email'],
         ['Registration', 'reg_completed'],
         ['Local contests', 'local_contests'],
@@ -235,6 +239,7 @@ module TablesHelper
 
     CANCEL = '<< Cancel and Go Back'
     ACCEPT = 'Accept and Continue >>'
+    PARENT_CERTIFICATION = 'I Certify that this is my Parent or Guardian and that I have His or Her Permission to Compete >>'
 
   end
 

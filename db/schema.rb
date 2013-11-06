@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130727192301) do
+ActiveRecord::Schema.define(:version => 20131106015605) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -160,6 +160,16 @@ ActiveRecord::Schema.define(:version => 20130727192301) do
   end
 
   add_index "members", ["team_id"], :name => "index_members_on_team_id"
+
+  create_table "parents", :force => true do |t|
+    t.string   "first_name",     :limit => 40
+    t.string   "middle_initial", :limit => 1
+    t.string   "last_name",      :limit => 40
+    t.string   "email",          :limit => 40
+    t.integer  "member_id"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
 
   create_table "password_resets", :force => true do |t|
     t.string   "key"
