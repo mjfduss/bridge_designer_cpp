@@ -2,14 +2,11 @@ class StandingsLocalController < ApplicationController
 
   skip_before_filter :require_valid_session
 
-  # Won't work on Heroku!
-  #caches_page :show
-
   def show
     code = params[:code].upcase
     @local_contest = LocalContest.find_by_code code
     if @local_contest
-      @scoreboard = Team.get_local_contest_scoreboard code, params[:page]
+      @scoreboard = LocalScoreboard.for_code(code, params[:page])
     else
       flash[:alert] = 'The local contest standings page you requested does not exist.'
       redirect_to :controller => :sessions, :action => :new

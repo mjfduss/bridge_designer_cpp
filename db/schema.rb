@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131106015605) do
+ActiveRecord::Schema.define(:version => 20131107042214) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -133,6 +133,16 @@ ActiveRecord::Schema.define(:version => 20131106015605) do
   end
 
   add_index "local_contests", ["code"], :name => "index_local_contests_on_code", :unique => true
+
+  create_table "local_scoreboards", :force => true do |t|
+    t.string   "code"
+    t.integer  "page"
+    t.text     "board"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "local_scoreboards", ["code", "page"], :name => "index_local_scoreboards_on_code_and_page"
 
   create_table "members", :force => true do |t|
     t.string   "first_name",     :limit => 40

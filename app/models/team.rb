@@ -141,7 +141,6 @@ class Team < ActiveRecord::Base
 =end
   end
 
-
   # Get the teams in a local contest correctly sorted by score.
   # Offset and limit are to serve our pagination mechanism,
   # since we can't use any of the standard gems for scoreboards.
@@ -195,7 +194,7 @@ class Team < ActiveRecord::Base
 
   def self.get_teams_by_name(name_likeness, categories, statuses, limit)
     name_likeness.strip!
-    Team.where('name_key ILIKE ? and category in (?) and status in (?)',
+    Team.where('name_key ILIKE ? AND category IN (?) AND status IN (?) AND reg_completed IS NOT NULL',
       name_likeness.blank? ? '%' : name_likeness, categories, statuses).order('name_key ASC').limit(limit.to_i)
   end
 
@@ -264,13 +263,17 @@ class Team < ActiveRecord::Base
     row
   end
 
-  def self.get_local_contest_scoreboard(code, page)
-    teams = assign_simple_ranks(get_local_contest_teams(code, page), page)
+  def self.new_local_scoreboard(teams = [], rows = [])
     {
       :created_at => Time.now.to_s(:nice),
       :teams => teams,
-      :rows => teams.map {|t| t.scoreboard_row }
+      :rows => rows
     }
+  end
+
+  def self.get_local_contest_scoreboard(code, page)
+    teams = assign_simple_ranks(get_local_contest_teams(code, page), page)
+    new_local_scoreboard(teams, teams.map {|t| t.scoreboard_row })
   end
 
   def self.get_scoreboard(category, limit = 0, option = '-')

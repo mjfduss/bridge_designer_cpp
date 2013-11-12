@@ -8,7 +8,8 @@ class StandingsController < ApplicationController
 
   ROUTE_ID_TO_CATEGORY = {
     'combined' => 'c',
-    'uskids' => 'e',
+    'middleschool' => 'm',
+    'highschool' => 'h',
     'open' => 'i',
     'semifinal' => '2'
   }
