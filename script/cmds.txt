@@ -109,3 +109,10 @@ heroku run rake db:seed
 # Setting up log tracker.
 heroku addons:add papertrail:choklad
 heroku addons:open papertrail
+
+# Add memcachier for Rails::Cache to handle cached schedule record.
+heroku addons:add memcachier
+# got shell vars:
+#MEMCACHIER_PASSWORD:          8703cbcd01
+#MEMCACHIER_SERVERS:           mc4.dev.ec2.memcachier.com:11211
+#MEMCACHIER_USERNAME:          135f96

@@ -21,6 +21,11 @@ gem 'delayed_job_active_record', '~> 0.4'
 gem 'postmark-rails', '~> 0.5'
 gem 'newrelic_rpm'
 
+group :production do
+  gem 'memcachier'
+  gem 'dalli'
+end
+
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
   gem 'capybara', '1.1.2'
