@@ -19,9 +19,9 @@ class Admin::SchedulesController < Admin::ApplicationController
     elsif params.nonblank? :update
       id = params[:schedule][:id]
       if id.blank?
-        logger.debug "PARAMS #{params[:schedule].inspect}"
+        # logger.debug "PARAMS #{params[:schedule].inspect}"
         @edited_schedule = Schedule.create(params[:schedule])
-        logger.debug "CREATED #{@edited_schedule.inspect}"
+        # logger.debug "CREATED #{@edited_schedule.inspect}"
         if @edited_schedule.valid?
           reset_active(@edited_schedule)
           flash.now[:alert] = "New schedule '#{@edited_schedule.name}' was created."
