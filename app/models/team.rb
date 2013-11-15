@@ -154,8 +154,9 @@ class Team < ActiveRecord::Base
       where(:status => %w{- a 2 h},
             :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
             :local_contests => { :code => code }).
-      paginate(:page => page, :per_page => PER_PAGE).
-      order('bests.score ASC, bests.sequence ASC')
+      order('bests.score ASC, bests.sequence ASC').
+      offset((page - 1) * PER_PAGE).
+      limit(PER_PAGE)
 
 =begin
     Team.paginate_by_sql scenario ?

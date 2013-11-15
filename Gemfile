@@ -13,13 +13,17 @@ gem 'pg', '~> 0.12'
 gem 'nokogiri', '~> 1.5'
 gem 'thin', '~> 1.5'
 gem 'diff-lcs', '~> 1.2'
-gem 'will_paginate', '~> 3.0'
 gem 'ckeditor', '~> 4.0'
 gem 'paperclip', '~> 3.0'
 gem 'paperclip_database', '~> 1.0'
 gem 'delayed_job_active_record', '~> 0.4'
 gem 'postmark-rails', '~> 0.5'
 gem 'newrelic_rpm'
+
+group :production do
+  gem 'memcachier'
+  gem 'dalli'
+end
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
