@@ -6,15 +6,6 @@
     \-- Your answers are confidential.
     %br
     \-- Entering erroneous information may result in disqualification from the contest.
-  .para
-    %span.tiny
-      Age
-    != oops_on(member, :age)
-    != age_select(f, member.age)
-    %span.tiny
-      &nbsp;&nbsp;&nbsp;Grade
-    != oops_on(member, :grade)
-    != grade_select(f, member.grade)
   %table
     %tr.tiny
       %td.shr 

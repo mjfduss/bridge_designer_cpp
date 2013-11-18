@@ -30,16 +30,15 @@ Wpbdc::Application.routes.draw do
   resource :certification, :only => [ :edit, :update ]
   resource :captain_completion, :only => [ :edit, :update ]
   resource :member_completion, :only => [ :edit, :update ]
+  resource :coppa_captain_completion, :only => [ :edit, :update ]
+  resource :coppa_member_completion, :only => [ :edit, :update ]
   resource :team_completion, :only => [ :edit, :update ]
   resource :verification, :only => [ :edit, :update ]
   resource :home, :only => [ :edit, :update ]
   resource :semi_final_instruction, :only => [ :edit, :update ]
   resources :standings, :only => [ :show ]
   resources :reminder_requests, :only => [ :new, :create ]
-
-  # Can's use a standard resource path here because both local contest
-  # code and page (for pagination) must be in path for cache to work.
-  match 'standings/local/:code(/:page)' => 'standings_local#show', :via => :get
+  get '/standings/local/:code' => 'standings_local#show', :as => :standings_local
 
   # CKEditor file upload handler and browser.
   mount Ckeditor::Engine => '/ckeditor'

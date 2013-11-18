@@ -12,4 +12,28 @@ module ValidationHelper
     end
   end
 
+  # Convert a category letter to tag of corresponding age selector
+  def self.to_age_selector(category)
+    case category
+      when 'u', :u
+        :res_age
+      when 'n', :n
+        :nonres_age
+      else
+        nil
+    end
+  end
+
+  # Convert a category letter to tag of corresponding grade selector
+  def self.to_grade_selector(category)
+    case category
+      when 'u', :u
+        :res_grade
+      when 'n', :n
+        :nonres_grade
+      else
+        nil
+    end
+  end
+
 end

@@ -4,43 +4,71 @@ require 'matrix'
 module ApplicationHelper
   include TablesHelper
 
-  def school_selected(m, ch)
-    return (m.category == ch) ? m.reg_state : '-'
+  def state_selected(m, ch)
+    m.category == ch ? m.reg_state : '-'
+  end
+
+  def age_selected(m, ch)
+    m.category == ch ? m.age : '-'
+  end
+
+  def grade_selected(m, ch)
+    m.category == ch ? m.grade : '-'
   end
 
   def school_state_select(f, m)
-    return f.select :school_state, options_for_select(TablesHelper::STATE_PAIRS, school_selected(m, 'u')), 
-      {}, { :id => "school_state", :onchange => "window.school_state_change(this)"  }
+    f.select :school_state, options_for_select(TablesHelper::STATE_PAIRS, state_selected(m, 'u')),
+      {}, { :id => "school_state", :onchange => "window.res_list_change(this)"  }
   end
 
   def res_state_select(f, m)
-    return f.select :res_state, options_for_select(TablesHelper::STATE_PAIRS, school_selected(m, 'n')), 
-      {}, {  :id => "res_state", :onchange => "window.res_state_change(this)"  }
+    f.select :res_state, options_for_select(TablesHelper::STATE_PAIRS, state_selected(m, 'n')),
+      {}, {  :id => "res_state", :onchange => "window.nonres_list_change(this)"  }
+  end
+
+  def res_age_select(f, m)
+    f.select :res_age, options_for_select(TablesHelper::AGE_PAIRS, age_selected(m, 'u')),
+      {}, { :id => "res_age", :onchange => "window.res_list_change(this)"  }
+  end
+
+  def nonres_age_select(f, m)
+    f.select :nonres_age, options_for_select(TablesHelper::AGE_PAIRS, age_selected(m, 'n')),
+      {}, { :id => "nonres_age", :onchange => "window.nonres_list_change(this)"  }
+  end
+
+  def res_grade_select(f, m)
+    f.select :res_grade, options_for_select(TablesHelper::GRADE_PAIRS, grade_selected(m, 'u')),
+      {}, { :id => "res_grade", :onchange => "window.res_list_change(this)"  }
+  end
+
+  def nonres_grade_select(f, m)
+    f.select :nonres_grade, options_for_select(TablesHelper::GRADE_PAIRS, grade_selected(m, 'n')),
+      {}, { :id => "nonres_grade", :onchange => "window.nonres_list_change(this)"  }
   end
 
   def age_select(f, sel)
-    return f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel || '-')
+    f.select :age, options_for_select(TablesHelper::AGE_PAIRS, sel || '-')
   end
 
   def grade_select(f, sel)
-    return f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel || '-')
+    f.select :grade, options_for_select(TablesHelper::GRADE_PAIRS, sel || '-')
   end
 
   def sex_select(f, sel)
-    return f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel || '-')
+    f.select :sex, options_for_select(TablesHelper::SEX_PAIRS, sel || '-')
   end
 
   def hispanic_select(f, sel)
-    return f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel || '-')
+    f.select :hispanic, options_for_select(TablesHelper::HISPANIC_PAIRS, sel || '-')
   end
 
   def race_select(f, sel)
-    return f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel || '-')
+    f.select :race, options_for_select(TablesHelper::RACE_PAIRS, sel || '-')
   end
 
   def oops(msg)
     js_msg = escape_javascript(msg)
-    return '<a onmouseout="return window.show(\'\')" href="javascript:alert(\'' + js_msg + \
+    '<a onmouseout="return window.show(\'\')" href="javascript:alert(\'' + js_msg + \
       '\')" onmouseover="return window.show(\'' + js_msg + \
       '\')"><img class="oops" alt="Oops: ' + msg + \
       '" title="' + msg + \
@@ -52,7 +80,7 @@ module ApplicationHelper
     tags.each{ |tag| 
       return oops(obj.errors.full_message(tag, obj.errors[tag][0])) if obj.errors.include?(tag) 
     }
-    return ''
+    ''
   end
 
   def local_contest_list(team)

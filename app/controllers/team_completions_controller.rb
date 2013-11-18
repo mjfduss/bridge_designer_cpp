@@ -19,7 +19,8 @@ class TeamCompletionsController < ApplicationController
       @team.completion_status = :pending_new_password
       render 'edit'
     elsif params.has_key? :cancel
-      redirect_to :controller => :captain_completions, :action => :edit
+      controller = @captain.coppa? ? :coppa_captain_completions : :captain_completions
+      redirect_to :controller => controller, :action => :edit
     elsif params.has_key? :update
       if do_update
         @team.new_local_contest = nil if @team.errors[:new_local_contest].blank?

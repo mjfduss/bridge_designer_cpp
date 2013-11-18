@@ -17,11 +17,10 @@
     .box
       %table{ :width => '100%' }
         %tr
-          %td{ :width => '50%' }= render :partial => @team.category == 'e' ? 'eligible_verification' : 'ineligible_verification',
-                      :locals => { :tag => 'Captain', :member => @captain }
+          %td{ :width => '50%' }
+            = render :partial => partial_for(@team, @captain), :locals => { :tag => 'Captain', :member => @captain }
           - if @member
-            %td= render :partial => @team.category == 'e' ? 'eligible_verification' : 'ineligible_verification',
-                        :locals => { :tag => 'Member', :member => @member }
+            %td= render :partial => partial_for(@team, @member), :locals => { :tag => 'Member', :member => @member }
     .para.alignright
       = submit_tag '<< Make Changes', :name => :cancel, :class => 'btn'
       = submit_tag TablesHelper::ACCEPT, :name => :accept, :class => 'btn'

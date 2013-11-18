@@ -1,14 +1,14 @@
-class CaptainCompletionsController < ApplicationController
+class CoppaCaptainCompletionsController < ApplicationController
 
   def edit
     @member = Member.find(session[:captain_id])
+    @parent = @member.parent || Parent.new
   end
 
   def update
     @member = Member.find(session[:captain_id])
-    # Cause all validations to occur.
-    @member.completed = true
-    if @member.update_attributes(params[:member])
+    @parent = @member.parent || @member.build_parent
+    if @parent.update_attributes(params[:parent])
       if session[:member_id].nil?
         redirect_to :controller => :team_completions, :action => :edit
       else
@@ -19,4 +19,5 @@ class CaptainCompletionsController < ApplicationController
       render 'edit'
     end
   end
+
 end

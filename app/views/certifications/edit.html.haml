@@ -1,10 +1,11 @@
 = content_for :dialog do
   = form_tag certification_path, :method => :put do
-    .big Certify Your Team's Eligiblity
+    .big Certify Your Team's Eligibility
     .para.small.subdued
       Please check that the information below is true and correct. 
-      Be careful. Your eligiblity for national recognition depends 
-      on it, and the information cannot be changed after you click the 
+      Be careful. Your eligibility for national recognition depends
+      on it, and some of the information cannot be changed after
+      you click the
       %span.normalfont.bold I Certify 
       button below!
     .box
@@ -25,10 +26,11 @@
           %td.bold.shrink Team Captain:
           %td
             = @captain.full_name
+        - if @captain.coppa?
+          = render 'coppa'
         %tr
           %td.bold.shrink Category:
-          %td{ :id => 'captain_category' }
-            = render 'member_category', { :category => @captain.category }
+          %td{ :id => 'captain_category' }= render 'member_category', { :member => @captain }
         %tr
           %td{:colspan => 2}
             %hr
@@ -37,24 +39,34 @@
             %td.bold.shrink Second Team Member:
             %td
               = @member.full_name
+          - if @member.coppa?
+            = render 'coppa'
           %tr
             %td.bold.shrink Category:
-            %td{ :id => 'member_category' }
-              = render 'member_category', { :category => @member.category }
+            %td{ :id => 'member_category' }= render 'member_category', { :member => @member }
           %tr
             %td{:colspan => 2}
               %hr
-        - case eligibility(@captain, @member)
-        - when :eligible
-          = render 'team_category', { |
-              :competing_in => 'US/PR Student Competition.', |
-              :eligibility => 'Your team is eligible to compete for national recognition by submitting designs.' } |
-        - when :ineligible
-          = render 'team_category', { |
-              :competing_in => 'Open Competition.', |
-              :eligibility => 'At least one of your team members is not eligible for national ' + |
-                              'recognition. Therefore the team is not eligible. We encourage ' + |
-                              'you to submit designs in Open Competition!' } |
+        %tr
+          %td.bold.shrink{ :id => 'competing_in' } Competing in:
+          %td
+            - case @team.registration_category
+            - when 'h'
+              US/PR High School competition
+            - when 'm'
+              US/PR Middle School competition
+            - when 'i'
+              Open Competition
+        %tr
+          %td.bold.shrink{ :id => 'team_eligibility' } Team eligibility:
+          %td
+            - case @team.registration_category
+            - when 'h', 'm'
+              Your team is eligible to compete for national recognition by submitting designs.
+            - when 'i'
+              Your team is not eligible to compete for national recognition, but can
+              submit designs for judging in open competition. See our eligibility rules
+              for more information.
     .para.alignright
       = submit_tag '<< Go Back to Make Changes', :name => :cancel, :class => 'btn'
       = submit_tag 'I Certify the Information Above is True and Correct >>', :name => :accept, :class => 'btn'

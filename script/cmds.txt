@@ -116,3 +116,7 @@ heroku addons:add memcachier
 #MEMCACHIER_PASSWORD:          8703cbcd01
 #MEMCACHIER_SERVERS:           mc4.dev.ec2.memcachier.com:11211
 #MEMCACHIER_USERNAME:          135f96
+
+# To clear Safari copy of application.js to make Coffeescript changes visible:
+bundle exec rake assets:clean
+# Selection Safari | Reset... and Ok

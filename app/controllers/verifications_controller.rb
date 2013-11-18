@@ -11,8 +11,13 @@ class VerificationsController < ApplicationController
   def update
     @team = Team.find(session[:team_id])
     if params.has_key? :cancel
-      c = @team.category == 'i' ? :team_completions : :captain_completions
-      redirect_to :controller => c, :action => :edit
+      controller = case @team.category
+                     when 'h', 'm'
+                       @team.captain.coppa? ? :coppa_captain_completions : :captain_completions
+                     when 'i'
+                       :team_completions
+                   end
+      redirect_to :controller => controller, :action => :edit
     else
       # No need to check registration here because we have a valid session
       # only if registration was completed.

@@ -1,0 +1,27 @@
+.box
+  .big Parent or Guardian Info for #{member.full_name}
+  .para.small.subdued
+    Please enter the information requested below about a parent or guardian. Note carefully:
+    %br
+    \-- Your answers are confidential.
+    %br
+    \-- Entering erroneous information may result in disqualification from the contest.
+  %table
+    %tr.tiny
+      %td.shr
+        First Name
+        != oops_on(parent, :first_name)
+      %td.shr MI
+      %td.shr
+        Last Name
+        != oops_on(parent, :last_name)
+    %tr
+      %td= f.text_field :first_name, :size => 24, :id => 'first_name'
+      %td= f.text_field :middle_initial, :size => 1, :id => 'middle_initial'
+      %td= f.text_field :last_name, :size => 24, :id => 'last_name'
+    %tr.tiny
+      %td.shr{ :colspan => 3 }
+        Email address
+        != oops_on(parent, :email)
+    %tr
+      %td{ :colspan => 3 }= f.text_field :email

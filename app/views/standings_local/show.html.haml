@@ -1,4 +1,4 @@
-%h1 West Point Bridge Design Contest 2013
+%h1 Local West Point Bridge Design Contest Standings
 .small.bold.bright
   Local Contest #{@local_contest.code} (#{@local_contest.description})
   %br
@@ -10,6 +10,6 @@
   = @local_contest.poc_full_position
   %br
   = @local_contest.link_formatted.join(': ').html_safe
-= will_paginate @scoreboard[:teams]
+= page_index(@scoreboard)
 = render :partial => 'shared/scoreboard_table', :locals => { :scoreboard => @scoreboard, :show_category_p => true }
-= will_paginate @scoreboard[:teams]
+= page_index(@scoreboard)

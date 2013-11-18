@@ -1,0 +1,8 @@
+= content_for :dialog do
+  = render :partial => 'shared/error_head', :locals => { :obj => @parent }
+  = form_for @parent, :url => coppa_member_completion_path, :method => :put do |f|
+    = render :partial => "shared/coppa_member_completion",
+             :locals => { :f => f, :member => @member, :parent => @parent, :label => 'Member' }
+    .para.alignright
+      = f.submit TablesHelper::CANCEL, :name => 'cancel', :class => 'btn'
+      = f.submit TablesHelper::PARENT_CERTIFICATION, :name => 'accept', :class => 'btn'

@@ -6,3 +6,7 @@ en:
         name_key: "Team name"
       member:
         res_state: "State of residence"
+        res_age: "Age"
+        nonres_age: "Age"
+        res_grade: "Grade"
+        nonres_grade: "Grade"
