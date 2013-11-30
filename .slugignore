@@ -1,4 +1,5 @@
 /vendor/gems/WPBDC/test/contest
 /vendor/gems/WPBDC/test/eg
 /spec
+/doc
 *.bdc

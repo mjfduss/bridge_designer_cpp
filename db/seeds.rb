@@ -1,6 +1,27 @@
 # Make and administrator account.
-Administrator.delete_all
-%w{gene steve cathy}.each {|name| Administrator.find_or_create_by_name(:name => name, :password => 'foobarbaz', :password_confirmation => 'foobarbaz') }
+#Administrator.delete_all
+%w{gene steve cathy joanna}.each {|name| Administrator.find_or_create_by_name(:name => name, :password => 'foobarbaz', :password_confirmation => 'foobarbaz') }
+
+# Load old local contest data.
+if true
+  File.open('db/seeds_data/dbo.local_contest.txt', 'r') do |f|
+    # Get column names.
+    line = f.gets
+    return unless line
+    line.chomp!
+    # Make list of symbols for setters taken from column names
+    setters = line.split.map{|s| s == '-' ? nil : "#{s}=".to_sym }
+    n = 0
+    while line = f.gets
+      line.chomp!
+      data = line.split("\t").map {|s| s.strip }
+      lc = LocalContest.new {|lc| setters.zip(data).each{|p| lc.send(*p) if p[0] } }
+      n += 1 if lc.save
+    end
+    puts "Created #{n} local contests."
+  end
+end
+
 # For development, use factory girl to build some records.
 if false && Rails.env.development?
   REDIS.flushall

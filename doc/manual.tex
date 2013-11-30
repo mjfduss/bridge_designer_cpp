@@ -29,7 +29,7 @@
 This document describes how to use the West Point Bridge Design Contest Administrator
 Interface or CAI. It is intended for people who already know how the contest works. The CAI 
 is a web browser-based ``window" into the contest database that allows a small team
-to administer the contest. 
+to perform all necessary administrative chores. 
 
 Here is a brief overview of CAI functions:
 \begin{itemize}
@@ -43,7 +43,6 @@ Here is a brief overview of CAI functions:
 \item Query the contest database in various ways.
 \item Send bulk emails.
 \item Manually disable the contest, with an explanatory message banner displayed at
-what is 
  the login page.
 \end{itemize}
 There are many changes here with respect to the original 1999 CAI design. Some are
@@ -70,16 +69,18 @@ passworded administrator accounts.
 The new CAI does not require setting up new, different accounts for semi-final teams. 
 Instead, semi-finalists are merely marked in the Team Review portion of the CAI.  
 
-In the new system, any team can participate in up to four local contests at any time, either 
-4-character (all-scenario) or 6-character (scenario-specific) contest without regard forthe 
-current contest round. The old system was restricted to allow only 4-character contests 
+In the new system, any team can participate in up to four local contests at any time.
+These can be either 
+4-character (all-scenario) or 6-character (scenario-specific) contests without regard for the 
+current contest round. The old system allowed only 4-character contests 
 during the Qualifying Round. That restriction is gone.  Another quirk of the 
 old system was that 6-character codes could not change after registration.  This quirk is 
 also gone. Teams can add and delete local contests at any time. 
 
-This added flexibility results from added internal complexity. The new system tracks the  best  design for each scenario for each team rather than only a single best per team in 
+This added flexibility results from added internal complexity. The new system tracks the  
+best  design for each scenario for each team rather than only a single best per team in 
 the old one.  Formerly, a bridge submission was accepted by the system only if 
-it improved on team's current best (lowest cost) bridge overall.  The definition of 
+it improved on a team's current best (lowest cost) bridge overall.  The definition of 
 \emph{improvement} has changed in the new system: a bridge is an improvement, and 
 therefore accepted in the new system, if it has cost
 lower than all previous submissions by the team \emph{for the same scenario}.  This
@@ -87,7 +88,7 @@ more liberal policy will probably cause more bridges to be accepted per team.
 
 Bulk email is now performed by the contest server. This is necessary to gain the benefit of
 a registered bulk mail service that has much less chance of being blocked by spam detectors.
-A new ``rich text" editor in the CAI allows messages with any kind of standard text formatting.
+A new ``rich text" editor in the CAI allows messages with standard text formatting.
 The rich text editor also allows documents with images.  At present, however, these will
 not work for bulk email.
 
@@ -104,8 +105,8 @@ The CAI remains a work in progress. If you're an Administrator and see something
 that the CAI could do to make your life easier, tell the CAI software team.
 
 \section{Key concepts}
-Several key concepts are important for efficiently using the Administrator
-and avoiding mistakes.
+Several key concepts are important to avoid mistakes and to use the Administrator
+efficiently.
 
 \subsection{Administrators}
 An Administrator is a person entrusted with contest administration and decision authority.  
@@ -130,14 +131,19 @@ new one has a log out feature. Its use is highly recommended for the obvious
 security reasons.
 
 \subsection{Team categories}
-Teams competing in the contest fall into only two categories in the new CAI.
+Teams competing in the contest fall into only three categories in the new CAI.
 \begin{description}
-\item[US/PR Students]  PR is for Puerto Rico.  This includes all age 13 to grade 12
+\item[US/PR High School Students]  PR is for Puerto Rico.  This includes all 
+grade 9 to 12
 kids who are either attending US schools (regardless of national origin) or are
 US citizens (regardless of location or school choice including home-schooling).
-\item[Open Competition]  All people who are not US/PR students.
+\item[US/PR Middle School Students]  This is the same as the High School
+category above, except for grade 6 to 8 kids.
+\item[Open Competition]  All people who are not US/PR High School
+or Middle School students.
 \end{description}
-US/PR Students are eligible for recognition, advancing through successive
+US/PR Students, both Middle and High School, are eligible for recognition, 
+advancing through successive
 contest rounds, and receiving prizes.  Open competitors are in it for fun only.
 
 Long-time contest participants will remember that categories once included the
@@ -167,7 +173,7 @@ home page and the team's normal qualifying round page.  In the old system, the
 Team could do the same by using either its normal or semi-finals-specific
 user id.  Here, the normal user id is used for all.
 \end{description}
-Semi-final status should be viewed as ``Accepted with benefits."  A Semi-final
+Semi-final status should be thought of as ``Accepted with benefits."  A Semi-final
 team can continue to participate in local contests, and its standings are 
 unaffected.
 
@@ -714,6 +720,10 @@ Local contest \texttt{ABCD} & /standings/local/abcd
 \end{tabular}
 \label{tbl:scoreboards}
 \end{table}
+
+\subsection{Local contest scoreboards}
+Local contest scoreboards are updated periodically, currently every one-half hour.
+This is subject to change.
 
 \section{Future possibilities}
 This section of the document is a list of possible future features for the CAI.  It is a work

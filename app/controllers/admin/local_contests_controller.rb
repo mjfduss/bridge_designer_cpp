@@ -2,9 +2,11 @@ class Admin::LocalContestsController < Admin::ApplicationController
 
   # TODO could paginate.
 
+  LIMIT = 100
+
   def edit
     @edited_local_contest = LocalContest.new
-    @local_contests = LocalContest.all
+    @local_contests = LocalContest.limit(LIMIT)
   end
 
   def update
@@ -50,7 +52,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
       @edited_local_contest = LocalContest.new(params[:local_contest])
       flash.now[:alert] = 'Query results are shown below.'
     end
-    @local_contests ||= ids ? LocalContest.where(:id => ids) : LocalContest.all
+    @local_contests ||= ids ? LocalContest.where(:id => ids) : LocalContest.limit(LIMIT)
     render :action => :edit
   end
 

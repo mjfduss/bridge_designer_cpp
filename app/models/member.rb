@@ -33,7 +33,6 @@ class Member < ActiveRecord::Base
   end
 
   validates_each :res_age, :nonres_age do |record, attr, value|
-    logger.debug "AGE VALIDATION: r.res_age=#{record.res_age} attr=#{attr} value=#{value} age_sel=#{ValidationHelper.to_age_selector(record.category)} record=#{record.inspect}"
     record.errors.add(attr, 'must be selected') if value == '-' && attr == ValidationHelper.to_age_selector(record.category)
   end
 
