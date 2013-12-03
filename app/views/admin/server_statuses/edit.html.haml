@@ -1,1 +1,35 @@
-%h1== Server status at #{@time} from #{@ip}
+%h1 Server status at #{Time.now.to_s(:nice)} from client #{@ip}
+%table
+  %tr
+    %td Teams:
+    %td= Team.count
+  %tr
+    %td Designs:
+    %td= Design.count
+  %tr
+    %td Local Contests:
+    %td= LocalContest.count
+  %tr
+    %td Local scoreboard update:
+    %td= LocalScoreboard.first.created_at.to_s(:nice)
+%hr
+%h1 Clear contest database
+= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }
+.para
+  Use the button below with extreme care.  Once cleared,
+  the database can be restored only from backups.  This
+  may lose several hours of contest submissions.
+
+= form_tag({:controller => :server_statuses, :action => :update }, :method => :put) do
+  .para
+    Type the word
+    %span.bold #{Admin::ServerStatusesController::VERIFICATION}
+    in the box below.
+  = text_field_tag('verification')
+  .para Type your password in the box below.
+  = password_field_tag('password')
+  .para
+  = submit_tag('Clear database now',
+    :confirm => 'I am ABSOLUTELY SURE that I want to clear the entire database!')
+
+

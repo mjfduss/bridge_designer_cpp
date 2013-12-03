@@ -27,9 +27,10 @@
 
 \section{Overview and Changes}
 This document describes how to use the West Point Bridge Design Contest Administrator
-Interface or CAI. It is intended for people who already know how the contest works. The CAI 
-is a web browser-based ``window" into the contest database that allows a small team
-to perform all necessary administrative chores. 
+Interface or CAI. It covers only the CAI's technology, assuming the reader already knows
+about contest operations, policies, and procedures. The CAI is a web browser-based 
+``window" into the contest database.  Its design allows a small administrative
+team to conduct the contest even if the number of participants is very large. 
 
 Here is a brief overview of CAI functions:
 \begin{itemize}
@@ -47,7 +48,7 @@ Here is a brief overview of CAI functions:
 \end{itemize}
 There are many changes here with respect to the original 1999 CAI design. Some are
 obvious.  Others are subtle but still important. A brief overview follows.  Those who
-have never used the CAI before may safely skip to the next section.
+have never used the original CAI may safely skip to the next section.
 
 Automatic schedules are new.  In the old CAI, the start and end times of contest 
 rounds could be established only at the server console. Now they can be 
@@ -700,7 +701,7 @@ other status, the team name is no longer editable.
 The new CAI, unlike the old one, stores passwords in an encrypted form only.  Therefore it
 is impossible to tell a team its password.  A standard password reset mechanism has been
 added.  There is a ``Forgot your team name or password?'' link just below the contest login
-box. Selecting it produces  a request for the team to the the email it entered at registration. 
+box. Selecting it produces  a request for the team to provide the email it entered at registration. 
 All teams associated with this address are included in a single password reset message with
 a ``Log in'' link for each. Since the team email is available in the CAI, an administrator can 
 use it to request a reset message as described above on behalf of the team. 
