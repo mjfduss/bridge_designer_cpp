@@ -465,7 +465,6 @@ char *analysis_to_html(TAnalysis *analysis,
 	char *rtn, *p;
 	char buf[1024];
 	unsigned member_index;
-	TLoadScenario *ls;
 
 #define Append(S)	do {							\
 	char *q = (S);									\
@@ -494,8 +493,6 @@ char *analysis_to_html(TAnalysis *analysis,
 	assert(loading);
 	assert(params);
 	// result is optional
-
-	ls = &bridge->load_scenario;
 
 	// Allocate an initial return buffer.
 	New(140, rtn, rtn_size, char);
@@ -611,6 +608,110 @@ char *analysis_to_html(TAnalysis *analysis,
 	}
 	Append("</table>\n");
 
+	return rtn;
+}
+
+char *analysis_to_text(TAnalysis *analysis,
+					   TBridge *bridge,
+					   TGeometry *geometry,
+					   TLoading *loading,
+					   TParams *params,
+					   struct analysis_result_t *result)
+{
+	size_t rtn_size = 1024 * 8;
+	char *rtn, *p;
+	char buf[1024];
+	unsigned member_index;
+
+	assert(analysis);
+	assert(bridge);
+	assert(geometry);
+	assert(loading);
+	assert(params);
+	// result is optional
+
+	// Allocate an initial return buffer.
+	New(145, rtn, rtn_size, char);
+	p = rtn;
+
+	if (analysis->error) {
+		sprintf(buf, "Analysis error: %d\n", analysis->error);
+		Append(buf);
+		return rtn;
+	}
+
+	#define AppendTab Append("\t")
+	#define AppendNewline Append("\n")
+
+	// Header
+	AppendInt(bridge->n_design_iterations);
+	AppendTab;
+	Append(bridge->scenario_descriptor.id);
+	AppendTab;
+	Append(bridge->scenario_descriptor.number);
+	AppendTab;
+	if (result)
+		AppendFloat(result->cost/100, 2);
+	else
+		AppendFloat(bridge_cost(bridge, geometry, params), 2);
+	AppendNewline;
+	for (member_index = 1; member_index <= bridge->n_members; member_index++) {
+		TXSection *xs = &bridge->members[member_index].x_section;
+		TFloat compressive = analysis->member_strength[member_index].compressive;
+		TFloat tensile = analysis->member_strength[member_index].tensile;
+		AppendInt(member_index);
+		AppendTab;
+		Append(params->shapes[xs->section][xs->size].name);
+		AppendTab;
+		Append(section_str(xs->section));
+		AppendTab;
+		Append(params->materials[xs->material].short_name);
+		AppendTab;
+		AppendFloat(geometry->length[member_index], 6);
+		AppendTab;
+		AppendFloat(analysis->max_forces[member_index].compression, 6);
+		AppendTab;
+		AppendFloat(compressive, 6);
+		AppendTab;
+		if (compressive > 0)
+			AppendFloat(analysis->max_forces[member_index].compression/compressive, 6);
+		else
+			Append("oo");
+		AppendTab;
+		switch (analysis->member_strength[member_index].compressive_fail_mode) {
+		case FailModeNone:
+			Append("OK");
+			break;
+		case FailModeSlenderness:
+			Append("Slenderness");
+			break;
+		default:
+			Append("Fail");
+			break;
+		}
+		AppendTab;
+		AppendFloat(analysis->max_forces[member_index].tension, 6);
+		AppendTab;
+		AppendFloat(tensile, 6);
+		AppendTab;
+		if (tensile > 0)
+			AppendFloat(analysis->max_forces[member_index].tension/tensile, 6);
+		else
+			Append("oo");
+		AppendTab;
+		switch (analysis->member_strength[member_index].tensile_fail_mode) {
+		case FailModeNone:
+			Append("OK");
+			break;
+		case FailModeSlenderness:
+			Append("Slenderness");
+			break;
+		default:
+			Append("Fail");
+			break;
+		}
+		AppendNewline;
+	}
 	return rtn;
 }
 

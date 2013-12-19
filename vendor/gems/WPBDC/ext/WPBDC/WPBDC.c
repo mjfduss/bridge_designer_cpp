@@ -154,6 +154,15 @@ static VALUE rb_api_analysis_table(VALUE self, VALUE bridge_as_string)
     return c_str_to_value(result);
 }
 
+static VALUE rb_api_analysis_log(VALUE self, VALUE bridge_as_string)
+#define ARGC_analysis_log 1
+{
+    Check_Type(bridge_as_string, T_STRING);
+    INIT_STRING_FROM_VALUE(bridge_internal_string, bridge_as_string);
+    char *result = analysis_log(bridge_internal_string);
+    return c_str_to_value(result);
+}
+
 static VALUE rb_api_local_contest_number_to_id(VALUE self, VALUE number_as_string)
 #define ARGC_local_contest_number_to_id 1
 {
@@ -180,6 +189,7 @@ static struct ft_entry {
   FUNCTION_TABLE_ENTRY(perturbation),
   FUNCTION_TABLE_ENTRY(sketch),
   FUNCTION_TABLE_ENTRY(analysis_table),
+  FUNCTION_TABLE_ENTRY(analysis_log),
   FUNCTION_TABLE_ENTRY(local_contest_number_to_id),
 };
 

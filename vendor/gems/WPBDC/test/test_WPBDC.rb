@@ -3,8 +3,45 @@ require 'WPBDC'
 
 class WPBDCTest < Test::Unit::TestCase
 
-  YEAR = 2012
+  YEAR = 2014
   N_VARIANTS = 10
+
+  # 428	1052804100	42A	196560.3239129398
+  HEAD_FMT = "i i s f".split(' ')
+  # 1	190x190x9	Tube	CS	4.25	449.28209310650266	1232.3796209685247	0.36456468888491744	OK	0.0	1547.55	0.0	OK
+  TABLE_FMT = "i s s s f f f f s f f f s".split(' ')
+
+  def test_analysis_text_table_generation
+    Dir.glob("test/eg/#{YEAR}/*.bdc").each do |ifn|
+      bridge = open(ifn, "rb") { |f| f.read }
+      WPBDC.endecrypt(bridge)
+      ofn = ifn.sub('.bdc', '.txt').sub("/#{YEAR}", "/#{YEAR}/log")
+      open(ofn, "w") { |f| f.write(WPBDC.analysis_log(bridge)) }
+    end
+    # Diff the member data tables with respect to the judge's versions
+    Dir.glob("test/eg/#{YEAR}/log/*.txt").each do |judge_fn|
+      bd_fn = judge_fn.sub(%r|^.*test/|, '/Users/generessler/Projects/wpbdc-wpbd/')
+      IO.readlines(judge_fn).zip(IO.readlines(bd_fn)).each_with_index do |pair, i|
+        # TODO Should actually compare on slenderness failures
+        next if pair.any? {|p| p =~ /Slenderness/ }
+        line = i + 1
+        (line == 1 ? HEAD_FMT : TABLE_FMT).zip(*pair.map(&:split)).each_with_index do |triple, j|
+          col = j + 1
+          fmt, a, b = triple
+          case fmt
+          when 's'
+            assert(a == b, "#{bd_fn}: line #{line}, string col #{col}-#{pair.inspect}")
+          when 'i'
+            assert(Integer(a) == Integer(b), "#{bd_fn}: line #{line}, int col #{col}-#{pair.inspect}")
+          when 'f'
+            assert((Float(a) - Float(b)).abs < 0.01, "#{bd_fn}: line #{line}, float col #{col}-#{pair.inspect}")
+          else
+            assert(false, "line #{line} col #{col}: unknown format")
+          end
+        end
+      end
+    end
+  end
 
   def test_similarity
     seed = 53535353
@@ -49,7 +86,7 @@ class WPBDCTest < Test::Unit::TestCase
       assert(result[:status] != WPBDC::BRIDGE_OK || good_bridge, "#{fn}: failed bridge returned ok")
       assert(result[:status] != WPBDC::BRIDGE_FAILEDTEST || !good_bridge, "#{fn}: good bridge returned failed")
       assert_not_equal(result[:status], WPBDC::BRIDGE_WRONGVERSION, "#{fn}: bad report of wrong version")
-      assert_not_equal(result[:status], WPBDC::BRIDGE_MALFORMED, "#{fn}: bad report of malformed bridge")
+      assert_not_equal(result[:status], WPBDC::BRIDGE_MALFORMED, "#{  fn}: bad report of malformed bridge")
     end
   end
 

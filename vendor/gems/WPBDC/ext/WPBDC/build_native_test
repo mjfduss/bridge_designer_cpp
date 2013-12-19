@@ -1,2 +1,2 @@
 #! /bin/bash
-gcc -g -DNATIVE_TEST analysis.c bridge.c bridge_cost.c bridge_hash.c bridge_parser.c bridge_random.c bridge_sketch.c geometry.c judge.c loading.c params.c rc4.c rc4_key.c scenario.c sketch.c -lpng -o judge
+gcc -g -DNATIVE_TEST -Wall analysis.c bridge.c bridge_cost.c bridge_hash.c bridge_parser.c bridge_random.c bridge_sketch.c geometry.c judge.c loading.c params.c rc4.c rc4_key.c scenario.c sketch.c -lpng -o judge

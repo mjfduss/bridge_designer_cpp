@@ -11,7 +11,7 @@
 #include "rubydefs.h"
 #include "sketch.h"
 
-#define CONTEST_YEAR 2012
+#define CONTEST_YEAR 2014
 #define YEAR_TO_VERSION(Y) (((((Y) % 100) / 10) << 8) | (((Y) % 10) << 4) | 0x400c)
 #define BD_VERSION YEAR_TO_VERSION(CONTEST_YEAR)
 
@@ -19,8 +19,8 @@
 #define NULL_SEMIFINAL_SCENARIO_ID "0000000000"
 
 // When you set this, you _must_ change the scenario table so its record is in sorted order!
-#define SEMIFINAL_SCENARIO_ID "3100003100"
-//#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
+//#define SEMIFINAL_SCENARIO_ID "3100003100"
+#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
 
 // Status returns from analyze().
 #define BRIDGE_OK           0
@@ -141,6 +141,9 @@ void sketch(STRING *bridge_as_string,
 
 // Return HTML for a table of analysis data.
 char *analysis_table(STRING *bridge_as_string);
+
+// Return tab-delimited text for a table of analysis data.
+char *analysis_log(STRING *bridge_as_string);
 
 // Accept a string containing a scenario number.
 // Return a pointer to the 3-character local contest code or null if no match.

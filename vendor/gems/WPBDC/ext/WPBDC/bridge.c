@@ -242,10 +242,10 @@ void canonicalize(TBridge *dst, TBridge *src)
 
 			// Ignore joints that are outside the rectangular extent of the member.
 			joint = &dst->joints[joint_index];
-			if (start->x > joint->x && end->x > joint->x ||
-				start->x < joint->x && end->x < joint->x ||
-				start->y > joint->y && end->y > joint->y ||
-				start->y < joint->y && end->y < joint->y)
+			if ((start->x > joint->x && end->x > joint->x) ||
+				(start->x < joint->x && end->x < joint->x) ||
+				(start->y > joint->y && end->y > joint->y) ||
+				(start->y < joint->y && end->y < joint->y))
 				continue;
 
 			// Check if the joint is on the line struck by the member ends.

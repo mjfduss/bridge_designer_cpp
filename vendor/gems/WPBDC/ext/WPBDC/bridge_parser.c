@@ -1059,7 +1059,6 @@ void pack_bridge(STRING *in_str, STRING *out_str,
 {
 	TBridge bridge[1];
 	char *mutable_copy;
-	char *rtn = 0;
 
 	init_bridge(bridge);
 
@@ -1091,7 +1090,6 @@ void unpack_bridge(STRING *in_str, STRING *out_str,
 {
 	TBridge bridge[1];
 	char *mutable_copy;
-	char *rtn = 0;
 
 	init_bridge(bridge);
 

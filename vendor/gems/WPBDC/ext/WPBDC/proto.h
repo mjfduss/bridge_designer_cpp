@@ -4,6 +4,7 @@ void clear_analysis(TAnalysis *anal);
 void setup_analysis(TAnalysis *anal, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params);
 void do_analyze(STRING *bridge_as_string, TAnalysis *analysis, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params, struct analysis_result_t *result);
 char *analysis_to_html(TAnalysis *analysis, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params, struct analysis_result_t *result);
+char *analysis_to_text(TAnalysis *analysis, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params, struct analysis_result_t *result);
 void print_analysis(FILE *f, TAnalysis *anal, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params);
 /* bridge.c */
 void init_bridge(TBridge *bridge);
@@ -68,6 +69,8 @@ char *failed_variant(STRING *bridge_as_string, int seed);
 char *perturbation(STRING *bridge_as_string, int seed, int n_joints, int n_members);
 void sketch(STRING *bridge_as_string, int width, int height, COMPRESSED_IMAGE *compressed_image, struct analysis_result_t *result);
 char *analysis_table(STRING *bridge_as_string);
+char *analysis_log(STRING *bridge_as_string);
+
 /* loading.c */
 void init_loading(TLoading *loading);
 void clear_loading(TLoading *loading);

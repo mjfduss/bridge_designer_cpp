@@ -25,8 +25,8 @@
 // External interface.
 #include "judge.h"
 
-#if BD_VERSION != 0x412c
-#error Wrong BD_VERSION. Should be 0x412c.
+#if BD_VERSION != 0x414c
+#error Wrong BD_VERSION. Should be 0x414c.
 #endif
 
 // Extension stubs --------------------------------------------------------------
@@ -171,8 +171,6 @@ void sketch(STRING *bridge_as_string,
 
 char *get_local_contest_number(STRING *number_as_string)
 {
-    char *rtn;
-    
     if (number_as_string->size != SCENARIO_NUMBER_SIZE)
         return NULL;
     return local_contest_number_to_id(number_as_string->ptr);
@@ -201,15 +199,39 @@ char *analysis_table(STRING *bridge_as_string)
     return rtn;
 }
 
+char *analysis_log(STRING *bridge_as_string)
+{
+    TBridge bridge[1];
+    TParams params[1];
+    TGeometry geometry[1];
+    TLoading loading[1];
+    TAnalysis analysis[1];
+    struct analysis_result_t result[1];
+    char *rtn = 0;
+
+    do_analyze(bridge_as_string, analysis, bridge, geometry, loading, params, result);
+    if (!bridge->error)
+        rtn = analysis_to_text(analysis, bridge, geometry, loading, params, result);
+
+    clear_analysis(analysis);
+    clear_bridge(bridge);
+    clear_geometry(geometry);
+    clear_loading(loading);
+    clear_params(params);
+
+    return rtn;
+}
+
 #if defined(NATIVE_TEST) && !defined(CPROTO)
 
 //#define WRITE_EXAMPLES
 
 #ifdef WRITE_EXAMPLES
+#define PREVIOUS_YEAR_DELTA 2
 #define EG_DIR  "../../test/eg/2012"
-#define NEW_EG_DIR  "../../test/eg/2013"
+#define NEW_EG_DIR  "../../test/eg/2014"
 #else
-#define EG_DIR  "../../test/eg/2012"
+#define EG_DIR  "../../test/eg/2014"
 #endif
 
 #ifdef WINDOWS
@@ -219,6 +241,7 @@ char *analysis_table(STRING *bridge_as_string)
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <unistd.h>
 
 void strcpyn(char *dst, char *src, int n)
 {
@@ -229,7 +252,6 @@ void strcpyn(char *dst, char *src, int n)
 
 void split_path(char *path, char *drv, char *dir, char *fname, char *ext)
 {
-    int len = strlen(path);
     char *colon, *slash, *dot;
 
     colon = strchr(path, ':');
@@ -305,7 +327,7 @@ int main(int argc, char* argv[])
     TLoading loading[1];
     TAnalysis anal[1];
     int i, n, test_case;
-    long h;
+    //long h;
     COMPRESSED_IMAGE compressed_image[1];
 
 #ifdef WRITE_EXAMPLES
@@ -355,8 +377,10 @@ int main(int argc, char* argv[])
             continue;
 
         // SINGLE TEST CASE!
+        /*
         if (strcmp(dir_ent->d_name, "semis-01.bdc") != 0)
             continue;
+        */
 
         printf("Test case %d (%s):\n", test_case, dir_ent->d_name);
         sprintf(fname, EG_DIR "/%s", dir_ent->d_name);
@@ -381,7 +405,7 @@ int main(int argc, char* argv[])
 #ifdef WRITE_EXAMPLES
 
         // Set the parser to look for last year's bridges.
-        contest_year = CONTEST_YEAR - 1;
+        contest_year = CONTEST_YEAR - PREVIOUS_YEAR_DELTA;
 #endif
 
         // Try a parse.
@@ -401,7 +425,7 @@ int main(int argc, char* argv[])
 
         if (!strstr(dir_ent->d_name, "failed")) {
 
-            struct _stat stat_buf[1];
+            struct stat stat_buf[1];
 
             n_examples_read++;
 
@@ -432,7 +456,7 @@ int main(int argc, char* argv[])
             // Write a failed version of this bridge for future testing.
             printf("writing failed version\n");
             sprintf(fname, NEW_EG_DIR "/" "%s-failed%s", name, ext);
-            if (_stat(fname, stat_buf) != 0 && induce_failure(copy, bridge, 0) == 0) {
+            if (stat(fname, stat_buf) != 0 && induce_failure(copy, bridge, 0) == 0) {
                 text = unparse_bridge(copy);
                 copy_str->ptr = text;
                 copy_str->size = strlen(text);
@@ -546,7 +570,7 @@ int main(int argc, char* argv[])
         text = analysis_table(bridge_str);
 
         if (text) {
-            printf("writing analysis...");
+            printf("writing analysis table...");
             split_path(dir_ent->d_name, 0, path, name, ext);
             sprintf(buf, "Debug/html/%s.htm", name);
             f = fopen(buf, "w");
@@ -561,6 +585,24 @@ int main(int argc, char* argv[])
                 "</style></head><body>\n", f);
             fputs(text, f);
             fputs("</body></html>", f);
+            fclose(f);
+
+            Safefree(text);
+        }
+
+        // Do an analysis log.
+        text = analysis_log(bridge_str);
+
+        if (text) {
+            printf("writing analysis log...");
+            split_path(dir_ent->d_name, 0, path, name, ext);
+            sprintf(buf, "Debug/text/%s.txt", name);
+            f = fopen(buf, "w");
+            if (!f) {
+                fprintf(stderr, "can't open %s for output", buf);
+                return 4;
+            }
+            fputs(text, f);
             fclose(f);
 
             Safefree(text);

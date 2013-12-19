@@ -283,8 +283,8 @@ typedef struct params_t {
 		{	/* [1] */																		\
 			"Case B (Heavy Deck, Heavy Truck)",												\
 			DEAD_LOAD_FACTOR * 120.265 + 33.097,		/* TFloat point_dead_load; */		\
-			118,										/* TFloat front_axle_load; */		\
-			118,										/* TFloat rear_axle_load; */		\
+			120,										/* TFloat front_axle_load; */		\
+			120,										/* TFloat rear_axle_load; */		\
 		},																					\
 		{	/* [2] */																		\
 			"Case C (Light Deck, Light Truck)",												\
@@ -295,11 +295,11 @@ typedef struct params_t {
 		{	/* [3] */																		\
 			"Case D (Light Deck, Heavy Truck)",												\
 			DEAD_LOAD_FACTOR * 82.608 + 33.097,			/* TFloat point_dead_load; */		\
-			118,										/* TFloat front_axle_load; */		\
-			118,										/* TFloat rear_axle_load; */		\
+			120,										/* TFloat front_axle_load; */		\
+			120,										/* TFloat rear_axle_load; */		\
 		},																					\
 	},																						\
-	300,										/* TFloat connection_cost; */				\
+	500,										/* TFloat connection_cost; */				\
 	1000,										/* TFloat ordering_fee; */					\
 	{	/* TMaterial materials[NMaterials];	*/												\
 		{																					\
@@ -309,7 +309,7 @@ typedef struct params_t {
 			250000,							/* TFloat Fy; */								\
 			7850,							/* TFloat density; */							\
 			{								/* TFloat cost[NSections]; */					\
-				3.78,							/* Bar */									\
+				4.50,							/* Bar */									\
 				6.30,							/* Tube */									\
 			}																				\
 		},																					\
@@ -320,8 +320,8 @@ typedef struct params_t {
 			345000,							/* TFloat Fy; */								\
 			7850,							/* TFloat density; */							\
 			{								/* TFloat cost[NSections]; */					\
-				4.62,							/* Bar */									\
-				7.03,							/* Tube	*/									\
+				5.00,							/* Bar */									\
+				7.00,							/* Tube	*/									\
 			}																				\
 		},																					\
 		{																					\
@@ -331,8 +331,8 @@ typedef struct params_t {
 			485000,							/* TFloat Fy; */								\
 			7850,							/* TFloat density; */							\
 			{								/* TFloat cost[NSections]; */					\
-				5.70,							/* Bar */									\
-				7.95,							/* Tube	*/									\
+				5.55,							/* Bar */									\
+				7.75,							/* Tube	*/									\
 			}																				\
 		},																					\
 	}																						\
@@ -427,6 +427,7 @@ void clear_analysis(TAnalysis *anal);
 void setup_analysis(TAnalysis *anal, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params);
 void do_analyze(STRING *bridge_as_string, TAnalysis *analysis, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params, struct analysis_result_t *result);
 char *analysis_to_html(TAnalysis *analysis, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params, struct analysis_result_t *result);
+char *analysis_to_text(TAnalysis *analysis, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params, struct analysis_result_t *result);
 void print_analysis(FILE *f, TAnalysis *anal, TBridge *bridge, TGeometry *geometry, TLoading *loading, TParams *params);
 /* bridge.c */
 void init_bridge(TBridge *bridge);

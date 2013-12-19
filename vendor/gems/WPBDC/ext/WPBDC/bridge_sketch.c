@@ -54,7 +54,7 @@ void do_sketch(TBridge *bridge,
 {
 	IMAGE image[1];
 	static RGB_TRIPLE white[1] = {{255, 255, 255}};
-	static RGB_TRIPLE black[1] = {{0, 0, 0}};
+	//static RGB_TRIPLE black[1] = {{0, 0, 0}};
 	static RGB_TRIPLE gray[1] = {{192, 192, 192}};
 	RGB_TRIPLE color[1];
 	UNSIGNED bridge_width_grids;
