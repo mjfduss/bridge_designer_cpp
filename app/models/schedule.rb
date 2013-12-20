@@ -42,7 +42,7 @@ class Schedule < ActiveRecord::Base
   validates_with ScheduleValidator
 
   STATE_CLOSED = 0
-  STATE_INITIAL_FREE = 1
+  STATE_INITIAL_CLOSED = 1
   STATE_QUALS_PREREG = 2
   STATE_QUALS = 3
   STATE_QUALS_CLOSED = 4
@@ -54,7 +54,7 @@ class Schedule < ActiveRecord::Base
 
   DESCRIPTIONS = [
     'Team logins disabled with "closed" message displayed',
-    'Open for free play, qualifying round not begun',
+    'Closed with prompt for qualifying round not yet begun',
     'Early registration for qualifying round',
     'Qualifying round in progress',
     'Tallying results of qualifying round',
@@ -66,7 +66,7 @@ class Schedule < ActiveRecord::Base
 
   def state(t = Time.now)
     return STATE_CLOSED if closed?
-    return STATE_INITIAL_FREE if t < start_quals_prereg
+    return STATE_INITIAL_CLOSED if t < start_quals_prereg
     return STATE_QUALS_PREREG if t < start_quals
     return STATE_QUALS if t < end_quals
     return STATE_QUALS_CLOSED if t < start_semis_prereg && !quals_tally_complete?

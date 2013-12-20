@@ -15,12 +15,14 @@
                 .indent
                   .hi Sorry! The contest is currently off line.
                   .vsep #{@schedule.message.html_safe}
-      - when Schedule::STATE_INITIAL_FREE
-        .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
+      - when Schedule::STATE_INITIAL_CLOSED
+        .vsep.hi We're closed while preparing for the #{WPBDC::CONTEST_YEAR} contest year.
         .para
           The #{WPBDC::CONTEST_YEAR} Qualifying Round will begin #{@schedule.start_quals_prereg.to_s(:nice)} when the
           %span.bold West Point Bridge Designer #{WPBDC::CONTEST_YEAR}
           will be available. Until then, we recommend you practice with the old version!
+        %iframe{ :name => 'reminder_request', :src => '/reminder_requests/new?tag=wpbdc_login',
+                 :style => 'width:540px;height:72px;border:1px solid black;overflow:hidden;background-color:transparent' }
       - when Schedule::STATE_QUALS_PREREG
         .vsep.hi We're open for #{WPBDC::CONTEST_YEAR} Qualifying Round pre-registration.
         .para
@@ -71,7 +73,7 @@
         .para
           The #{WPBDC::CONTEST_YEAR} Qualifying and Semifinal Rounds ended #{@schedule.end_semis.to_s(:nice)}.
           You can check the Contest Results tab to see how they turned out!
-  - unless @schedule_state == Schedule::STATE_CLOSED || @schedule_state == Schedule::STATE_QUALS_CLOSED
+  - unless [Schedule::STATE_CLOSED, Schedule::STATE_INITIAL_CLOSED, Schedule::STATE_QUALS_CLOSED].include? @schedule_state
     .indent
       .vsep.hi If you've already registered, then log in by typing your Team Name and Password below.
       .dialog.loginwidth
