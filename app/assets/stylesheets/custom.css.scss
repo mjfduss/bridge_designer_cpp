@@ -115,9 +115,14 @@ div.dialoghead {
   width: 95%;
 }
 
+div.float_left {
+  float:left;
+  margin:10px 4px 0px 4px;
+}
+
 div.dialogbody {
   background-color: transparent;
-  padding: 4px;
+  padding: 4px 4px 0px 4px;
 }
 
 div.banner {

@@ -3,6 +3,7 @@
   = form_for @member, :url => member_completion_path do |f|
     = render :partial => "shared/member_completion",
              :locals => { :f => f, :member => @member, :label => 'Member' }
+    = render :partial => 'shared/privacy_link'
     .para.alignright
       = f.submit TablesHelper::CANCEL, :name => 'cancel', :class => 'btn'
       = f.submit TablesHelper::ACCEPT, :name => 'accept', :class => 'btn'

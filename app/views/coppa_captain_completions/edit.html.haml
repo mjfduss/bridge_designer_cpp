@@ -3,6 +3,7 @@
   = form_for @parent, :url => coppa_captain_completion_path, :method => :put do |f|
     = render :partial => "shared/coppa_member_completion",
              :locals => { :f => f, :member => @member, :parent => @parent, :label => 'Captain' }
+    = render :partial => 'shared/privacy_link'
     .para.alignright
       .inline
         = f.submit TablesHelper::PARENT_CERTIFICATION, { :class => 'btn' }

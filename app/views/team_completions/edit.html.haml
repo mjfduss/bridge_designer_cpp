@@ -71,6 +71,7 @@
           != oops_on(@team, :new_local_contest)
           = f.text_field :new_local_contest, :size => 8
           %br
+    = render :partial => 'shared/privacy_link'
     .para.alignright
       - if @team.category != 'i'
         = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }

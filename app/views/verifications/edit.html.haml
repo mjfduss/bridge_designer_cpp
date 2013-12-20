@@ -21,6 +21,7 @@
             = render :partial => partial_for(@team, @captain), :locals => { :tag => 'Captain', :member => @captain }
           - if @member
             %td= render :partial => partial_for(@team, @member), :locals => { :tag => 'Member', :member => @member }
+    = render :partial => 'shared/privacy_link'
     .para.alignright
       = submit_tag '<< Make Changes', :name => :cancel, :class => 'btn'
       = submit_tag TablesHelper::ACCEPT, :name => :accept, :class => 'btn'

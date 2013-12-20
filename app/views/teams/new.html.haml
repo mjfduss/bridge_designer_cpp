@@ -19,7 +19,7 @@
         Every team must have a captain. If you're competing alone,
         then you're it! Please enter the information requested below.
       = f.fields_for :members, @team.captain do |mf| 
-        = render :partial => "shared/member", |
-                 :locals => { :mf => mf, :member => @team.captain } |
+        = render :partial => "shared/member", :locals => { :mf => mf, :member => @team.captain }
+    = render :partial => 'shared/privacy_link'
     .para.alignright
       = f.submit TablesHelper::ACCEPT, :class => 'btn'

@@ -11,6 +11,7 @@
         Otherwise, please enter the information requested below.
       = render :partial => "shared/member",
                :locals => { :mf => f, :member => @member }
+    = render :partial => 'shared/privacy_link'
     .para.alignright
       = f.submit TablesHelper::CANCEL, { :name => 'cancel', :class => 'btn' }
       = f.submit TablesHelper::ACCEPT, { :name => 'accept', :class => 'btn' }
