@@ -18,6 +18,10 @@
 /log/*.log
 /tmp
 
+# Ignore special working areas
+/foo
+/certs
+
 # For now, we need to restrict distribution of the scramble key to serious developers.
 # If you want it, just write us to explain why.
 /vendor/gems/WPBDC/ext/WPBDC/rc4_key.c
