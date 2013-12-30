@@ -42,7 +42,6 @@ class Admin::ServerStatusesController < Admin::ApplicationController
     #   Groups           could be handy for reuse
     #   HtmlDocuments    rich HTML document headers
     #   LocalContests    obviously still useful!
-    #   LocalScoreboards will be regenerated anywan
     #   ReminderRequests deleted elsewhere
     #   Schedule         obviously still useful
     #   Scoreboards      historical record is important
@@ -56,6 +55,7 @@ class Admin::ServerStatusesController < Admin::ApplicationController
     PasswordReset.delete_all
     SequenceNumber.reset :design
     Team.delete_all
+    LocalScoreboard.delete_all
 
     # Reset the affiliation counter caches in each of the local contests.
     LocalContest.pluck(:id).each { |id| LocalContest.reset_counters(id, :affiliations) }
