@@ -50,7 +50,7 @@ class Schedule < ActiveRecord::Base
   STATE_SEMIS_PREREG = 6
   STATE_SEMIS = 7
   STATE_POST_FREE = 8
-  STATES_CLOSED_FOR_LOGIN = [STATE_CLOSED, STATE_QUALS_CLOSED]
+  STATES_CLOSED_FOR_LOGIN = [STATE_CLOSED, STATE_INITIAL_CLOSED, STATE_QUALS_CLOSED]
 
   DESCRIPTIONS = [
     'Team logins disabled with "closed" message displayed',
