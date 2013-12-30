@@ -20,7 +20,8 @@ class ApplicationController < ActionController::Base
   def load_schedule
     @schedule = Schedule.fetch_cache
     # We look up the state and store it for the controller run so it can't change in the middle!
-    @schedule_state = @schedule.state
+    # If we have an admin session, we are always in qualifiers for test uploads.
+    @schedule_state = session[:admin_id] ? Schedule::STATE_QUALS : @schedule.state
   end
 
   def kill_session(msg)
@@ -32,7 +33,7 @@ class ApplicationController < ActionController::Base
 
   def check_schedule
     # Punt if the system should be closed.
-    if @schedule_state == Schedule::STATE_CLOSED || @schedule_state == Schedule::STATE_QUALS_CLOSED
+    if Schedule::STATES_CLOSED_FOR_LOGIN.include? @schedule_state
       kill_session 'The Contest is currently closed.'
     elsif session[:is_semis_session] && @schedule_state < Schedule::STATE_SEMIS_PREREG
       kill_session "We've logged you out because Semi-Finals are not yet in progress!"
