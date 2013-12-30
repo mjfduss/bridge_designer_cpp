@@ -38,6 +38,7 @@ Wpbdc::Application.routes.draw do
   resource :semi_final_instruction, :only => [ :edit, :update ]
   resources :standings, :only => [ :show ]
   resources :reminder_requests, :only => [ :new, :create ]
+  resources :maps, :only => [ :show ]
   get '/standings/local/:code' => 'standings_local#show', :as => :standings_local
 
   # CKEditor file upload handler and browser.

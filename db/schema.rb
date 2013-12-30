@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131107042214) do
+ActiveRecord::Schema.define(:version => 20131230074103) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(:version => 20131107042214) do
     t.integer  "member_id"
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
+    t.string   "zip",            :limit => 16
   end
 
   create_table "password_resets", :force => true do |t|

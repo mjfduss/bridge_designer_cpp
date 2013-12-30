@@ -20,8 +20,12 @@
       %td= f.text_field :middle_initial, :size => 1, :id => 'middle_initial'
       %td= f.text_field :last_name, :size => 24, :id => 'last_name'
     %tr.tiny
-      %td.shr{ :colspan => 3 }
+      %td.shr{ :colspan => 2 }
         Email address
         != oops_on(parent, :email)
+      %td.shr
+        Zip/Postal Code
+        != oops_on(parent, :zip)
     %tr
-      %td{ :colspan => 3 }= f.text_field :email
+      %td{ :colspan => 2 }= f.text_field :email
+      %td= f.text_field :zip, :size => 8, :id => 'zip'

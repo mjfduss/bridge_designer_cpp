@@ -7,10 +7,11 @@ class SessionsController < ApplicationController
   skip_before_filter :check_schedule
 
   def new
+    clear_session_except_flash
   end
 
   def create
-    reset_session # Make sure we're starting fresh. Should not be needed if we're thorough elsewhere.
+    reset_session # An attack precaution.
     team = Team.authenticate(params[:session][:name], params[:session][:password])
     if team
       establish_session(team)
@@ -44,6 +45,12 @@ class SessionsController < ApplicationController
   end
 
   private
+
+  def clear_session_except_flash
+    [:team_id, :captain_id, :member_id, :login, :last_touch, :is_semis_session, :password_reset].each do |key|
+      session.delete(key)
+    end
+  end
 
   def establish_session(team)
     session[:team_id] = team.id

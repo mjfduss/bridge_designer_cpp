@@ -1,3 +1,5 @@
+require 'pippa'
+
 class Team < ActiveRecord::Base
 
   VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

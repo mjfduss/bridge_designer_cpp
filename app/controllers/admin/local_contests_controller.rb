@@ -46,11 +46,24 @@ class Admin::LocalContestsController < Admin::ApplicationController
         LocalContest.destroy(selected)
         flash.now[:alert] = 'Selected local contests were deleted.'
       end
-      restore_edited
+      restore_edited_local_contest
     elsif params.nonblank? :query
       @local_contests = LocalContest.qbe(params[:local_contest])
       @edited_local_contest = LocalContest.new(params[:local_contest])
       flash.now[:alert] = 'Query results are shown below.'
+    elsif params.nonblank? :send_email
+      restore_edited_local_contest
+      email = params[:email]
+      if email && email[:message_body_id].to_i > 0
+        msg = HtmlDocument.find(email[:message_body_id])
+        GeneralNotice.delay.to_address(@edited_local_contest.link,
+                                       @edited_local_contest.substitute_escapes_in(msg.subject),
+                                       @edited_local_contest.substitute_escapes_in(msg.text),
+                                       @edited_local_contest.substitute_escapes_in(msg.plain_text))
+        flash.now[:alert] = "Email with subject '#{msg.subject}' sent to '#{@edited_local_contest.description}' at '#{@edited_local_contest.link}'."
+      else
+        flash.now[:alert] = 'Please select a message to send.'
+      end
     end
     @local_contests ||= ids ? LocalContest.where(:id => ids) : LocalContest.limit(LIMIT)
     render :action => :edit
@@ -58,7 +71,7 @@ class Admin::LocalContestsController < Admin::ApplicationController
 
   private
 
-  def restore_edited
+  def restore_edited_local_contest
     id = params[:local_contest][:id]
     @edited_local_contest = id.blank? ? LocalContest.new : (LocalContest.where(:id => id).first || LocalContest.new)
   end

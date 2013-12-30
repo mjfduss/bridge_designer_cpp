@@ -105,6 +105,20 @@ class LocalContest < ActiveRecord::Base
     p.join(', ')
   end
 
+  # Destructively replace escapes in the input text
+  # with information on this local contest.
+  def substitute_escapes_in(text)
+    text.gsub(/\[[^\]]*\]/) do |s|
+      case s
+        when '[year]' then WPBDC::CONTEST_YEAR
+        when '[poc]'  then poc_full_name
+        when '[code]' then code
+        when '[description]' then description
+        else s
+      end
+    end
+  end
+
   protected
 
   def upcase_code

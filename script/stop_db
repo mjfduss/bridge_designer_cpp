@@ -1,3 +1,4 @@
 #! /bin/csh
-sudo ls
-sudo -u postgres pg_ctl -m fast -D /opt/local/var/db/postgresql92/defaultdb stop
+# old: sudo ls
+# old: sudo -u postgres pg_ctl -m fast -D /opt/local/var/db/postgresql92/defaultdb stop
+pg_ctl -D /usr/local/var/postgres stop

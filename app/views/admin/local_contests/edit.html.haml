@@ -54,6 +54,13 @@
     = f.submit 'Delete selected records', :name => 'delete', :confirm => 'Are you absolutely sure you want to delete?'
     = sep
     = f.submit 'Query by example', :name => 'query'
+    - if email? @edited_local_contest.link
+      %br
+      = f.submit 'Send email', :name => 'send_email'
+      = sep
+      = collection_select(:email, :message_body_id,
+        HtmlDocument.where(['subject ILIKE ?', '%local contest%']).order('subject ASC'),
+          :id, :subject, :include_blank => 'Select Document')
     %hr
     .para #{pluralize(@local_contests.length, 'contest')} shown.
     = render @local_contests
