@@ -1,6 +1,6 @@
 class StandingsController < ApplicationController
 
-    skip_before_filter :require_valid_session
+  skip_before_filter :require_valid_session, :check_schedule
   before_filter :require_valid_category
 
   # Doesn't work on Heroku!

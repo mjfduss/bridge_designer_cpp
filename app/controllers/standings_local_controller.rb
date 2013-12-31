@@ -1,6 +1,6 @@
 class StandingsLocalController < ApplicationController
 
-  skip_before_filter :require_valid_session
+  skip_before_filter :require_valid_session, :check_schedule
 
   def show
     code = params[:code].upcase
