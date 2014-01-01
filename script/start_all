@@ -1,7 +1,0 @@
-#! /bin/csh
-# old sudo ls
-redis-server /Users/generessler/Projects/Rails/wpbdc/db/redis.conf &
-# old: sudo su postgres -c '/opt/local/lib/postgresql92/bin/postgres -D /opt/local/var/db/postgresql92/defaultdb' &
-pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
-bundle exec rails s &
-bundle exec rake jobs:work &

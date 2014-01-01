@@ -1,3 +1,0 @@
-#! /bin/csh
-script/stop_web
-bundle exec rails s &

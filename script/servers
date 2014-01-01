@@ -1,0 +1,115 @@
+#! /bin/bash
+
+#
+# Start and stop the development servers.
+#
+
+usage() {
+  echo 'usage: servers [start|stop|restart]'
+}
+
+# Gather evidence of what's running
+postgres_cmd='pg_ctl -D /usr/local/var/postgres'
+redis_pid=`pgrep redis-server`
+postgres_pid=`$postgres_cmd status | grep PID`
+web_server_pid_file='tmp/pids/server.pid'
+# delayed_job is invisible to pgrep. Weird.
+delayed_job_pid=`ps -axo pid,comm | grep delayed_job`
+
+# Text color escapes
+txtund=$(tput sgr 0 1)          # Underline
+txtbld=$(tput bold)             # Bold
+bldred=${txtbld}$(tput setaf 1) #  red
+bldgrn=${txtbld}$(tput setaf 2) #  green
+bldylw=${txtbld}$(tput setaf 3) #  yellow
+bldblu=${txtbld}$(tput setaf 4) #  blue
+bldmgn=${txtbld}$(tput setaf 5) #  magenta
+bldcyn=${txtbld}$(tput setaf 6) #  cyan
+bldwht=${txtbld}$(tput setaf 7) #  white
+txtrst=$(tput sgr0)             # Reset
+
+case "$1" in
+
+  start)
+
+    if [ -n "$postgres_pid" ]
+    then
+      echo "${bldred}postgres already running${txtrst}"
+    else
+      $postgres_cmd  -l /usr/local/var/postgres/server.log start
+      echo "${bldblu}started postgres${txtrst}"
+    fi
+
+    if [ -n "$redis_pid" ]
+    then
+      echo "${bldred}redis already running${txtrst}"
+    else
+      redis-server /Users/generessler/Projects/Rails/wpbdc/db/redis.conf &
+      echo "${bldblu}started redis${txtrst}"
+    fi
+
+    if [ -f "$web_server_pid_file" ]
+    then
+      echo "${bldred}web server already running${txtrst}"
+    else
+      bundle exec rails s -d &
+      echo "${bldblu}started web server${txtrst}"
+    fi
+
+    if [ -n "$delayed_job_pid" ]
+    then
+      echo "${bldred}delayed job already running${txtrst}"
+    else
+      RAILS_ENV=development script/delayed_job start
+      echo "${bldblu}started delayed job${txtrst}"
+    fi
+    ;;
+
+  stop)
+
+    # Won't be able to run dj script if postgres isn't up.
+    if [ -n "$delayed_job_pid" -a -n "$postgres_pid" ]
+    then
+      RAILS_ENV=development script/delayed_job stop
+      echo "${bldblu}stopped delayed job${txtrst}"
+    else
+      echo "${bldred}delayed job already stopped${txtrst}"
+    fi
+
+    if [ -f "$web_server_pid_file" ]
+    then
+      kill `cat $web_server_pid_file`
+      echo "${bldblu}stopped web server${txtrst}"
+    else
+      echo "${bldred}web server already stopped${txtrst}"
+    fi
+
+    if [ -n "$redis_pid" ]
+    then
+      redis-cli shutdown
+      echo "${bldblu}stopped redis${txtrst}"
+    else
+      echo "${bldred}redis already stopped${txtrst}"
+    fi
+
+    if [ -n "$postgres_pid" ]
+    then
+      $postgres_cmd -m fast stop
+      echo "${bldblu}stopped postgres${txtrst}"
+    else
+      echo "${bldred}postgres already stopped${txtrst}"
+    fi
+    ;;
+
+  restart)
+    echo "${txtund}${bldblu}restarting: stop all${txtrst}"
+    $0 stop
+    echo "${txtund}${bldblu}restarting: start all${txtrst}"
+    $0 start
+    ;;
+
+  *)
+    usage
+    ;;
+    
+esac
