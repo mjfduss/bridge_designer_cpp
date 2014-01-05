@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    reset_session # An attack precaution.
+    reset_session unless session[:admin_id ]# An attack precaution.
     team = Team.authenticate(params[:session][:name], params[:session][:password])
     if team
       establish_session(team)
