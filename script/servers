@@ -32,6 +32,12 @@ case "$1" in
 
   start)
 
+    # Clobber logs so the don't grow indefinitely.
+    for log in log/*
+    do
+      > "${log}"
+    done
+
     if [ -n "$postgres_pid" ]
     then
       echo "${bldred}postgres already running${txtrst}"
@@ -67,7 +73,8 @@ case "$1" in
 
   stop)
 
-    # Won't be able to run dj script if postgres isn't up.
+    # Won't be able to run dj script if postgres isn't up,
+    # but dj should have crashed in that case, so not a problem.
     if [ -n "$delayed_job_pid" -a -n "$postgres_pid" ]
     then
       RAILS_ENV=development script/delayed_job stop

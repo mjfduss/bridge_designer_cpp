@@ -1,5 +1,7 @@
 class Admin::ApplicationController < ActionController::Base
 
+  force_ssl
+
   layout 'admin/application'
 
   protect_from_forgery
