@@ -34,7 +34,7 @@ class Admin::ApplicationController < ActionController::Base
         attr = m[2]
         case attr
           when 'group'
-            Team.update_all({:group_id => val}, {:id => id}) unless val == params["#{id}_group_in"]
+            Team.update_all({:group_id => val == '-' ? nil : val.to_i}, {:id => id}) unless val == params["#{id}_group_in"]
           when 'status'
             old_val = params["#{id}_status_in"]
             unless val == old_val

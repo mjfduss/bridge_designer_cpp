@@ -1,6 +1,9 @@
 %h1 Server status at #{Time.now.to_s(:nice)} from client #{@ip}
 %table
   %tr
+    %td Reminder requests:
+    %td= ReminderRequest.count
+  %tr
     %td Teams:
     %td= Team.count
   %tr

@@ -12,11 +12,13 @@
         %td= text_field_tag('request[test_email]')
         %td{ :align => 'right' }= submit_tag 'Send', :name => :to_test_email
         %td= sep
-      %tr
-        %td Reminder requestors:
-        %td= sep
-        %td{ :align => 'right' }= submit_tag 'Send', :name => :to_reminder_requestors
-        %td= submit_tag 'Clear all reminder requests', :name => :clear_reminder_requests, :confirm => 'This action cannot be undone! Are you absolutely sure you want to clear all reminder requests?'
+      - reminder_request_count = ReminderRequest.count
+      - if reminder_request_count > 0
+        %tr
+          %td Reminder requestors (#{reminder_request_count}):
+          %td= sep
+          %td{ :align => 'right' }= submit_tag 'Send', :name => :to_reminder_requestors
+          %td= submit_tag 'Clear all reminder requests', :name => :clear_reminder_requests, :confirm => 'This action cannot be undone! Are you absolutely sure you want to clear all reminder requests?'
       %tr
         %td= label(:request, :local_contest_id, 'Local contest:')
         %td= collection_select(:request, :local_contest_id, LocalContest.order('code ASC'), :id, :description, :include_blank => 'Select Local Contest')
