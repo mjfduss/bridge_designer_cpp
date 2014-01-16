@@ -1,7 +1,7 @@
 module Admin::StandingsReviewsHelper
 
   def row_height(row)
-    row.map { |i| i.kind_of?(Array) ? i.length : 1 }.max;
+    row.map { |key, val| val.kind_of?(Array) ? val.length : 1 }.max;
   end
 
 end

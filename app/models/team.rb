@@ -256,7 +256,7 @@ class Team < ActiveRecord::Base
       :rank => rank,
       :team_name => name,
       :category => category,
-      :members => members.map{|m| m.first_name.strip }.uniq,
+      :members => members.map{|m| m.first_name }, # Don't uniquify first names!
       :city_state => members.map{|m| city_state(m) }.uniq,
       :school => members.map{|m| m.school ? m.school.strip : '--'}.uniq,
       :location => members.map{|m| m.school_city ? m.school_city.strip : '--' }.uniq,
