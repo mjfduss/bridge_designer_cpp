@@ -52,7 +52,7 @@ class LocalContest < ActiveRecord::Base
     LocalContest.column_names.each do |name|
       next if name == 'id'
       param = params[name]
-      q = q.where("#{name} ILIKE ?", "%#{param}%") unless param.blank?
+      q = q.where("#{name} ILIKE ?", "#{param}%") unless param.blank?
     end
     ac = params[:affiliation_count].to_i  # this gives 0 for blank or nil param
     (ac == 0) ? q.all : q.select{ |c| c.affiliation_count >= ac }
