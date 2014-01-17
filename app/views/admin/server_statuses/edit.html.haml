@@ -15,7 +15,7 @@
   - if LocalScoreboard.first
     %tr
       %td Local scoreboard update:
-      %td= LocalScoreboard.first.created_at.to_s(:nice)
+      %td= LocalScoreboard.first.updated_at.to_s(:nice)
 %hr
 %h1 Clear contest database
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }

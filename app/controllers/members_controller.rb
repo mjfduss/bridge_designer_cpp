@@ -10,6 +10,9 @@ class MembersController < ApplicationController
     elsif params.has_key? :skip
       redirect_to :controller => :certifications, :action => :edit
     else
+      # Clean any partial second member before creating a new one.  This can
+      # Happen if the back button is pressed in the browser.
+      Member.delete_all(['team_id = ? AND rank = 1', session[:team_id]])
       @member = Member.new(params[:member])
       # Fill in rank of member record, since it is not a user field.
       @member.rank = 1
