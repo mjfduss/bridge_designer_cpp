@@ -71,8 +71,8 @@ module DiffMarkups
         [ "#{DEL_TAG}#{a[0]}#{END_TAG}".html_safe, diff_markup(a[1], b[0]) ]
     elsif a.length == 1 && b.length == 2
       deep_length(Diff::LCS::diff(a[0], b[0])) <= deep_length(Diff::LCS::diff(a[0], b[1])) ?
-        [ diff_markup(a[0], b[0]), "#{DEL_TAG}#{b[1]}#{END_TAG}".html_safe ] :
-        [ "#{DEL_TAG}#{b[0]}#{END_TAG}".html_safe, diff_markup(a[0], b[1]) ]
+        [ diff_markup(a[0], b[0]), "#{INS_TAG}#{b[1]}#{END_TAG}".html_safe ] :
+        [ "#{INS_TAG}#{b[0]}#{END_TAG}".html_safe, diff_markup(a[0], b[1]) ]
     end
   end
 end

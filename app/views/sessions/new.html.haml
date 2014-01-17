@@ -83,10 +83,10 @@
             %table
               %tr
                 %td= f.label 'Team Name:'
-                %td= f.text_field :name, { :size => 16, :maxlength => 16 }
+                %td= f.text_field :name, { :size => 16 }
               %tr
                 %td= f.label 'Password:'
-                %td= f.password_field :password, { :size => 16, :maxlength => 16 }
+                %td= f.password_field :password, { :size => 16 }
               %tr
                 %td{ :colspan => 2, :align => 'right' }= f.submit 'Log In', { :class => 'btn' }
       .para= link_to 'Forgot your team name or password?', new_password_reset_path
