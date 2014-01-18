@@ -204,6 +204,7 @@ class Team < ActiveRecord::Base
   def self.assign_top_ranks(teams, truncate_at_rank = -1)
     max_ranked_in_group = 1
     rank = 0
+    rankable = 0  # Could be ranked if accepted.
     group_counts = Hash.new(0)
     teams.each_with_index do |team, index|
       g = team.group
@@ -216,11 +217,17 @@ class Team < ActiveRecord::Base
           end
         when '-'
           # :x for "Would be visible if this alone were accepted"; :o for "Would be hidden even if accepted"
-          (g.nil? || group_counts[g.id] <= max_ranked_in_group) ? :x : :o
+          if g.nil? || group_counts[g.id] <= max_ranked_in_group
+            rankable += 1
+            :x
+          else
+            :o
+          end
         else
+          rankable += 1
           :x
       end
-      return [teams.replace(teams[0..index]), rank] if rank == truncate_at_rank
+      return [teams.replace(teams[0..index]), rank] if rank == truncate_at_rank || rankable == truncate_at_rank
     end
     [teams, rank]
   end
