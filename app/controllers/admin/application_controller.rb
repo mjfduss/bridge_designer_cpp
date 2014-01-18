@@ -7,27 +7,14 @@ class Admin::ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :add_no_cache_headers, :require_valid_session
 
-  def disqualified
-    @disqualified ||= []
-  end
-
-  def disqualified=(val)
-    @disqualified = val
-  end
-
-  def qualified
-    @qualified ||= []
-  end
-
-  def qualified=(val)
-    @qualified = val
-  end
-
   protected
 
   # Check for team review controls that have changed from their initial
   # value and update only those records.  Several controllers use it.
+  # Returns a pair of lists: newly qualified and disqualified teams
   def update_modified_teams
+    qualified = []
+    disqualified = []
     params.each_pair do |key, val|
       /^(\d+)_([a-zA-Z0-9]+)$/.match(key) do |m|
         id = m[1]
@@ -53,6 +40,7 @@ class Admin::ApplicationController < ActionController::Base
         end
       end
     end
+    [qualified, disqualified]
   end
 
   def kill_session(msg)

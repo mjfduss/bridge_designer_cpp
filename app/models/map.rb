@@ -43,7 +43,7 @@ module Map
     gc.fill('black')
     lx = LEGEND_LEFT
     ly = LEGEND_TOP
-    gc.text(lx, ly, "West Point Bridge Design Contest Participants (#{Time.now.to_s(:nice)})")
+    gc.text(lx, ly, "Engineering Encounters Bridge Design Contest Participants (#{Time.now.to_s(:nice)})")
 
     ly = LEGEND_TOP + MAX_DOT_SIDE / 2
     gc.text(lx, ly + FONT_HEIGHT / 2, 'Legend (# of participants)')

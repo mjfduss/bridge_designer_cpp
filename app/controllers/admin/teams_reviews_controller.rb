@@ -5,7 +5,7 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
 
   def update
     if params.nonblank? :process
-      update_modified_teams
+      qualified, disqualified = update_modified_teams
       msg = ''
       unless disqualified.empty?
         msg << 'Disqualified notices sent to ' + disqualified.map{|t| "'#{t.name}'"}.to_sentence + '. '
@@ -15,7 +15,7 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
         msg << 'Qualified notices sent to ' + qualified.map{|t| "'#{t.name}'"}.to_sentence  + '. '
         qualified.each{|t| QualifiedNotice.delay.to_team(t) }
       end
-      flash[:alert] = msg unless msg.empty?
+      flash.now[:alert] = msg unless msg.empty?
       fetch_params
       @groups = Group.all
       render :action => :edit
@@ -34,6 +34,6 @@ class Admin::TeamsReviewsController < Admin::ApplicationController
     @standings_cutoff = params[:standings_cutoff].to_i
     @visible_status = params[:visible_status] || []
     @visible_attributes = params[:visible_attributes] || []
-    @teams = Team.assign_top_ranks(Team.get_top_teams(@category, @visible_status, nil, @standings_cutoff))
+    @teams = Team.get_ranked_top_teams(@category, @visible_status, nil, @standings_cutoff)
   end
 end

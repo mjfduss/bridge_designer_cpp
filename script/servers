@@ -58,7 +58,7 @@ case "$1" in
     then
       echo "${bldred}web server already running${txtrst}"
     else
-      bundle exec rails s -d &
+      bundle exec rails s &
       echo "${bldblu}started web server${txtrst}"
     fi
 

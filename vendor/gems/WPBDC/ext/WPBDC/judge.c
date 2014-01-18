@@ -1,8 +1,7 @@
 /*
  *
- * judge.c -- Ruby Extension WPBDC.  Support for the West Point 
- * Bridge Design Contest web site.  Ruby-visible constants
- * and functions.
+ * judge.c -- Ruby Extension WPBDC.  Support for the Engineering Encounters
+ * Bridge Design Contest web site.  Ruby-visible constants and functions.
  *
  * Hashing code assumes unsigned int is 32 bits, but should otherwise be portable.
  *

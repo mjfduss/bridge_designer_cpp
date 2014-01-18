@@ -6,7 +6,7 @@ describe "Registration" do
   
   describe "at Login/Register page" do
     before { visit root_path }
-    it { should have_selector('title', :text => 'West Point Bridge Design Contest') }
+    it { should have_selector('title', :text => 'Engineering Encounters Bridge Design Contest') }
     it { should have_selector('div', :text => 'Welcome Bridge Designer!') }
     it { should have_selector('div', :text => 'Contest Login') }
   end

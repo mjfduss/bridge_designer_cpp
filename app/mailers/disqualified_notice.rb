@@ -1,6 +1,6 @@
 class DisqualifiedNotice < ApplicationMailer
 
-  SUBJECT = "West Point Bridge Design Contest: Disqualification notice"
+  SUBJECT = "Engineering Encounters Bridge Design Contest: Disqualification notice"
 
   def to_team(team)
     @team = team

@@ -201,11 +201,11 @@ class Team < ActiveRecord::Base
       name_likeness.blank? ? '%' : name_likeness, categories, statuses).order('name_key ASC').limit(limit.to_i)
   end
 
-  def self.assign_top_ranks(teams)
+  def self.assign_top_ranks(teams, truncate_at_rank = -1)
     max_ranked_in_group = 1
     rank = 0
     group_counts = Hash.new(0)
-    teams.each do |team|
+    teams.each_with_index do |team, index|
       g = team.group
       team.rank = case team.status
         when 'a', '2'
@@ -220,8 +220,22 @@ class Team < ActiveRecord::Base
         else
           :x
       end
+      return [teams.replace(teams[0..index]), rank] if rank == truncate_at_rank
     end
-    teams
+    [teams, rank]
+  end
+
+  def self.get_ranked_top_teams(category, status, scenario, limit)
+    # Number to fetch from database trying to reach limit
+    n = 3 * limit
+    loop do
+      top_teams = get_top_teams(category, status, scenario, n)
+      ranked_top_teams, top_rank = assign_top_ranks(top_teams, limit)
+      # We're done if we already fetched all records or if we reached the desired limit.
+      return ranked_top_teams if top_teams.length < n || top_rank == limit
+      # We didn't get enough records. Try again.
+      n *= 2
+    end
   end
 
   def self.assign_simple_ranks(teams, page)
@@ -306,7 +320,7 @@ class Team < ActiveRecord::Base
       :created_at => Time.now.to_s(:nice),
       :category => category,
       :rows => option == 'x' ? nil : # No rows at all if option is 'x'
-        assign_top_ranks(get_top_teams(team_category, team_status, scenario, limit)).
+        get_ranked_top_teams(team_category, team_status, scenario, limit).
           select { |t| t.rank.is_a? Integer }.map {|t| t.scoreboard_row(option == 's') }
     }
     scoreboard[:unavailable] = true if option == 'x'

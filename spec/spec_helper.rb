@@ -86,7 +86,7 @@ def goto_certification_page(args)
 end
 
 def it_should_have_standard_title
-  it { should have_selector('title', :text => 'West Point Bridge Design Contest') }
+  it { should have_selector('title', :text => 'Engineering Encounters Bridge Design Contest') }
 end
 
 def it_should_have_member_partial

@@ -3,9 +3,8 @@
 
 /*
  *
- * judge.h -- Ruby Extension WPBDC.  Support for the West Point 
- * Bicentennial Design Contest web site.  Ruby-visible constants
- * and functions.
+ * judge.h -- Ruby Extension WPBDC.  Support for the Engineering Encounters
+ * Bridge Design Contest web site.  Ruby-visible constants and functions.
  */
 
 #include "rubydefs.h"

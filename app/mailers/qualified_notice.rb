@@ -1,6 +1,6 @@
 class QualifiedNotice < ApplicationMailer
 
-  SUBJECT = "West Point Bridge Design Contest: You're qualified!"
+  SUBJECT = "Engineering Encounters Bridge Design Contest: You're qualified!"
 
   def to_team(team)
     @team = team
