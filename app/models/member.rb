@@ -16,7 +16,7 @@ class Member < ActiveRecord::Base
   has_one :parent
 
   validates :first_name, :presence => true, :length => { :maximum => 40 }
-  validates :middle_initial, :length => { :maximum => 1 }
+  validates :middle_initial, :length => { :maximum => 1, :message => 'can be only a single character' }
   validates :last_name, :presence => true, :length => { :maximum => 40 }
   validates :category, 
             :presence => { :message => 'must be selected with one of the buttons below' }, 
