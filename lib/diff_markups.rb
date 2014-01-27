@@ -10,9 +10,11 @@ module DiffMarkups
   def self.team_name_check_markup(team_name, family_names)
     tn = team_name.downcase.gsub(/[^a-z0-9]/, '').split('')
     fns = family_names.map{|f| f.downcase.gsub(/[^a-z]/, '').split('') }
-    # Find a family name that can be formed by only adding to the team name, not deleting.  This
+    # Find a family name prefix that can be formed by only adding to the team name, not deleting. This
     # means breaking out of the sequence traversal if a '-' is found, i.e. the sequence is okay.
-    fn = fns.find { |f| not Diff::LCS::traverse_sequences(f, tn) {|e| break true if e.action == '-' } }
+    fn = fns.find do |n|
+      not Diff::LCS::traverse_sequences(n[0...[4, n.length / 4].max], tn) {|e| break true if e.action == '-' }
+    end
     # Return unmarked team name key unless we found a family name with a problem.
     return fn ? markup(fn, tn).join('').html_safe : nil
   end
