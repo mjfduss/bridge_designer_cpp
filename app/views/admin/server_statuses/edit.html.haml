@@ -5,17 +5,27 @@
     %td= ReminderRequest.count
   %tr
     %td Teams:
-    %td= Team.count
+    %td
+      #{Team.count}
+      (#{Team.joins(:designs).count(:id, :distinct => true)} with designs)
+  %tr
+    %td ...last 24 hours:
+    %td
+      #{Team.where(['reg_completed >= ?', 24.hours.ago]).count}
+      (#{Team.joins(:designs).where(['reg_completed >= ?', 24.hours.ago]).count(:id, :distinct => true)} with designs)
   %tr
     %td Designs:
     %td= Design.count
+  %tr
+    %td ...last 24 hours:
+    %td= Design.where(['created_at >= ?', 24.hours.ago]).count
   %tr
     %td Local Contests:
     %td= LocalContest.count
   - if LocalScoreboard.first
     %tr
       %td Local scoreboard update:
-      %td= LocalScoreboard.first.updated_at.to_s(:nice)
+      %td= LocalScoreboard.maximum(:updated_at).to_s(:nice)
 %hr
 %h1 Clear contest database
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }
