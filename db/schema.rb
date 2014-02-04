@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131230074103) do
+ActiveRecord::Schema.define(:version => 20140204004437) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(:version => 20131230074103) do
     t.string   "state",              :limit => 40
     t.string   "zip",                :limit => 9
     t.string   "phone",              :limit => 16
-    t.string   "link",               :limit => 40
+    t.string   "link",               :limit => 80
     t.datetime "created_at",                                      :null => false
     t.datetime "updated_at",                                      :null => false
     t.integer  "affiliations_count",               :default => 0, :null => false

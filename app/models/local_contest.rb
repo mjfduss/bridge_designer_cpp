@@ -36,7 +36,7 @@ class LocalContest < ActiveRecord::Base
   validates :state, :length => { :maximum => 40 }
   validates :zip, :length => { :maximum => 9 }, :numericality => { :only_integer => true }, :allow_blank => true
   validates :phone, :length => { :maximum => 16 }
-  validates :link, :length => { :maximum => 40 }
+  validates :link, :length => { :maximum => 80 }
 
   # Query for the number of teams in this contest and cache the result.
   def affiliation_count

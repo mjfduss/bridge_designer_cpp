@@ -17,6 +17,17 @@
     %td Designs:
     %td= Design.count
   %tr
+    %td Standings:
+    %td
+      - s = %w{h m i}.map { |c| Standing.score_count(c) }
+      High school: #{s[0]}
+      |
+      Middle school: #{s[1]}
+      |
+      Open: #{s[2]}
+      |
+      Total: #{s.inject(0, :+)}
+  %tr
     %td ...last 24 hours:
     %td= Design.where(['created_at >= ?', 24.hours.ago]).count
   %tr
