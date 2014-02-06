@@ -81,7 +81,7 @@ prawn_document(:page_layout => :landscape, :force_download => false) do |pdf|
           pdf.move_down 0.5.in
           pdf.font_size 0.2.in do
             pdf.text 'Stephen J. Ressler'
-            pdf.text 'Chief Judge'
+            pdf.text 'Contest Director'
           end
         end
       end
