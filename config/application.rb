@@ -70,5 +70,11 @@ module Wpbdc
 
     # Postmark setup added 16 July 2013
     config.action_mailer.delivery_method   = :postmark
-    config.action_mailer.postmark_settings = { :api_key => ENV['POSTMARK_API_KEY'] }  end
+    config.action_mailer.postmark_settings = { :api_key => ENV['POSTMARK_API_KEY'] }
+
+    # DEBUG DEBUG
+    config.after_initialize do
+      require 'prawn_rails'
+    end
+  end
 end

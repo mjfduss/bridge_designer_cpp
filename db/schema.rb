@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20140204004437) do
     t.string   "first_name",     :limit => 40
     t.string   "middle_initial", :limit => 1
     t.string   "last_name",      :limit => 40
-    t.string   "email",          :limit => 40
+    t.string   "email",          :limit => 80
     t.integer  "member_id"
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
@@ -238,7 +238,7 @@ ActiveRecord::Schema.define(:version => 20140204004437) do
   create_table "teams", :force => true do |t|
     t.string   "name",            :limit => 32
     t.string   "name_key",        :limit => 32
-    t.string   "email",           :limit => 40
+    t.string   "email",           :limit => 80
     t.integer  "submits",                       :default => 0,   :null => false
     t.integer  "improves",                      :default => 0,   :null => false
     t.datetime "created_at",                                     :null => false

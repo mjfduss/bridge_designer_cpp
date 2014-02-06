@@ -88,7 +88,6 @@ class Member < ActiveRecord::Base
 
   def res_age=(val)
     self.age = val if category == 'u'
-    logger.debug "SET RES_AGE: val=#{val} cat=#{category} age=#{age}"
   end
 
   def nonres_age
@@ -96,7 +95,6 @@ class Member < ActiveRecord::Base
   end
 
   def nonres_age=(val)
-    logger.debug "SET NONRES_AGE: val=#{val} cat=#{category}"
     self.age = val if category == 'n'
   end
 

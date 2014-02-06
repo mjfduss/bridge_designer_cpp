@@ -21,6 +21,7 @@ gem 'delayed_job_active_record', '~> 0.4'
 gem 'postmark-rails', '~> 0.5'
 gem 'newrelic_rpm'
 gem 'rails_12factor'
+gem 'prawn_rails'
 
 group :production do
   gem 'memcachier'

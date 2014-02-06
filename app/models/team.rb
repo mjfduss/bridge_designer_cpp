@@ -38,7 +38,7 @@ class Team < ActiveRecord::Base
   validates :new_local_contest, :length => { :maximum => 6 }
 
   with_options :if => :completed? do |v|
-    v.validates :email, :presence => true, :format => { :with => VALID_EMAIL_ADDRESS }
+    v.validates :email, :length => { :maximum => 80 }, :presence => true, :format => { :with => VALID_EMAIL_ADDRESS }
     v.validates_associated :members
     v.validates :captain, :presence => true
   end
@@ -141,6 +141,35 @@ class Team < ActiveRecord::Base
       order by score asc, sequence asc
       limit ?', categories, statuses, limit]
 =end
+  end
+
+  def standing_query(statuses)
+    bd = best_design
+    Team.count_by_sql([
+      'SELECT count(DISTINCT COALESCE(t.group_id, t.id)) ' +
+      'FROM teams t INNER JOIN bests b ' +
+      'ON t.id = b.team_id ' +
+      "WHERE  t.status IN (?) " +
+      'AND t.category = ? ' +
+      'AND b.scenario IS NULL ' +
+      'AND (b.score < ? ' +
+      'OR (b.score = ? AND b.sequence <= ?)) ',
+      statuses, category, bd.score, bd.score, bd.sequence])
+  end
+
+  def basis_query
+    Team.count_by_sql([
+    'SELECT count(DISTINCT COALESCE(t.group_id, t.id)) ' +
+    'FROM teams t INNER JOIN bests b ' +
+    'ON t.id = b.team_id ' +
+    'WHERE t.category = ? ' +
+    "AND t.status IN ('-', 'a', '2') " +
+    'AND b.scenario IS NULL ',
+    category])
+  end
+
+  def standing
+    [ standing_query( %w{a 2}.include?(status) ? %w{a 2} : %w{- a 2} ), basis_query ]
   end
 
   # Get the teams in a local contest correctly sorted by score.

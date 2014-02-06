@@ -7,7 +7,7 @@ module Certificate
                            :page_size => 'LETTER',
                            :page_layout => :landscape) do |pdf|
     pdf.bounding_box [pdf.bounds.left + 0.25.in, pdf.bounds.top], :width => 9.5.in, :height => 7.5.in do
-      pdf.image 'bg.png', :position => 0.26.in, :vposition => 3.in, :scale => 0.5
+      pdf.image "#{File.dirname(__FILE__)}/bg.png", :position => 0.26.in, :vposition => 3.in, :scale => 0.5
       pdf.font 'Times-Roman'
       pdf.stroke_color = '008800'
       pdf.stroke_bounds
@@ -29,7 +29,7 @@ module Certificate
           pdf.text 'The Engineering Encounters', :align => :center
 
           #pdf.move_down 0.25.in
-          pdf.font "ProgressiveText.ttf" do
+          pdf.font "#{File.dirname(__FILE__)}/ProgressiveText.ttf" do
             pdf.font_size 0.75.in
             pdf.text 'Certificate Of Achievement', :align => :center
           end
