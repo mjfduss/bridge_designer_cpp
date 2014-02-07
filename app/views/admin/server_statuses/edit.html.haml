@@ -1,4 +1,5 @@
 %h1 Server status at #{Time.now.to_s(:nice)} from client #{@ip}
+- a_day_ago = 24.hours.ago
 %table
   %tr
     %td Reminder requests:
@@ -7,15 +8,19 @@
     %td Teams:
     %td
       #{Team.count}
-      (#{Team.joins(:designs).count(:id, :distinct => true)} with designs)
+      (#{Team.joins(:designs).count(:id, :distinct => true)} with designs,
+      #{Team.joins(:designs).where("status = 'r'").count(:id, :distinct => true)} rejected)
   %tr
     %td ...last 24 hours:
     %td
-      #{Team.where(['reg_completed >= ?', 24.hours.ago]).count}
-      (#{Team.joins(:designs).where(['reg_completed >= ?', 24.hours.ago]).count(:id, :distinct => true)} with designs)
+      #{Team.where(['reg_completed >= ?', a_day_ago]).count}
+      (#{Team.joins(:designs).where(['reg_completed >= ?', a_day_ago]).count(:id, :distinct => true)} with designs)
   %tr
     %td Designs:
     %td= Design.count
+  %tr
+    %td ...last 24 hours:
+    %td= Design.where(['created_at >= ?', a_day_ago]).count
   %tr
     %td Standings:
     %td
@@ -27,9 +32,6 @@
       Open: #{s[2]}
       |
       Total: #{s.inject(0, :+)}
-  %tr
-    %td ...last 24 hours:
-    %td= Design.where(['created_at >= ?', 24.hours.ago]).count
   %tr
     %td Local Contests:
     %td= LocalContest.count

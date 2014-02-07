@@ -44,9 +44,9 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.4.0)
       ffi (~> 1.0, >= 1.0.11)
-    ckeditor (4.0.9)
+    ckeditor (4.0.4)
       mime-types
-      orm_adapter (~> 0.5.0)
+      orm_adapter
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.3)
@@ -217,7 +217,7 @@ DEPENDENCIES
   bcrypt-ruby (= 3.0.1)
   bootstrap-sass (= 2.0.4.0)
   capybara (= 1.1.2)
-  ckeditor (~> 4.0)
+  ckeditor (= 4.0.4)
   coffee-rails (= 3.2.2)
   dalli
   delayed_job_active_record (~> 0.4)
