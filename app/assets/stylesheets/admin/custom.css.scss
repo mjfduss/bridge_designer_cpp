@@ -94,6 +94,10 @@ td.unreviewed {
   vertical-align: middle;
 }
 
+span.okay {
+  color: $accepted
+}
+
 span.questionable {
   color: $rejected
 }

@@ -7,9 +7,10 @@
   %tr
     %td Teams:
     %td
-      #{Team.count}
-      (#{Team.joins(:designs).count(:id, :distinct => true)} with designs,
-      #{Team.joins(:designs).where("status = 'r'").count(:id, :distinct => true)} rejected)
+      - n_teams = Team.count
+      - n_teams_with_designs = Team.joins(:designs).count(:id, :distinct => true)
+      - n_teams_rejected = Team.joins(:designs).where("status = 'r'").count(:id, :distinct => true)
+      #{n_teams} (#{n_teams_with_designs} with designs, #{n_teams_rejected} rejected)
   %tr
     %td ...last 24 hours:
     %td
@@ -25,20 +26,25 @@
     %td Standings:
     %td
       - s = %w{h m i}.map { |c| Standing.score_count(c) }
+      - total_standings = s.inject(0, :+)
       High school: #{s[0]}
       |
       Middle school: #{s[1]}
       |
       Open: #{s[2]}
       |
-      Total: #{s.inject(0, :+)}
+      Total: #{total_standings}
+      - if n_teams_with_designs - n_teams_rejected == total_standings
+        %span.okay OK
+      - else
+        %span.questionable Not OK
   %tr
     %td Local Contests:
     %td= LocalContest.count
   - if LocalScoreboard.first
     %tr
       %td Local scoreboard update:
-      %td= LocalScoreboard.maximum(:updated_at).to_s(:nice)
+      %td= Time.zone.at(LocalScoreboard.maximum(:updated_at)).to_s(:nice)
 %hr
 %h1 Clear contest database
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }

@@ -5,7 +5,7 @@
       = row[:rank]
       - if row[:score]
         %br
-        %span.tiny.gray= format "$%.2f", 0.01 * row[:score]
+        %span.tiny.gray #{row[:score]}
     %td= row[:team_name]
     - if show_category_p
       %td.centered= TablesHelper::CATEGORY_MAP[row[:category]]
