@@ -142,8 +142,8 @@ module TablesHelper
     CATEGORY_PAIRS =
       [
         ['Select Category', '-'],
-        ['US/PR High School', 'h'],
-        ['US/PR Middle School', 'm'],
+        ['High School', 'h'],
+        ['Middle School', 'm'],
         ['Open Competition', 'i'],
       ]
 
@@ -153,8 +153,8 @@ module TablesHelper
       [
         ['Select Standings', '-'],
         ['Combined All', 'c'],
-        ['US/PR High School', 'h'],
-        ['US/PR Middle School', 'm'],
+        ['High School', 'h'],
+        ['Middle School', 'm'],
         ['Open Competition', 'i'],
         ['Semi-Finalists', '2'],
       ]

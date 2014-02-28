@@ -48,17 +48,20 @@ prawn_document(:page_layout => :landscape, :force_download => false) do |pdf|
           end
         end
 
-        pdf.move_down 0.20.in
-        pdf.text "For attaining a rank of #{@standing} out of #{@basis} teams", :align => :center
+        pdf.move_down 0.2.in
+        pdf.text "For attaining a standing of #{number_with_delimiter(@standing, :delimiter => ',')} among " +
+          "#{number_with_delimiter(@basis, :delimiter => ',')} teams", :align => :center
 
         pdf.move_down 0.1.in
-        pdf.text 'in the National', :align => :center
+        pdf.text "#{TablesHelper::CATEGORY_MAP[@team.category]} Division Qualifying Round", :align => :center
 
         pdf.move_down 0.1.in
         pdf.text 'Engineering Encounters Bridge Design Contest', :align => :center
 
-        pdf.move_down 0.1.in
-        pdf.text "on #{Time.now.strftime('%B %e, %Y')}", :align => :center
+        pdf.move_down 0.2.in
+        pdf.font pdf.font.name, :style => :italic do
+          pdf.text @date.strftime('%B %e, %Y'), :align => :center
+        end
 
         pdf.bounding_box [pdf.bounds.left + 0.7.in, pdf.bounds.bottom + 1.3.in],
                          :width => 3.in do
@@ -67,10 +70,9 @@ prawn_document(:page_layout => :landscape, :force_download => false) do |pdf|
           pdf.bounding_box [pdf.bounds.left + graphic_width, pdf.bounds.top],
                            :width => pdf.bounds.width - graphic_width do
             pdf.font pdf.font.name, :style => :bold_italic, :size => 0.16.in do
-              pdf.move_down 0.1.in
+              pdf.move_down 0.2.in
               pdf.text 'Engineering Encounters'
               pdf.text 'Certified'
-              pdf.text 'True and Correct'
             end
           end
         end

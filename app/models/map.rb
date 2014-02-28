@@ -28,11 +28,6 @@ module Map
   # Assumes version is a valid Pippa map name.
   def self.members(version)
 
-    # Count participation in each zip code.
-    counts = Hash.new(0)
-    Member.where('zip IS NOT NULL').find_each {|member| counts[member.zip] += 1 }
-    Parent.where('zip IS NOT NULL').find_each {|parent| counts[parent.zip] += 1 }
-
     # Draw dots on a map.
     map = Pippa::Map.new(version)
     map.point_size = POINT_SIZE
@@ -56,7 +51,37 @@ module Map
     end
     gc.draw(map.image)
 
-    counts.each {|zip, count| map.add_at_zip(zip, count) }
+    counts_by_zip.each {|zip, count| map.add_at_zip(zip, count) }
     map.to_png
   end
+
+  def self.data(version)
+    map = Pippa::Map.new(version)
+    counts_by_zip.map do |zip, count|
+      data = Pippa.zips[zip]
+      [ *map.lat_lon_to_xy(data[:lat], data[:lon]), count ] if data
+    end.compact
+  end
+
+  def self.dump_data(version = 'USA', file = 'data.c')
+    File.open(file, 'w') do |f|
+      f.write %Q{#include "utility.h"\n}
+      f.write %Q{#include "marker.h"\n}
+      f.write "MARKER test_markers[] = {\n"
+      data(version).each do |x, y, count|
+         f.write "  { #{count * x}, #{count * y}, #{count} },\n"
+      end
+      f.write("};\n")
+      f.write("int test_markers_size = ArraySize(test_markers);\n")
+    end
+  end
+
+  def self.counts_by_zip
+    # Count participation in each zip code.
+    counts = Hash.new(0)
+    Member.where('zip IS NOT NULL').find_each {|member| counts[member.zip] += 1 }
+    Parent.where('zip IS NOT NULL').find_each {|parent| counts[parent.zip] += 1 }
+    counts
+  end
+
 end
