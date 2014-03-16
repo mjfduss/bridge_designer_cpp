@@ -4,9 +4,28 @@ class Certificate < ActiveRecord::Base
   belongs_to :local_contest, :counter_cache => true
   belongs_to :team
   belongs_to :group
+  # validates_uniqueness_of :team_id, :scope => :local_contest_id
 
-  def self.generate_for_qualifiers
+  def self.revoke_for_qualifiers(category)
+    Certificate.joins(:team).destroy_all(:local_contest_id => nil, :teams => { :category => category })
+  end
 
+  def self.generate_for_qualifiers(category)
+    Certificate.revoke_for_qualifiers(category)
+    basis = Team.get_basis(category)
+    awarded_on = Date.today
+    Team.each_team_receiving_qualifying_certificate(category) do |team, group_standing, group_basis|
+      Certificate.create do |c|
+        c.team = team
+        c.design = team.best_design
+        c.standing = team.rank
+        c.basis = [basis, c.standing].max
+        c.group = team.group
+        c.group_standing = group_standing
+        c.group_basis = group_basis
+        c.awarded_on = awarded_on
+      end
+    end
   end
 
   def self.revoke_for_local_contests(ids)
@@ -18,11 +37,11 @@ class Certificate < ActiveRecord::Base
 
   def self.generate_for_local_contests(ids)
     lcs = revoke_for_local_contests(ids)
+    awarded_on = Date.today
     lcs.each do |lc|
       # We can't use affiliation count here as we do in the administrator
       # because we want to take bridges and reject status into account.
       basis = Team.get_local_contest_basis(lc.code)
-      awarded_on = Date.today
       page = 1
       loop do
         teams = Team.get_ranked_local_contest_teams(lc.code, page, 1000)

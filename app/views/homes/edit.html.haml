@@ -130,11 +130,11 @@
                     %li{ :class => 'msg_list' } Something went wrong saving your bridge. Sorry. Try again and contact the contest officials if it doesn't work.
                   - else
                     %li{ :class => 'msg_list'} [ bad @result = #{@result} ]
-    - unless @certificates.blank?
+    - unless @team.certificates.blank?
       %hr
-      .para.bold Download your #{'Certificate'.pluralize(@certificates.length)} of Achievement
+      .para.bold Download your #{'Certificate'.pluralize(@team.certificates.length)} of Achievement
       %table
-        - @certificates.each do |c|
+        - @team.certificates.each do |c|
           %tr
             %td{ :class => 'link_menu'}= certificate_link(c)
     %hr

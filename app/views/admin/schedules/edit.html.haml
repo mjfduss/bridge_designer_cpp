@@ -29,12 +29,12 @@
       %td
         = f.datetime_select :end_quals, :minute_step => 5
         = sep
+        = f.label(:post_certificates, "Certificates:" )
+        = f.submit 'Post', :name => 'certificates'
+        = f.submit 'Revoke', :name => 'revoke_certificates'
+        = sep
         = f.label(:quals_tally_complete, "Tally complete:" )
         = f.check_box(:quals_tally_complete)
-        = sep
-        = f.label(:post_certificates, "Certificates:" )
-        = f.submit 'Post', :name => 'post_certificates'
-        = f.submit 'Clear', :name => 'clear_certificates'
     %tr
       %td= f.label(:start_semis_prereg, 'Start semi login check:')
       %td= f.datetime_select :start_semis_prereg, :minute_step => 5

@@ -5,6 +5,8 @@ class Team < ActiveRecord::Base
   VALID_EMAIL_ADDRESS = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   NONE = '[none]'
   PER_PAGE = 20
+  STATUS_UNREJECTED = %w{- a 2}
+  STATUS_ACCEPTED = %w{a 2}
 
   attr_accessible :name, :email
   attr_accessible :password, :password_confirmation
@@ -138,49 +140,19 @@ class Team < ActiveRecord::Base
       joins(:bests).
       where(:bests => { :scenario => scenario }, :category => categories, :status => statuses).
       order('bests.score ASC, bests.sequence ASC').limit(limit)
-=begin
-    # PSQL specific
-    Team.find_by_sql ['select * from
-      (select distinct on (d.team_id) t.*, d.score, d.sequence
-        from teams t inner join designs d
-        on t.id = d.team_id
-        where t.category in (?) and t.status in (?)
-        order by d.team_id, d.score asc, d.sequence asc) tmp
-      order by score asc, sequence asc
-      limit ?', categories, statuses, limit]
-=end
   end
 
-  # TODO Not currently used.  Delete?
-  def standing_query(statuses)
-    bd = best_design
+  def self.get_basis(category)
+    max_group_id = Group.maximum(:id)
+    return 0 unless max_group_id
     Team.count_by_sql([
-      'SELECT count(DISTINCT COALESCE(t.group_id, t.id)) ' +
-      'FROM teams t INNER JOIN bests b ' +
-      'ON t.id = b.team_id ' +
-      "WHERE  t.status IN (?) " +
-      'AND t.category = ? ' +
-      'AND b.scenario IS NULL ' +
-      'AND (b.score < ? ' +
-      'OR (b.score = ? AND b.sequence <= ?)) ',
-      statuses, category, bd.score, bd.score, bd.sequence])
-  end
-
-  # TODO Not currently used.  Delete?
-  def basis_query
-    Team.count_by_sql([
-    'SELECT count(DISTINCT COALESCE(t.group_id, t.id)) ' +
-    'FROM teams t INNER JOIN bests b ' +
-    'ON t.id = b.team_id ' +
-    'WHERE t.category = ? ' +
-    "AND t.status IN ('-', 'a', '2') " +
-    'AND b.scenario IS NULL ',
-    category])
-  end
-
-  # TODO Not currently used.  Delete?
-  def standing
-    [ standing_query( %w{a 2}.include?(status) ? %w{a 2} : %w{- a 2} ), basis_query ]
+      "SELECT count(DISTINCT COALESCE(t.group_id, t.id + #{max_group_id + 1})) " +
+          'FROM teams t INNER JOIN bests b ' +
+          'ON t.id = b.team_id ' +
+          'WHERE t.category = ? ' +
+          "AND t.status IN ('-', 'a', '2') " +
+          'AND b.scenario IS NULL ',
+      category])
   end
 
   # Get the teams in a local contest correctly sorted by score.
@@ -193,7 +165,7 @@ class Team < ActiveRecord::Base
     relation = includes(:members, :best_design).
       joins(:bests, :affiliations => :local_contest).
       # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
-      where(:status => %w{- a 2 h},
+      where(:status => STATUS_UNREJECTED,
             :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
             :local_contests => { :code => code }).
       order('bests.score ASC, bests.sequence ASC')
@@ -201,10 +173,11 @@ class Team < ActiveRecord::Base
     relation
   end
 
+  # TODO This would be faster if we avoided the join with local contests just to get the code.
   def self.get_local_contest_basis(code)
     joins(:bests, :affiliations => :local_contest).
       # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
-      where(:status => %w{- a 2 h},
+      where(:status => STATUS_UNREJECTED,
             :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
             :local_contests => { :code => code }).count
   end
@@ -215,8 +188,35 @@ class Team < ActiveRecord::Base
       name_likeness.blank? ? '%' : name_likeness, categories, statuses).order('name_key ASC').limit(limit.to_i)
   end
 
+  MAX_RANKED_IN_GROUP = 1
+
+  def self.each_team_receiving_qualifying_certificate(category, &block)
+    # This returns a hash from group id to count of unrejected teams in group.
+    group_bases = joins(:bests).
+        where(:bests => { :scenario => nil}, :category => category, :status => STATUS_UNREJECTED).
+        where("group_id is not null").group(:group_id).count
+    team_ids = joins(:bests).
+        where(:bests => { :scenario => nil}, :category => category, :status => STATUS_UNREJECTED).
+        order('bests.score ASC, bests.sequence ASC').pluck(:id)
+    rank = 0
+    group_counts = Hash.new(0)
+    team_ids.each do |id|
+      team = Team.find(id)
+      gid = team.group_id
+      team.rank = if gid.nil? || (group_counts[gid] += 1) <= MAX_RANKED_IN_GROUP
+                    rank += 1
+                  else
+                    rank
+                  end
+      if gid
+        yield team, group_counts[gid], group_bases[gid]
+      else
+        yield team, nil, nil
+      end
+    end
+  end
+
   def self.assign_top_ranks(teams, truncate_at_rank = -1)
-    max_ranked_in_group = 1
     rank = 0
     rankable = 0  # Could be ranked if accepted.
     group_counts = Hash.new(0)
@@ -224,20 +224,20 @@ class Team < ActiveRecord::Base
       g = team.group
       team.rank = case team.status
         when 'a', '2'
-          if g.nil? || (group_counts[g.id] += 1) <= max_ranked_in_group
+          if g.nil? || (group_counts[g.id] += 1) <= MAX_RANKED_IN_GROUP
             rank += 1
           else
             :o
           end
-        when '-'
+        when '-', 'r'
           # :x for "Would be visible if this alone were accepted"; :o for "Would be hidden even if accepted"
-          if g.nil? || group_counts[g.id] <= max_ranked_in_group
+          if g.nil? || group_counts[g.id] <= MAX_RANKED_IN_GROUP
             rankable += 1
             :x
           else
             :o
           end
-        else
+        else # Should never happen.
           rankable += 1
           :x
       end
@@ -330,7 +330,7 @@ class Team < ActiveRecord::Base
     # i-ineligible (open)
     # 2-semifinal
     team_category = category
-    team_status = %w{a 2}
+    team_status = STATUS_ACCEPTED
     scenario = nil
     case category
       when 'c' # combined
