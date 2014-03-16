@@ -22,6 +22,7 @@ class Team < ActiveRecord::Base
   has_many :local_contests, :through => :affiliations
   has_many :bests, :dependent => :destroy
   has_many :password_resets, :dependent => :destroy
+  has_many :certificates, :dependent => :destroy
   belongs_to :group
 
   scope :ordered_by_name, :order => "name_key ASC"
@@ -120,6 +121,13 @@ class Team < ActiveRecord::Base
     return team && team.reg_completed ? team.try(:authenticate, password) : nil
   end
 
+  def self.for_each_team_in_standings_order(categories, statuses, scenario, &block)
+    includes(:members, :best_design).
+        joins(:bests).
+        where(:bests => { :scenario => scenario }, :category => categories, :status => statuses).
+        order('bests.score ASC, bests.sequence ASC').find_each { yield }
+  end
+
   # @param [Array] categories list of team categories to select from
   # @param [Array] statuses list of statuses to select from
   # @param [Integer] limit maximum number of teams to get
@@ -143,6 +151,7 @@ class Team < ActiveRecord::Base
 =end
   end
 
+  # TODO Not currently used.  Delete?
   def standing_query(statuses)
     bd = best_design
     Team.count_by_sql([
@@ -157,6 +166,7 @@ class Team < ActiveRecord::Base
       statuses, category, bd.score, bd.score, bd.sequence])
   end
 
+  # TODO Not currently used.  Delete?
   def basis_query
     Team.count_by_sql([
     'SELECT count(DISTINCT COALESCE(t.group_id, t.id)) ' +
@@ -168,6 +178,7 @@ class Team < ActiveRecord::Base
     category])
   end
 
+  # TODO Not currently used.  Delete?
   def standing
     [ standing_query( %w{a 2}.include?(status) ? %w{a 2} : %w{- a 2} ), basis_query ]
   end
@@ -176,52 +187,26 @@ class Team < ActiveRecord::Base
   # Offset and limit are to serve our pagination mechanism,
   # since we can't use any of the standard gems for scoreboards.
   # @param [String] code local contest code or nil for 4-char-code local contests
-  # @param [Integer] page page of records to return (as for will_paginate)
+  # @param [Integer] page page of records to return (as for will_paginate) or +nil+ for all pages
   # @return [Array] array of Teams
-  def self.get_local_contest_teams(code, page = 1)
-    includes(:members, :best_design).
+  def self.get_local_contest_teams(code, page = 1, per_page = PER_PAGE)
+    relation = includes(:members, :best_design).
       joins(:bests, :affiliations => :local_contest).
       # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
       where(:status => %w{- a 2 h},
             :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
             :local_contests => { :code => code }).
-      order('bests.score ASC, bests.sequence ASC').
-      offset((page - 1) * PER_PAGE).
-      limit(PER_PAGE)
+      order('bests.score ASC, bests.sequence ASC')
+    relation = relation.offset((page - 1) * per_page).limit(per_page) if page
+    relation
+  end
 
-=begin
-    Team.paginate_by_sql scenario ?
-
-      ["select * from
-        (select distinct on (d.team_id) lct.*, d.score, d.sequence
-          from (select t.* from teams t
-                inner join affiliations a
-                  on t.id = a.team_id
-                inner join local_contests lc
-                  on a.local_contest_id = lc.id
-                where lc.code = ?) lct
-          inner join designs d
-            on lct.id = d.team_id
-          where lct.status <> 'r' and d.scenario = ?
-          order by d.team_id, d.score asc, d.sequence asc) tmp
-        order by score, sequence", code, scenario] :
-
-      ["select * from
-        (select distinct on (d.team_id) lct.*, d.score, d.sequence
-          from (select t.* from teams t
-                inner join affiliations a
-                  on t.id = a.team_id
-                inner join local_contests lc
-                  on a.local_contest_id = lc.id
-                where lc.code = ?) lct
-          inner join designs d
-            on lct.id = d.team_id
-          where lct.status <> 'r'
-          order by d.team_id, d.score asc, d.sequence asc) tmp
-        order by score, sequence", code],
-
-        :page => page, :per_page => PER_PAGE
-=end
+  def self.get_local_contest_basis(code)
+    joins(:bests, :affiliations => :local_contest).
+      # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
+      where(:status => %w{- a 2 h},
+            :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
+            :local_contests => { :code => code }).count
   end
 
   def self.get_teams_by_name(name_likeness, categories, statuses, limit)
@@ -324,8 +309,12 @@ class Team < ActiveRecord::Base
     }
   end
 
+  def self.get_ranked_local_contest_teams(code, page, per_page = PER_PAGE)
+    assign_simple_ranks(get_local_contest_teams(code, page), page)
+  end
+
   def self.get_local_contest_scoreboard(code, page)
-    teams = assign_simple_ranks(get_local_contest_teams(code, page), page)
+    teams = get_ranked_local_contest_teams(code, page)
     new_local_scoreboard(teams, teams.map {|t| t.scoreboard_row })
   end
 
@@ -378,6 +367,8 @@ class Team < ActiveRecord::Base
   def self.splat(pair, key)
     pair.map{|hash| hash[key]}
   end
+
+  # TODO: Scoreboards should be a Struct or class.
 
   def self.scoreboard_diff(from, to)
     diff = {

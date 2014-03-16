@@ -8,11 +8,12 @@ class LocalContest < ActiveRecord::Base
   attr_accessible :poc_first_name, :poc_middle_initial, :poc_last_name, :poc_position
   attr_accessible :organization, :city, :state, :zip, :phone, :link
 
-  attr_accessor :affiliation_count
-  attr_accessible :affiliation_count
+  attr_accessor :affiliations_count_query
+  attr_accessible :affiliations_count_query
 
   has_many :affiliations
   has_many :teams, :through => :affiliations
+  has_many :certificates
   has_one :best
 
   before_validation :upcase_code
@@ -38,14 +39,8 @@ class LocalContest < ActiveRecord::Base
   validates :phone, :length => { :maximum => 16 }
   validates :link, :length => { :maximum => 80 }
 
-  # Query for the number of teams in this contest and cache the result.
-  def affiliation_count
-    affiliations.size # Uses :counter_cache column
-    # @affiliation_count ||= affiliations.count
-  end
-
   # Query by example using the given params, which are keyed on local
-  # contest column names plus the additional key :affiliation_count, which
+  # contest column names plus the additional key :affiliations_count_query, which
   # is treated as the minimum number of teams engaged.
   def self.qbe(params)
     q = LocalContest.scoped  # Make null query scope
@@ -54,8 +49,8 @@ class LocalContest < ActiveRecord::Base
       param = params[name]
       q = q.where("#{name} ILIKE ?", "#{param}%") unless param.blank?
     end
-    ac = params[:affiliation_count].to_i  # this gives 0 for blank or nil param
-    (ac == 0) ? q.all : q.select{ |c| c.affiliation_count >= ac }
+    ac = params[:affiliations_count_query].to_i  # this gives 0 for blank or nil param
+    (ac == 0) ? q.all : q.where('affiliations_count >= ?', ac)
   end
 
   def self.get_teams(code, statuses, limit)
@@ -65,6 +60,10 @@ class LocalContest < ActiveRecord::Base
 
   def formatted(visible = %w(description poc poc_position phone link created))
     visible.map { |item| send("#{item}_formatted") }
+  end
+
+  def find_by_code(code)
+    super.find_by_code(code.strip.upcase)
   end
 
   def description_formatted

@@ -5,7 +5,7 @@ class LocalScoreboard < ActiveRecord::Base
 
   # Update all the scoreboard pages for the given local contest code.
   def self.update_for_code(code)
-    code = code.upcase
+    code = code.upcase.strip
     1.upto(MAX_PAGES) do |page|
       board = Team.get_local_contest_scoreboard(code, page)
       return page - 1 if board[:rows].empty?

@@ -7,6 +7,7 @@ class HomesController < ApplicationController
     @team = Team.find(session[:team_id])
     @best = @team.best_score
     @design = Design.new
+    @certificates = @team.certificates
   end
 
   def update
