@@ -2,7 +2,6 @@ class CertificatesController < ApplicationController
   def show
     certificate = Certificate.find_by_id_and_team_id(params[:id], session[:team_id])
     if certificate
-      logger.debug "FOUND CERT>> #{certificate.inspect}"
       @team = certificate.team
       @standing = certificate.standing
       @basis = certificate.basis
