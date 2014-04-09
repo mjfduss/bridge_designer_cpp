@@ -1,8 +1,10 @@
 class CertificatesController < ApplicationController
   def show
     certificate = Certificate.find_by_id_and_team_id(params[:id], session[:team_id])
-    if certificate
-      @team = certificate.team
+    team = certificate.team
+    # Must be the logged in team and the team must not be rejected
+    if certificate && team.status != 'r'
+      @team = team
       @standing = certificate.standing
       @basis = certificate.basis
       if certificate.group_id

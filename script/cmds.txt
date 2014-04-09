@@ -120,3 +120,6 @@ heroku addons:add memcachier
 # To clear Safari copy of application.js to make Coffeescript changes visible:
 bundle exec rake assets:clean
 # Selection Safari | Reset... and Ok
+
+# To load a database dume from Heroku
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -U myuser -d mydb latest.dump

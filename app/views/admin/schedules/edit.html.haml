@@ -28,6 +28,9 @@
       %td= f.label(:end_quals, 'End qualifying:')
       %td
         = f.datetime_select :end_quals, :minute_step => 5
+    %tr
+      %td= sep
+      %td
         = sep
         = f.label(:post_certificates, "Certificates:" )
         = f.submit 'Post', :name => 'certificates'
@@ -58,7 +61,7 @@
     = sep
     = f.submit @edited_schedule.new_record? ? "Get selected schedule" : "Get new or selected schedule", :name => 'get'
     = sep
-    = f.submit "Delete selected schedule", :name => 'delete'
+    = f.submit "Delete selected schedules", :name => 'delete'
     %hr
   - if @active_schedule
     .para.bold System state: #{Schedule::DESCRIPTIONS[@active_schedule.state]}.

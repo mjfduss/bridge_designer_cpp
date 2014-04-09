@@ -5,6 +5,7 @@
 \usepackage{xcolor}
 \usepackage{array}
 \usepackage[bookmarks]{hyperref}
+\usepackage{pdfpages}	
 
 \newenvironment{fulltable}[1][tbp]
  {\begin{table}[#1]%
@@ -15,9 +16,10 @@
 
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 \def\ui#1{\textsf{#1}}
-\title{User Manual---Engineering Encounters Bridge Designer Administrator}
+\title{User Manual---Bridge Design Contest Administrator \\[1ex]
+\small Engineering Encounters, Inc.}
 \author{Gene Ressler}
-\date{14 January 2014}
+\date{\today}
 
 \setlength{\belowcaptionskip}{11pt}
 
@@ -26,7 +28,8 @@
 \tableofcontents\newpage
 
 \section{Overview and Changes}
-This document describes how to use the Engineering Encounters Bridge Design Contest Administrator
+This document explains how to use the Engineering Encounters Bridge Design 
+Contest Administrator
 Interface or CAI. It covers only the CAI itself, assuming the reader already knows
 about contest operations, policies, and procedures. The CAI is a web browser-based 
 ``window" into the contest database. Its design allows a small administrative
@@ -34,22 +37,24 @@ team to conduct the contest even if the number of participants is very large.
 
 Here is a brief overview of CAI functions:
 \begin{itemize}
-\item Create and activate automatic schedules for annual cycles of qualifying and semi-final rounds.
+\item Create and activate automatic schedules for annual cycles of qualifying and semi-final rounds.*
 \item Review and accept top teams.
 \item Post official standings.
 \item Set up local contests and view their current standings.
-\item Establish team groups, where only the top team appears in standings.
+\item Establish team groups, where only the top team appears in standings.*
 \item Inspect and analyze designs and download them.
-\item Designate teams for the semi-final round and post contestant instructions.
+\item Designate teams for the semi-final round and post contestant instructions.*
 \item Query the contest database in various ways.
-\item Send bulk emails.
+\item Generate Certificates of Achievement for local contest and qualifying round accomplishments.*
+\item Send bulk emails.*
 \item Manually disable the contest, with an explanatory message banner displayed at
- the login page.
+ the login page.*
 \item Serve maps showing the distribution of US contest participants.
 \end{itemize}
 
 \subsection{Changes}
-There are many changes here with respect to the original 1999 CAI design. Some are
+The features above marked with asterisks (*) are new. Indeed, there are many 
+changes in the CAI with respect to the original 1999 design. Some are
 obvious. Others are subtle but still important. A brief overview follows. Those who
 have never used the original CAI may safely skip to the next section.
 
@@ -95,6 +100,9 @@ a registered bulk mail service that has much less chance of being blocked by spa
 A new ``rich text" editor in the CAI allows messages with standard text formatting.
 The rich text editor also allows documents with images. At present, however, these will
 not work for bulk email.
+
+Downloadable Certificates of Achievement that acknowledge and celebrate the standing 
+that each team earns in the contest are also new. 
 
 Other changes are for usability. 
 \begin{itemize}
@@ -206,6 +214,33 @@ In the new CAI, teams can be placed in named groups of arbitrary size. When
 official standings are generated, only one team per group will appear---the
 one with the highest standing among group members.
 
+\subsection{Certificates}
+\label{sec:certificates}
+The CAI is capable of producing Certificates of Achievement for the
+qualifying round (including a ribbon for semifinalists) and for each local contest.
+Up to five certificates may be awared to each team---one for the qualifying round
+and another for each of up to four local contests.
+
+These appear as links on the team home page. Clicking the respective link
+produces a PDF document in a fresh browser tab. Each certificate is suitable 
+for high quality printing and display in an 8x10 inch frame. 
+
+Certificates must be explicitly posted by an 
+administrator for each local contest and for the qualifying round. They may also 
+be revoked individually for each local contest and for the entire qualifying round. 
+
+Most attributes of certificates are \emph{frozen} at the time the administrator creates
+them. They do not change even if the team submits improved bridges or other
+teams with higher standings are rejected. Frozen attributes include the standing 
+and \emph{basis} (total number of competitors) for the local contest or qualifying round 
+for the respective kind of certificates. For the qualifying round, the standing within 
+the team's group (if any) is frozen and also the basis within the group.
+
+Semifinalist ribbons not frozen. Updates to the semifinalist status of a team are 
+reflected immediately in the qualifying round certificate.
+
+Example certificates are presented in the Appendix, Section~\ref{sec:examplecertificates}.
+
 \subsection{Data likenesses}
 For several functions of the CAI, the user can enter a pattern known as a \emph{likeness}
 to search for contest database records. A likeness is just text. When the likeness
@@ -280,9 +315,13 @@ Administrator's use of the CAI.
 This menu item presents, in the display pane, an opportunity for the
 the Administrator to change his or her CAI password.
 
-\subsection{Servers}
-This menu item causes the display pane to be filled with information about the
-current state of the contest server. 
+\subsection{Server}
+Selecting this menu item fills the display pane with information about the
+current state of the contest servers (there are three of them).  
+
+It also contains an experimental interface
+for clearing the contest database.  For security reaons, this function is currently
+not operational.
 
 \subsection{Schedule}
 This menu item causes the display pane to be filled with the \emph{schedule
@@ -290,9 +329,11 @@ manager}. The schedule manager controls what users see at the contest
 login page and, after they are logged in, what they are able to do. 
 It does so indirectly by allowing the administrator to specify a set of key 
 date-times and other bits of information.
-Overall, the manager has three related purposes.
+Overall, the manager has four related purposes.
 \begin{itemize}
 \item Starting and stopping the various rounds of the contest.
+\item Posting or revoking Certificates of Achievement (see Section~\ref{sec:certificates}) 
+  for the qualifying round.
 \item Re-enabling logins after they are automatically turned off
 as the qualifying round ends.
 \item Temporarily disabling and re-enabling all logins with a banner 
@@ -337,7 +378,7 @@ Banner message & text & displayed at login page while logins are suspended
 \end{fulltable}
 
 \subsubsection{Add schedule/Update schedule}
-If the workspace contains a new schedule, fill it in with schedule information
+If the schedule workspace contains a new schedule, fill it in with schedule information
 and press \ui{Add} to save the schedule in the contest database. If the
 workspace contains an existing schedule, make changes and press \ui{Update}
 to save them in the contest database.
@@ -353,11 +394,6 @@ To retrieve an existing schedule into the workspace, select
 its review box and press this button. If more than one review box is
 checked, only the first will be retrieved. 
 
-\subsubsection{Delete selected schedules}
-To delete schedules, select all their review boxes and press this button
-once. You'll be asked if you're sure you wish to proceed. Deletions cannot
-be undone, so be sure. The active schedule cannot be deleted.
-
 \subsubsection{The active schedule and disabling logins}
 At most one schedule can be active. If no schedule is active, then logins are disabled.
 Activate any schedule by getting it into the workspace, checking the \ui{Active} box,
@@ -366,6 +402,24 @@ and pressing \ui{update}. The change is immediately effective.
 To change the active schedule in any manner---for example, to suspend team logins
 temporarily---retrieve it into the workspace, make the desired changes, and press
 \ui{Update}. The change is immediately effective.
+
+\subsubsection{Certificates for the Qualifying Round}
+Buttons to post and revoke Certificates of Achievement (see 
+Section~\ref{sec:certificates}) are presented in the schedule
+workspace. Pressing them initiates background processing 
+that eventually creates, re-creates, or deletes certificates for all qualifying
+round teams that have submitted at least one design.
+
+These buttons are positioned visually between the qualifying round end
+date-time and the "Tally Complete" check box because posting
+of qualifying round certificates is most logically done during the
+period that the system is closed for qualifying round results 
+tallying.
+
+\subsubsection{Delete selected schedules}
+To delete schedules, select all their review boxes and press this button
+once. You'll be asked if you're sure you wish to proceed. Deletions cannot
+be undone, so be sure. The active schedule cannot be deleted.
 
 \subsection{Qualogin}
 A contraction for ``Qualifying round login," select this option to obtain the
@@ -598,16 +652,6 @@ To retrieve an existing record into the workspace, select
 its review box and press this button. If more than one review box is
 checked, only the first will be retrieved. 
 
-\subsection{Delete selected records}
-To delete local contests, select all their review boxes and press this button
-once. You'll be asked if you're sure you wish to proceed. Deletions cannot
-be undone, so be sure. 
-
-If a local contest is deleted, it automatically disappears from the local contest
-lists of all teams in the database. Even if it is recreated with exactly the same
-information, all participating teams must re-enter the local contest code in
-their registration pages.
-
 \subsection{Query by example}
 \label{sec:qbe}
 The list of review boxes can be restricted with the \emph{query by example}
@@ -629,6 +673,29 @@ press the button.
 
 Preparation of local contest email documents is described 
 in section~\ref{sec:documentmanagement}.
+
+\subsection{Operations on selected records}
+
+\subsubsection{Delete}
+To delete local contests, select all their review boxes and press this button
+once. You'll be asked if you're sure you wish to proceed. Deletions cannot
+be undone, so be sure. 
+
+If a local contest is deleted, it automatically disappears from the local contest
+lists of all teams in the database. Even if it is recreated with exactly the same
+information, all participating teams must re-enter the local contest code in
+their registration pages.
+
+\subsubsection{Posting and revoking certificates}
+To post certificates for one or more local contests, select their review boxes
+and press the Post button once. You'll be asked if you're sure you wish to proceed.
+Certificates are produced for each local contest team that has submitted at least
+one bridge and that is not in the Rejected status.  A standard email notification
+is automatically sent to the local contest Point of Contact when certificates are
+posted.
+
+Revocation is similar. Merely press the Revoke button. No email message is
+sent to the Point of Contact in this case.
 
 \section{Administering groups}
 Use the \ui{Groups} menu item to display the \emph{Group manager}. It 
@@ -822,5 +889,12 @@ messages.  This could be fixed.
 A malicious user could cause trouble with our email service provider by automatically
 sending many password reset emails to one or more contestants. Captchas 
 would reduce this threat.
-
+\appendix
+\section{Examples of Certificates}
+\label{sec:examplecertificates}
+Example certificates of achievement are included on the following pages. The first is for
+a local contest. The second is for the national qualifying round, provided by a team that
+was part of a group.
+\includepdf[angle=90]{localcontestcertificate.pdf}
+\includepdf[angle=90]{qualifierscertificate.pdf}
 \end{document}  

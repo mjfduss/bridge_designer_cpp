@@ -45,6 +45,14 @@
     %tr
       %td Local scoreboard update:
       %td= Time.zone.at(LocalScoreboard.maximum(:updated_at)).to_s(:nice)
+  %tr
+    - n_qualifiers_certificates = Certificate.where(:local_contest_id => nil).count
+    - n_local_contest_certificates = Certificate.where('local_contest_id IS NOT NULL').count
+    %td Certificates:
+    %td
+      Qualifiers: #{n_qualifiers_certificates}
+      |
+      Local contests: #{n_local_contest_certificates}
 %hr
 %h1 Clear contest database
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }
