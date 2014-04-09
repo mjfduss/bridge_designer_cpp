@@ -60,7 +60,9 @@ class LocalContest < ActiveRecord::Base
 
   def self.get_teams(code, statuses, limit)
     lc = LocalContest.find_by_code(code)
-    lc ? lc.teams.where(:status => statuses).ordered_by_name.limit(limit) : nil
+    return nil if lc.nil?
+    teams = lc.teams.where(:status => statuses).ordered_by_name
+    limit ? teams.limit(limit) : teams
   end
 
   def formatted(visible = %w(description poc poc_position phone link created))
