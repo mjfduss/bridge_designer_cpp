@@ -259,8 +259,8 @@ class Team < ActiveRecord::Base
     end
   end
 
-  def self.assign_simple_ranks(teams, page)
-    base = 1 + [page.to_i - 1, 0].max * PER_PAGE
+  def self.assign_simple_ranks(teams, page, per_page = PER_PAGE)
+    base = 1 + [page.to_i - 1, 0].max * per_page
     teams.each_with_index { |t, i| t.rank = base + i }
   end
 
@@ -310,7 +310,7 @@ class Team < ActiveRecord::Base
   end
 
   def self.get_ranked_local_contest_teams(code, page, per_page = PER_PAGE)
-    assign_simple_ranks(get_local_contest_teams(code, page), page)
+    assign_simple_ranks(get_local_contest_teams(code, page, per_page), page, per_page)
   end
 
   def self.get_local_contest_scoreboard(code, page)
