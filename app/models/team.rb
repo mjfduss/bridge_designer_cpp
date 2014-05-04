@@ -105,10 +105,6 @@ class Team < ActiveRecord::Base
     !reg_completed.blank?
   end
 
-  def accepted_or_hidden?
-    status == 'a'
-  end
-
   def rejected?
     status == 'r'
   end
@@ -244,6 +240,12 @@ class Team < ActiveRecord::Base
       return [teams.replace(teams[0..index]), rank] if rank == truncate_at_rank || rankable == truncate_at_rank
     end
     [teams, rank]
+  end
+
+  # Used in review view to decide effect of Hidden visibility flag.
+  # This version forces semifinal teams to be visible even with no numeric rank.
+  def hidden?
+    rank != :o || status == '2'
   end
 
   def self.get_ranked_top_teams(category, status, scenario, limit)
