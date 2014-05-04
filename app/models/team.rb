@@ -245,7 +245,7 @@ class Team < ActiveRecord::Base
   # Used in review view to decide effect of Hidden visibility flag.
   # This version forces semifinal teams to be visible even with no numeric rank.
   def hidden?
-    rank != :o || status == '2'
+    rank == :o && status != '2'
   end
 
   def self.get_ranked_top_teams(category, status, scenario, limit)

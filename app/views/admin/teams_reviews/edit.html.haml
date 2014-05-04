@@ -3,7 +3,7 @@
 - elsif @teams.blank?
   .notice Sorry. No teams in category #{TablesHelper::CATEGORY_MAP[@category]}!
 - else
-  - hide_hidden_p = @visible_status.include?('h')
+  - hide_hidden_p = !@visible_status.include?('h')
   - team_items_table = @teams.zip(Team.format_all(@teams, @visible_attributes))
   %a{ :name => 'top' }
   = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => nil }
