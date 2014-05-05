@@ -19,12 +19,12 @@ class Admin::LocalContestTeamsController < Admin::ApplicationController
 
   private
 
-  def fetch_params(limit = :none)
+  def fetch_params(limit = :from_params)
     @standings_cutoff = params[:standings_cutoff].to_i
     @visible_status = params[:visible_status] || []
     @visible_attributes = params[:visible_attributes] || []
     @local_contest_code = params[:local_contest_code].strip.upcase
-    @teams = Team.assign_unofficial_ranks(LocalContest.get_teams(@local_contest_code, @visible_status,
-                                          limit == :none ? @standings_cutoff : limit))
+    raw_teams = LocalContest.get_teams(@local_contest_code, @visible_status, limit == :from_params ? @standings_cutoff : limit)
+    @teams = Team.assign_unofficial_ranks(raw_teams)
   end
 end

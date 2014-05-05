@@ -20,8 +20,8 @@ module Map
   INTER_LINE_SPACE = 4
   LEGEND_TOP = 12
   LEGEND_LEFT = 20
-  DOT_SIZES = [1, 5, 10, 50, 100]
-  POINT_SIZE = 2
+  DOT_SIZES = [1.0, 5.0, 10.0, 50.0, 100.0]
+  POINT_SIZE = 1.5
   LEGEND_MARGIN = 175
   MAX_DOT_SIDE = 14 * POINT_SIZE
 
@@ -30,7 +30,10 @@ module Map
 
     # Draw dots on a map.
     map = Pippa::Map.new(version)
+    map.merge = true
+    map.dot_kind = :circle
     map.point_size = POINT_SIZE
+    map.anti_alias = true
 
     # Add title and legend.
     gc = Magick::Draw.new

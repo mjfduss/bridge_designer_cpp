@@ -5,16 +5,9 @@
 #
 
 usage() {
-  echo 'usage: servers [start|stop|restart]'
+  echo 'usage: servers [start|stop|restart|clear]'
+  echo 'The clear option clears all logs.'
 }
-
-# Gather evidence of what's running
-postgres_cmd='pg_ctl -D /usr/local/var/postgres'
-redis_pid=`pgrep redis-server`
-postgres_pid=`$postgres_cmd status | grep PID`
-web_server_pid_file='tmp/pids/server.pid'
-# delayed_job is invisible to pgrep. Weird.
-delayed_job_pid=`ps -axo pid,comm | grep delayed_job`
 
 # Text color escapes
 txtund=$(tput sgr 0 1)          # Underline
@@ -28,15 +21,36 @@ bldcyn=${txtbld}$(tput setaf 6) #  cyan
 bldwht=${txtbld}$(tput setaf 7) #  white
 txtrst=$(tput sgr0)             # Reset
 
+# Gather evidence of what's running
+postgres_cmd='pg_ctl -D /usr/local/var/postgres'
+
+redis_pid=`pgrep redis-server`
+
+postgres_pid=`$postgres_cmd status | grep PID`
+
+# If the web served died hideously, delete the pid file.
+web_server_pid_file='tmp/pids/server.pid'
+if [ -f "$web_server_pid_file" ] && ! ps -ax -p `cat "$web_server_pid_file"` > /dev/null
+then
+  echo "${bldred}deleting orphaned web server pid file${txtrst}"
+  rm -f "$web_server_pid_file"
+fi
+
+# delayed_job is invisible to pgrep. Weird.
+delayed_job_pid=`ps -axo pid,comm | grep delayed_job`
+
 case "$1" in
 
-  start)
+  clear)
 
     # Clobber logs so the don't grow indefinitely.
     for log in log/*
     do
       > "${log}"
     done
+    ;;
+
+  start)
 
     if [ -n "$postgres_pid" ]
     then

@@ -86,6 +86,7 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.1)
+    lulu (0.0.2)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -106,7 +107,7 @@ GEM
       paperclip (>= 2.3.0)
     pdf-core (0.1.6)
     pg (0.17.1)
-    pippa (0.2.1)
+    pippa (0.3.0)
       rmagick (~> 2.13)
     polyglot (0.3.4)
     postmark (1.1.0)
@@ -215,13 +216,14 @@ DEPENDENCIES
   factory_girl_rails (= 4.0.0)
   haml-rails (= 0.3.4)
   jquery-rails (~> 2.1)
+  lulu (~> 0.0)
   memcachier
   newrelic_rpm
   nokogiri (~> 1.5)
   paperclip (~> 3.0)
   paperclip_database (~> 1.0)
   pg (~> 0.12)
-  pippa (~> 0.2)
+  pippa (~> 0.3)
   postmark-rails (~> 0.5)
   prawn_rails
   rails (~> 3.2)

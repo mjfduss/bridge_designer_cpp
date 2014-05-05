@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140204004437) do
+ActiveRecord::Schema.define(:version => 20140316000317) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -46,6 +46,23 @@ ActiveRecord::Schema.define(:version => 20140204004437) do
   add_index "bests", ["scenario"], :name => "index_bests_on_scenario"
   add_index "bests", ["score", "sequence"], :name => "index_bests_on_score_and_sequence"
   add_index "bests", ["team_id"], :name => "index_bests_on_team_id"
+
+  create_table "certificates", :force => true do |t|
+    t.integer  "team_id",          :null => false
+    t.integer  "local_contest_id"
+    t.integer  "design_id",        :null => false
+    t.integer  "standing",         :null => false
+    t.integer  "basis",            :null => false
+    t.integer  "group_id"
+    t.integer  "group_standing"
+    t.integer  "group_basis"
+    t.date     "awarded_on",       :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "certificates", ["local_contest_id"], :name => "index_certificates_on_local_contest_id"
+  add_index "certificates", ["team_id"], :name => "index_certificates_on_team_id"
 
   create_table "ckeditor_assets", :force => true do |t|
     t.string   "data_file_name",                  :null => false
@@ -130,6 +147,7 @@ ActiveRecord::Schema.define(:version => 20140204004437) do
     t.datetime "created_at",                                      :null => false
     t.datetime "updated_at",                                      :null => false
     t.integer  "affiliations_count",               :default => 0, :null => false
+    t.integer  "certificates_count",               :default => 0, :null => false
   end
 
   add_index "local_contests", ["code"], :name => "index_local_contests_on_code", :unique => true

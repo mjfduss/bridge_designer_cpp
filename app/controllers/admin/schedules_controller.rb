@@ -48,6 +48,16 @@ class Admin::SchedulesController < Admin::ApplicationController
       end
       id = params[:schedule][:id]
       @edited_schedule = id.blank? ? Schedule.new : (Schedule.where(['id = ?', id.to_i]).first || Schedule.new)
+    elsif params.nonblank? :certificates
+      %w{m h i}.each { |category| Certificate.delay.generate_for_qualifiers(category) }
+      flash.now[:alert] = 'Certificates for qualifying are being created (it may take a few minutes).'
+      id = params[:schedule][:id]
+      @edited_schedule = id.blank? ? Schedule.new : (Schedule.where(['id = ?', id.to_i]).first || Schedule.new)
+    elsif params.nonblank? :revoke_certificates
+      %w{m h i}.each { |category| Certificate.delay.revoke_for_qualifiers(category) }
+      flash.now[:alert] = 'Certificates for qualifying are being destroyed (it may take a few minutes).'
+      id = params[:schedule][:id]
+      @edited_schedule = id.blank? ? Schedule.new : (Schedule.where(['id = ?', id.to_i]).first || Schedule.new)
     end
     @schedules = Schedule.order('active DESC, name ASC')
     @active_schedule = @schedules.find { |schedule| schedule.active? }

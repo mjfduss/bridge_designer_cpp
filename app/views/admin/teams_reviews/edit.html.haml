@@ -3,7 +3,7 @@
 - elsif @teams.blank?
   .notice Sorry. No teams in category #{TablesHelper::CATEGORY_MAP[@category]}!
 - else
-  - show_hidden_p = @visible_status.include?('h')
+  - hide_hidden_p = !@visible_status.include?('h')
   - team_items_table = @teams.zip(Team.format_all(@teams, @visible_attributes))
   %a{ :name => 'top' }
   = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => nil }
@@ -13,7 +13,7 @@
     - for row_team_items in team_items_table.each_slice(30)
       %tr
         - for team, items in row_team_items
-          - if team.rank != :o || show_hidden_p
+          - unless hide_hidden_p && team.hidden?
             %td{ :class => [team.status_style_id, 'index'] }
               %a{ :class => 'index', :href => "##{team.name_key}" }= team.rank
   = form_tag admin_teams_review_path, :method => :put do
@@ -27,6 +27,6 @@
     = sep
     = submit_tag 'Download as spreadsheet', :name => 'download'
     - team_items_table.each do |team, items|
-      - if team.rank != :o || show_hidden_p
+      - unless hide_hidden_p && team.hidden?
         = render :partial => 'shared/team_review_record',
                  :locals => { :team => team, :team_items => items }

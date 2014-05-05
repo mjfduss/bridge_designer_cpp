@@ -64,6 +64,25 @@ class Admin::LocalContestsController < Admin::ApplicationController
       else
         flash.now[:alert] = 'Please select a message to send.'
       end
+    elsif params.nonblank? :certificates
+      if selected.blank?
+        flash.now[:alert] = 'No local contests were selected for certificate generation.'
+      else
+        lcs = Certificate.generate_for_local_contests(selected)
+        flash.now[:alert] = "Certificates were generated for selected local" +
+              " #{'contest'.pluralize(lcs.length)} #{lcs.map { |lc| lc.code }.to_sentence}."
+        lcs.each { |lc| LocalContestCertificateNotice.delay.to_poc(lc) }
+      end
+      restore_edited_local_contest
+    elsif params.nonblank? :revoke_certificates
+      if selected.blank?
+        flash.now[:alert] = 'No local contests were selected for certificate revocation.'
+      else
+        lcs = Certificate.revoke_for_local_contests(selected)
+        flash.now[:alert] = "Certificates were revoked for selected local" +
+            " #{'contest'.pluralize(lcs.length)} #{lcs.map { |lc| lc.code }.to_sentence}."
+      end
+      restore_edited_local_contest
     end
     @local_contests ||= ids ? LocalContest.where(:id => ids) : LocalContest.limit(LIMIT)
     render :action => :edit
