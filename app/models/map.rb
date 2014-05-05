@@ -30,7 +30,7 @@ module Map
 
     # Draw dots on a map.
     map = Pippa::Map.new(version)
-    map.merge = true
+    map.merge = false # true
     map.dot_kind = :circle
     map.point_size = POINT_SIZE
     map.anti_alias = true
