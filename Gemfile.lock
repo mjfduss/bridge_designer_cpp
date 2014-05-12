@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    WPBDC (2014.3.5)
+    WPBDC (2014.3.6)
     actionmailer (3.2.17)
       actionpack (= 3.2.17)
       mail (~> 2.5.4)
@@ -204,7 +204,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  WPBDC (= 2014.3.5)
+  WPBDC (= 2014.3.6)
   bcrypt-ruby (= 3.0.1)
   bootstrap-sass (= 2.0.4.0)
   capybara (= 1.1.2)
