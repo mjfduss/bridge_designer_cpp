@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name        = 'WPBDC'
-  spec.version     = '2014.3.5'
-  spec.date        = '2014-12-18'
+  spec.version     = '2014.3.6'
+  spec.date        = '2014-05-11'
   spec.summary     = "Judge functions of the Engineering Encounters Bridge Design Contest"
   spec.description = "Container for C code extension that implements the West Point Bridge Contest Judge."
   spec.authors     = ["Gene Ressler"]

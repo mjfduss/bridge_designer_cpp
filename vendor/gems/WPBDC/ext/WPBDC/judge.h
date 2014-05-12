@@ -18,8 +18,8 @@
 #define NULL_SEMIFINAL_SCENARIO_ID "0000000000"
 
 // When you set this, you _must_ change the scenario table so its record is in sorted order!
-//#define SEMIFINAL_SCENARIO_ID "3100003100"
-#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
+#define SEMIFINAL_SCENARIO_ID "4110320000"
+//#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
 
 // Status returns from analyze().
 #define BRIDGE_OK           0
