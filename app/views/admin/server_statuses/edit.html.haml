@@ -53,6 +53,9 @@
       Qualifiers: #{n_qualifiers_certificates}
       |
       Local contests: #{n_local_contest_certificates}
+  %tr
+    %td Semi-final scenario:
+    %td= WPBDC::SEMIFINAL_SCENARIO_ID
 %hr
 %h1 Clear contest database
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }

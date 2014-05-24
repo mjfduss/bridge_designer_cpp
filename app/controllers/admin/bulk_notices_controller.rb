@@ -3,7 +3,7 @@ class Admin::BulkNoticesController < Admin::ApplicationController
   # A little class to let us load the params hash.
   # TODO Could do this in the main menu to simplify much code
   class Request
-    attr_accessor :message_body_id, :local_contest_id, :test_email
+    attr_accessor :message_body_id, :local_contest_id, :test_email, :reminder_email
 
     def initialize(params = {})
       params.each { |k,v| instance_variable_set("@#{k}", v) unless v.nil? }
@@ -19,6 +19,15 @@ class Admin::BulkNoticesController < Admin::ApplicationController
     if params.nonblank? :clear_reminder_requests
       ReminderRequest.destroy_all
       flash.now[:alert] = 'All reminder requests have been deleted.'
+    elsif params.nonblank? :add_reminder
+      reminder_request = ReminderRequest.new(:email => @request.reminder_email,
+                                             :tag => 'Administrator')
+      reminder_request.referer = request.referer || '[none]'
+      if reminder_request.save
+        flash.now[:alert] = "Added '#{@request.reminder_email}' to reminder requests."
+      else
+        flash.now[:alert] = "Save failed. Something wrong with address '#{@request.reminder_email}'."
+      end
     else
       if @request.message_body_id.blank?
         flash.now[:alert] = 'No document was selected.'

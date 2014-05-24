@@ -4,7 +4,7 @@ class QualifiedNotice < ApplicationMailer
 
   def to_team(team)
     @team = team
-    mail(:to => "#{@team.name} <#{@team.email}>", :subject => SUBJECT, :bcc => ARCHIVE_EMAIL)
+    mail(:to => "#{@team.name} <#{@team.email}>", :subject => SUBJECT)
   end
 
 end

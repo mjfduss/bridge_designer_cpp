@@ -34,8 +34,14 @@
         %td= sep
         %td{ :align => 'right' }= submit_tag 'Send', :name => :to_all
         %td= sep
+    %hr
+    .vsep.big.bold Manually add a reminder request
+    .para
+      Email address:
+      = text_field_tag('request[reminder_email]')
+      = submit_tag 'Add', :name => :add_reminder
 %hr
-.vsep.big.bold Reminder Request Exemplar
+.vsep.big.bold User reminder request box exemplar
 .para
   %iframe{ :src => new_reminder_request_path, :name => 'reminder_request',
     :style => 'width:540px;height:72px;border:1px solid black;overflow:hidden;background-color:transparent' }
@@ -44,9 +50,9 @@
 .para
   This HTML code can be pasted into any web page to provide the reminder support service.
   Pick a unique TAG_VALUE for each one to allow tracking request sources.
-  Of course you can substitute any desired style attributes.
+  Of course you can substitute any desired CSS attributes.
   %pre
     :escaped
       <iframe name="reminder_request"
-            src="/reminder_requests/new?tag=TAG_VALUE"
+            src="https://judge.bridgecontest.org/reminder_requests/new?tag=TAG_VALUE"
             style="width:540px;height:72px;border:none;overflow:hidden;background-color:transparent"></iframe>
