@@ -121,5 +121,7 @@ heroku addons:add memcachier
 bundle exec rake assets:clean
 # Selection Safari | Reset... and Ok
 
-# To load a database dume from Heroku
-pg_restore --verbose --clean --no-acl --no-owner -h localhost -U myuser -d mydb latest.dump
+# To load a database dump from Heroku
+heroku pgbackups:capture
+curl -o latest.dump `heroku pgbackups:url`
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -U generessler -d wpbdc_development latest.dump

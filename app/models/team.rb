@@ -19,7 +19,11 @@ class Team < ActiveRecord::Base
 
   has_many :members, :order => 'rank ASC', :dependent => :destroy
   has_many :designs, :order => 'score ASC, sequence ASC', :dependent => :destroy
-  has_one :best_design, :class_name => 'Design', :order => 'score ASC, sequence ASC'
+  # Modified so that semifinal team's best design is always the semfinal scenario best.
+  has_one :best_design, :class_name => 'Design', :order => 'score ASC, sequence ASC',
+          :conditions => proc { [ status == '2' ? 'scenario = ?' : 'scenario != ?',  WPBDC::SEMIFINAL_SCENARIO_ID] }
+  has_one :best_qualifiers_design, :class_name => 'Design', :order => 'score ASC, sequence ASC',
+          :conditions => ['scenario != ?', WPBDC::SEMIFINAL_SCENARIO_ID]
   has_many :affiliations, :dependent => :destroy
   has_many :local_contests, :through => :affiliations
   has_many :bests, :dependent => :destroy
@@ -74,7 +78,7 @@ class Team < ActiveRecord::Base
       if team.rejected?
         Standing.delete(team)
       else
-        d = team.best_design
+        d = team.best_qualifiers_design
         Standing.insert(team, d) if d
       end
     end
@@ -120,7 +124,7 @@ class Team < ActiveRecord::Base
   end
 
   def self.for_each_team_in_standings_order(categories, statuses, scenario, &block)
-    includes(:members, :best_design).
+    includes(:members).
         joins(:bests).
         where(:bests => { :scenario => scenario }, :category => categories, :status => statuses).
         order('bests.score ASC, bests.sequence ASC').find_each { yield }
@@ -132,7 +136,7 @@ class Team < ActiveRecord::Base
   def self.get_top_teams(categories, statuses, scenario, limit)
     limit = limit.to_i
     return [] if statuses.empty? || categories.empty? || limit <= 0
-    includes(:members, :best_design).
+    includes(:members).
       joins(:bests).
       where(:bests => { :scenario => scenario }, :category => categories, :status => statuses).
       order('bests.score ASC, bests.sequence ASC').limit(limit)
@@ -158,7 +162,7 @@ class Team < ActiveRecord::Base
   # @param [Integer] page page of records to return (as for will_paginate) or +nil+ for all pages
   # @return [Array] array of Teams
   def self.get_local_contest_teams(code, page = 1, per_page = PER_PAGE)
-    relation = includes(:members, :best_design).
+    relation = includes(:members).
       joins(:bests, :affiliations => :local_contest).
       # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
       where(:status => STATUS_UNREJECTED,
@@ -219,7 +223,10 @@ class Team < ActiveRecord::Base
     teams.each_with_index do |team, index|
       g = team.group
       team.rank = case team.status
-        when 'a', '2'
+        when '2'
+          group_counts[g.id] += 1 if g
+          rank += 1
+        when 'a'
           if g.nil? || (group_counts[g.id] += 1) <= MAX_RANKED_IN_GROUP
             rank += 1
           else
@@ -287,7 +294,7 @@ class Team < ActiveRecord::Base
     end
   end
 
-  def scoreboard_row(score_p=false)
+  def scoreboard_row(score_p = false)
     bd = best_design
     row = {
       :rank => rank,
@@ -299,7 +306,9 @@ class Team < ActiveRecord::Base
       :location => members.map{|m| m.school_city ? m.school_city.strip : '--' }.uniq,
       :submitted => bd ? bd.created_at.to_s(:nice) : '---',
     }
-    row[:score] = format("$%.2f", 0.01 * best_score) if score_p
+    if score_p
+      row[:score] = bd ? format("$%.2f", 0.01 * bd.score) : '---'
+    end
     row
   end
 
