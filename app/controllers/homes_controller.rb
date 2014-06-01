@@ -5,7 +5,7 @@ class HomesController < ApplicationController
   def edit
     @is_semis_session = session[:is_semis_session]
     @team = Team.find(session[:team_id])
-    @best = @team.best_score
+    @best = @is_semis_session ? @team.best_semifinal_score : @team.best_qualifying_score
     @design = Design.new
   end
 
@@ -51,7 +51,7 @@ class HomesController < ApplicationController
 
       # Approach here is to fill the @analysis hash and @result with all information
       # and leave decisions on how to present it to the view.
-      @best = @team.best_score
+      @best = @is_semis_session ? @team.best_semifinal_score : @team.best_qualifying_score
 
       # There is a design from the user.  Read the uploaded string.
       bridge = params[:design][:bridge].read
@@ -61,9 +61,9 @@ class HomesController < ApplicationController
       @analysis = WPBDC.analyze(bridge)
 
       # Catch uploads of the wrong scenario during semi-finals.
-      if session[:is_semis_session] && @analysis[:scenario] != WPBDC::SEMIFINAL_SCENARIO_ID
+      if @is_semis_session && @analysis[:scenario] != WPBDC::SEMIFINAL_SCENARIO_ID
         @result = :not_semis_scenario
-      elsif !session[:is_semis_session] && @analysis[:scenario] == WPBDC::SEMIFINAL_SCENARIO_ID
+      elsif !@is_semis_session && @analysis[:scenario] == WPBDC::SEMIFINAL_SCENARIO_ID
         @result = :bad_semis_scenario
       else
         case @analysis[:status]
@@ -98,9 +98,11 @@ class HomesController < ApplicationController
                   if @best.nil? || @analysis[:score] < @best
                     @old_best = @best
                     @best = @analysis[:score]
-                    @team.improves = @team.improves + 1
-                    @standing, @out_of = Standing.insert(@team, @design)
-                    logger.info "Inserted standing #{@standing} of #{@out_of}."
+                    unless @is_semis_session
+                      @team.improves = @team.improves + 1
+                      @standing, @out_of = Standing.insert(@team, @design)
+                      logger.info "Inserted standing #{@standing} of #{@out_of}."
+                    end
                     @result = :new_best
                   else
                     @result = :not_new_best
