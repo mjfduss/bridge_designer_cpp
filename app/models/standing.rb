@@ -72,7 +72,7 @@ module Standing
   # Re-insert team's best design if the standings database is missing it.
   # This will fix up standings if REDIS is down when a new best bridge is posted.
   def self.missing_standing(team)
-    best_design = team.best_qualifiers_design
+    best_design = team.best_qualifying_design
     return Standing.insert(team, best_design) if best_design
     [nil, REDIS.hlen(to_teams_key(team))]
   end

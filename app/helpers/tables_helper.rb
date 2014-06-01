@@ -200,15 +200,17 @@ module TablesHelper
         ['Email', 'email'],
         ['Registration', 'reg_completed'],
         ['Local contests', 'local_contests'],
-        ['Best score', 'best_score'],
-        ['Best design', 'best_design']
+        ['Best qualifying score', 'best_qualifying_score'],
+        ['Best qualifying design', 'best_qualifying_design'],
+        ['Best semifinal score', 'best_semifinal_score'],
+        ['Best semifinal design', 'best_semifinal_design']
       ]
 
     TEAM_ATTRIBUTE_DEFAULTS =
       %w{team_name
       captain_name captain_category captain_age_grade captain_contact captain_school
       member_name member_age_grade member_contact member_school
-      email local_contests best_score}
+      email local_contests best_qualifying_score}
     TEAM_ATTRIBUTE_SELECTED = TEAM_ATTRIBUTE_PAIRS.map { |p| TEAM_ATTRIBUTE_DEFAULTS.include? p[1] }
 
     # Must keep Hidden last or else update shared/_team_review_record.haml

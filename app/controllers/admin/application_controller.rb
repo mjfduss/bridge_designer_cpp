@@ -31,7 +31,7 @@ class Admin::ApplicationController < ActionController::Base
               if val == 'r'
                 Standing.delete(team)
               else
-                Standing.insert(team, team.best_design) if team.best_design
+                Standing.insert(team, team.best_qualifying_design) if team.best_qualifying_design
               end
               # Make lists of changes for later processing
               disqualified << team if old_val != 'r' && val == 'r'

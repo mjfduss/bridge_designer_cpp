@@ -17,7 +17,7 @@ class Certificate < ActiveRecord::Base
     Team.each_team_receiving_qualifying_certificate(category) do |team, group_standing, group_basis|
       Certificate.create do |c|
         c.team = team
-        c.design = team.best_qualifiers_design
+        c.design = team.best_qualifying_design
         c.standing = team.rank
         c.basis = [basis, c.standing].max
         c.group = team.group
@@ -49,7 +49,7 @@ class Certificate < ActiveRecord::Base
           Certificate.create do |c|
             c.team = team
             c.local_contest = lc
-            c.design = team.best_qualifiers_design
+            c.design = team.best_qualifying_design
             c.standing = team.rank
             # Since we aren't locking the team table, really bad timing could
             # cause the standing to be more than the basis.  Patch that here.
