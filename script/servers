@@ -21,6 +21,8 @@ bldcyn=${txtbld}$(tput setaf 6) #  cyan
 bldwht=${txtbld}$(tput setaf 7) #  white
 txtrst=$(tput sgr0)             # Reset
 
+project_root="${HOME}/Projects/bdc/bridgecontest"
+
 # Gather evidence of what's running
 postgres_cmd='pg_ctl -D /usr/local/var/postgres'
 
@@ -64,7 +66,7 @@ case "$1" in
     then
       echo "${bldred}redis already running${txtrst}"
     else
-      redis-server /Users/generessler/Projects/Rails/wpbdc/db/redis.conf &
+      redis-server ${project_root}/db/redis.conf &
       echo "${bldblu}started redis${txtrst}"
     fi
 

@@ -3,7 +3,7 @@ require 'standing'
 
 module FactoryHelpers
 
-  PATH = 'vendor/gems/WPBDC/test/eg/2012'
+  PATH = 'vendor/gems/WPBDC/test/eg/2014'
 
   def self.read_bdc_file(entry)
     f = File.open "#{PATH}/#{entry}", 'rb'
