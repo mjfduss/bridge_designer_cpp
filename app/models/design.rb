@@ -1,3 +1,5 @@
+require 'set'
+
 class Design < ActiveRecord::Base
   include ActiveModel::Validations
 
@@ -37,6 +39,37 @@ class Design < ActiveRecord::Base
 
   def improves_on?(other)
     other.nil? || score < other.score || (score == other.score && sequence < other.sequence)
+  end
+
+  # Return p'th percentile of x.
+  def self.percentile(x, p)
+    return nil if x.size == 0
+    return x[0] if x.size == 1
+    i = x.size * p * 0.01 + 0.5
+    k, f = i.floor, i % 1
+    if k < 1
+      x[0]
+    elsif k >= x.size
+      x[-1]
+    else
+      (1 - f) * x[k - 1] + f * x[k]
+    end
+  end
+
+  def self.cost_histogram
+    n = 0
+    hash = Hash.new { |hash, key| hash[key] = SortedSet.new }
+    find_each do |design|
+      hash[design.scenario].add(design.score)
+      n += 1
+    end
+    hash.sort_by {|scenario, scores| scores.size }.each do |scenario, scores|
+      a = scores.to_a
+      print "\"#{scenario}\",#{a.size},#{a[0]},#{a[-1]}"
+      print ",#{percentile(a, 25)},#{percentile(a, 50)},#{percentile(a, 75)}" if a.size >= 2
+      puts
+    end
+    n
   end
 
   private
