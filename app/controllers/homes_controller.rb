@@ -33,7 +33,7 @@ class HomesController < ApplicationController
 
     # Else if get standings...
     elsif params.nonblank? :get_standings
-      @best = @team.best_score
+      @best = @team.best_qualifying_score
       @design = Design.new
       @standing, @out_of = @best ? Standing.standing(@team) : [nil, Standing.max_standing(@team)]
       @result = :get_standings

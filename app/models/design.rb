@@ -63,11 +63,11 @@ class Design < ActiveRecord::Base
       hash[design.scenario].add(design.score)
       n += 1
     end
-    hash.sort_by {|scenario, scores| scores.  first }.each do |scenario, scores|
+    hash.sort_by {|scenario, scores| scores.first }.each do |scenario, scores|
       a = scores.to_a
-      print "\"#{scenario}\",#{a.size},#{a[0]},#{a[-1]}"
-      print ",#{percentile(a, 25)},#{percentile(a, 50)},#{percentile(a, 75)}" if a.size >= 2
-      puts
+      print "\"#{scenario}\",#{a.size},#{a[0]}"
+      print ",#{percentile(a, 25)},#{percentile(a, 50)},#{percentile(a, 75)}" if a.size >= 4
+      print ",#{a[-1]}\n"
     end
     n
   end
