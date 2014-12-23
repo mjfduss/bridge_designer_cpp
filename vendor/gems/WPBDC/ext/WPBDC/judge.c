@@ -24,8 +24,8 @@
 // External interface.
 #include "judge.h"
 
-#if BD_VERSION != 0x414c
-#error Wrong BD_VERSION. Should be 0x414c.
+#if BD_VERSION != 0x415c
+#error Wrong BD_VERSION. Should be 0x415c.
 #endif
 
 // Extension stubs --------------------------------------------------------------

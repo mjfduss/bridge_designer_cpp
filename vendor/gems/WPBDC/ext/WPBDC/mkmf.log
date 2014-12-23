@@ -1,6 +1,6 @@
-have_library: checking for png_create_write_struct_2() in -lpng... -------------------- yes
+have_library: checking for png_create_write_struct_2() in -lpng... -------------------- no
 
-"/usr/local/opt/apple-gcc42/bin/gcc-4.2 -o conftest -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/x86_64-darwin13.0.0 -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/ruby/backward -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wshorten-64-to-32 -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/usr/local/rvm/rubies/ruby-1.9.3-p484/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L. -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1  -lpthread -ldl -lobjc "
+"/usr/local/opt/gcc46/bin/gcc-4.6 -o conftest -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/x86_64-darwin13.3.0 -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/ruby/backward -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/Users/gene/.rvm/rubies/ruby-1.9.3-p547/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L.  -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1  -lpthread -ldl -lobjc "
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -11,11 +11,11 @@ checked program was:
 6: }
 /* end */
 
-"/usr/local/opt/apple-gcc42/bin/gcc-4.2 -o conftest -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/x86_64-darwin13.0.0 -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/ruby/backward -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wshorten-64-to-32 -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/usr/local/rvm/rubies/ruby-1.9.3-p484/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L. -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1 -lpng  -lpthread -ldl -lobjc "
-conftest.c: In function ‘t’:
-conftest.c:4: error: ‘png_create_write_struct_2’ undeclared (first use in this function)
-conftest.c:4: error: (Each undeclared identifier is reported only once
-conftest.c:4: error: for each function it appears in.)
+"/usr/local/opt/gcc46/bin/gcc-4.6 -o conftest -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/x86_64-darwin13.3.0 -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/ruby/backward -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/Users/gene/.rvm/rubies/ruby-1.9.3-p547/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L.  -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1 -lpng  -lpthread -ldl -lobjc "
+conftest.c: In function 't':
+conftest.c:4:53: error: 'png_create_write_struct_2' undeclared (first use in this function)
+conftest.c:4:53: note: each undeclared identifier is reported only once for each function it appears in
+conftest.c:4:28: warning: variable 'p' set but not used [-Wunused-but-set-variable]
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -32,9 +32,11 @@ checked program was:
 12: }
 /* end */
 
-"/usr/local/opt/apple-gcc42/bin/gcc-4.2 -o conftest -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/x86_64-darwin13.0.0 -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/ruby/backward -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wshorten-64-to-32 -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/usr/local/rvm/rubies/ruby-1.9.3-p484/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L. -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1 -lpng  -lpthread -ldl -lobjc "
-conftest.c: In function ‘t’:
-conftest.c:4: warning: implicit declaration of function ‘png_create_write_struct_2’
+"/usr/local/opt/gcc46/bin/gcc-4.6 -o conftest -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/x86_64-darwin13.3.0 -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/ruby/backward -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/Users/gene/.rvm/rubies/ruby-1.9.3-p547/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L.  -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1 -lpng  -lpthread -ldl -lobjc "
+conftest.c: In function 't':
+conftest.c:4:1: warning: implicit declaration of function 'png_create_write_struct_2' [-Wimplicit-function-declaration]
+ld: library not found for -lpng
+collect2: ld returned 1 exit status
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -55,11 +57,11 @@ checked program was:
 
 have_library: checking for zlibVersion() in -lz... -------------------- yes
 
-"/usr/local/opt/apple-gcc42/bin/gcc-4.2 -o conftest -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/x86_64-darwin13.0.0 -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/ruby/backward -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wshorten-64-to-32 -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/usr/local/rvm/rubies/ruby-1.9.3-p484/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L. -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib     -lpng  -lruby.1.9.1 -lz -lpng  -lpthread -ldl -lobjc "
-conftest.c: In function ‘t’:
-conftest.c:4: error: ‘zlibVersion’ undeclared (first use in this function)
-conftest.c:4: error: (Each undeclared identifier is reported only once
-conftest.c:4: error: for each function it appears in.)
+"/usr/local/opt/gcc46/bin/gcc-4.6 -o conftest -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/x86_64-darwin13.3.0 -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/ruby/backward -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/Users/gene/.rvm/rubies/ruby-1.9.3-p547/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L.  -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1 -lz  -lpthread -ldl -lobjc "
+conftest.c: In function 't':
+conftest.c:4:53: error: 'zlibVersion' undeclared (first use in this function)
+conftest.c:4:53: note: each undeclared identifier is reported only once for each function it appears in
+conftest.c:4:28: warning: variable 'p' set but not used [-Wunused-but-set-variable]
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -76,9 +78,9 @@ checked program was:
 12: }
 /* end */
 
-"/usr/local/opt/apple-gcc42/bin/gcc-4.2 -o conftest -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/x86_64-darwin13.0.0 -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/ruby/backward -I/usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wshorten-64-to-32 -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/usr/local/rvm/rubies/ruby-1.9.3-p484/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L. -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib     -lpng  -lruby.1.9.1 -lz -lpng  -lpthread -ldl -lobjc "
-conftest.c: In function ‘t’:
-conftest.c:4: warning: implicit declaration of function ‘zlibVersion’
+"/usr/local/opt/gcc46/bin/gcc-4.6 -o conftest -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/x86_64-darwin13.3.0 -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/ruby/backward -I/Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1 -I. -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include  -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  -fno-common -pipe conftest.c  -L. -L/Users/gene/.rvm/rubies/ruby-1.9.3-p547/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib -L.  -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib      -lruby.1.9.1 -lz  -lpthread -ldl -lobjc "
+conftest.c: In function 't':
+conftest.c:4:1: warning: implicit declaration of function 'zlibVersion' [-Wimplicit-function-declaration]
 checked program was:
 /* begin */
  1: #include "ruby.h"

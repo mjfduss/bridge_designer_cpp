@@ -10,7 +10,7 @@
 #include "rubydefs.h"
 #include "sketch.h"
 
-#define CONTEST_YEAR 2014
+#define CONTEST_YEAR 2015
 #define YEAR_TO_VERSION(Y) (((((Y) % 100) / 10) << 8) | (((Y) % 10) << 4) | 0x400c)
 #define BD_VERSION YEAR_TO_VERSION(CONTEST_YEAR)
 

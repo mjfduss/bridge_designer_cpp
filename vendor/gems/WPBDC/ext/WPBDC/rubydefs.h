@@ -20,18 +20,21 @@
 
 #define New(x,v,n,t)									\
 	do {												\
-	    v = ALLOC_N(t, n);                              \
+	    void *p = ALLOC_N(t, n);                        \
+	    v = p;                                          \
 	} while (0)
 
 #define Newz(x,v,n,t)									\
 	do {												\
-	    v = ALLOC_N(t, n);                              \
+	    void *p = ALLOC_N(t, n);                        \
+	    v = p;                                          \
         MEMZERO(v, t, n);                               \
 	} while (0)
 
 #define Renew(v,n,t)									\
 	do {												\
-	    v = REALLOC_N(v, t, n);                         \
+	    void *p = REALLOC_N(v, t, n);                   \
+	    v = p;                                          \
 	} while (0)
 
 #define Safefree(p)										\

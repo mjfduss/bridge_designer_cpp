@@ -12,11 +12,11 @@ ECHO = $(ECHO1:0=@echo)
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1
-hdrdir = /usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1
-arch_hdrdir = /usr/local/rvm/rubies/ruby-1.9.3-p484/include/ruby-1.9.1/$(arch)
+topdir = /Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1
+hdrdir = /Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1
+arch_hdrdir = /Users/gene/.rvm/rubies/ruby-1.9.3-p547/include/ruby-1.9.1/$(arch)
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
-prefix = $(DESTDIR)/usr/local/rvm/rubies/ruby-1.9.3-p484
+prefix = $(DESTDIR)/Users/gene/.rvm/rubies/ruby-1.9.3-p547
 rubylibprefix = $(libdir)/$(RUBY_BASE_NAME)
 exec_prefix = $(prefix)
 vendorhdrdir = $(rubyhdrdir)/vendor_ruby
@@ -53,7 +53,7 @@ vendorarchdir = $(vendorlibdir)/$(sitearch)
 
 NULLCMD = :
 
-CC = /usr/local/opt/apple-gcc42/bin/gcc-4.2
+CC = /usr/local/opt/gcc46/bin/gcc-4.6
 CXX = g++
 LIBRUBY = $(LIBRUBY_SO)
 LIBRUBY_A = lib$(RUBY_SO_NAME)-static.a
@@ -67,13 +67,13 @@ RUBY_EXTCONF_H =
 cflags   =  $(optflags) $(debugflags) $(warnflags)
 optflags = -O3
 debugflags = -ggdb
-warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wshorten-64-to-32 -Wimplicit-function-declaration
+warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration
 CFLAGS   = -fno-common $(cflags)  -fno-common -pipe $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
 DEFS     = 
 CPPFLAGS =  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE $(DEFS) $(cppflags) -I/usr/local/opt/libyaml/include -I/usr/local/opt/readline/include -I/usr/local/opt/libksba/include -I/usr/local/opt/openssl/include
 CXXFLAGS = $(CFLAGS) $(cxxflags)
-ldflags  = -L. -L/usr/local/lib -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib 
+ldflags  = -L.  -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib 
 dldflags = -Wl,-undefined,dynamic_lookup -Wl,-multiply_defined,suppress -Wl,-flat_namespace -L/usr/local/opt/libyaml/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/libksba/lib -L/usr/local/opt/openssl/lib  
 ARCH_FLAG = 
 DLDFLAGS = $(ldflags) $(dldflags) $(ARCH_FLAG)
@@ -85,10 +85,10 @@ EXEEXT =
 RUBY_BASE_NAME = ruby
 RUBY_INSTALL_NAME = ruby
 RUBY_SO_NAME = ruby.1.9.1
-arch = x86_64-darwin13.0.0
+arch = x86_64-darwin13.3.0
 sitearch = $(arch)
 ruby_version = 1.9.1
-ruby = /usr/local/rvm/rubies/ruby-1.9.3-p484/bin/ruby
+ruby = /Users/gene/.rvm/rubies/ruby-1.9.3-p547/bin/ruby
 RUBY = $(ruby)
 RM = rm -f
 RM_RF = $(RUBY) -run -e rm -- -rf
@@ -116,9 +116,9 @@ extout =
 extout_prefix = 
 target_prefix = /WPBDC
 LOCAL_LIBS = 
-LIBS = $(LIBRUBYARG_SHARED) -lz -lpng  -lpthread -ldl -lobjc 
-SRCS = analysis.c bridge.c bridge_cost.c bridge_hash.c bridge_parser.c bridge_random.c bridge_sketch.c geometry.c judge.c loading.c params.c rc4.c rc4_key.c scenario.c sketch.c WPBDC.c
-OBJS = analysis.o bridge.o bridge_cost.o bridge_hash.o bridge_parser.o bridge_random.o bridge_sketch.o geometry.o judge.o loading.o params.o rc4.o rc4_key.o scenario.o sketch.o WPBDC.o
+LIBS = $(LIBRUBYARG_SHARED) -lz  -lpthread -ldl -lobjc 
+SRCS = analysis.c bridge.c bridge_cost.c bridge_hash.c bridge_parser.c bridge_random.c bridge_sketch.c geometry.c judge.c loading.c params.c rc4.c scenario.c sketch.c WPBDC.c
+OBJS = analysis.o bridge.o bridge_cost.o bridge_hash.o bridge_parser.o bridge_random.o bridge_sketch.o geometry.o judge.o loading.o params.o rc4.o scenario.o sketch.o WPBDC.o
 TARGET = WPBDC
 TARGET_NAME = WPBDC
 TARGET_ENTRY = Init_$(TARGET_NAME)
@@ -214,6 +214,7 @@ $(DLLIB): $(OBJS) Makefile
 	$(ECHO) linking shared-object WPBDC/$(DLLIB)
 	-$(Q)$(RM) $(@)
 	$(Q) $(LDSHARED) -o $@ $(OBJS) $(LIBPATH) $(DLDFLAGS) $(LOCAL_LIBS) $(LIBS)
+	$(Q) $(POSTLINK)
 
 
 
