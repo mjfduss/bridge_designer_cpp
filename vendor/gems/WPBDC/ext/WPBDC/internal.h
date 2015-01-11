@@ -283,8 +283,8 @@ typedef struct params_t {
 		{	/* [1] */																		\
 			"Case B (Heavy Deck, Heavy Truck)",												\
 			DEAD_LOAD_FACTOR * 120.265 + 33.097,		/* TFloat point_dead_load; */		\
-			120,										/* TFloat front_axle_load; */		\
-			120,										/* TFloat rear_axle_load; */		\
+			124,										/* TFloat front_axle_load; */		\
+			124,										/* TFloat rear_axle_load; */		\
 		},																					\
 		{	/* [2] */																		\
 			"Case C (Light Deck, Light Truck)",												\
@@ -295,8 +295,8 @@ typedef struct params_t {
 		{	/* [3] */																		\
 			"Case D (Light Deck, Heavy Truck)",												\
 			DEAD_LOAD_FACTOR * 82.608 + 33.097,			/* TFloat point_dead_load; */		\
-			120,										/* TFloat front_axle_load; */		\
-			120,										/* TFloat rear_axle_load; */		\
+			124,										/* TFloat front_axle_load; */		\
+			124,										/* TFloat rear_axle_load; */		\
 		},																					\
 	},																						\
 	500,										/* TFloat connection_cost; */				\
@@ -309,7 +309,7 @@ typedef struct params_t {
 			250000,							/* TFloat Fy; */								\
 			7850,							/* TFloat density; */							\
 			{								/* TFloat cost[NSections]; */					\
-				4.50,							/* Bar */									\
+				4.30,							/* Bar */									\
 				6.30,							/* Tube */									\
 			}																				\
 		},																					\
@@ -320,7 +320,7 @@ typedef struct params_t {
 			345000,							/* TFloat Fy; */								\
 			7850,							/* TFloat density; */							\
 			{								/* TFloat cost[NSections]; */					\
-				5.00,							/* Bar */									\
+				5.60,							/* Bar */									\
 				7.00,							/* Tube	*/									\
 			}																				\
 		},																					\
@@ -331,8 +331,8 @@ typedef struct params_t {
 			485000,							/* TFloat Fy; */								\
 			7850,							/* TFloat density; */							\
 			{								/* TFloat cost[NSections]; */					\
-				5.55,							/* Bar */									\
-				7.75,							/* Tube	*/									\
+				6.00,							/* Bar */									\
+				7.70,							/* Tube	*/									\
 			}																				\
 		},																					\
 	}																						\

@@ -29,7 +29,7 @@ typedef struct params_t {
 
 */
 
-#define DEAD_LOAD_FACTOR	1.25
+#define DEAD_LOAD_FACTOR	1.35
 
 // Constant part of the analysis parameters block.  Rest has to be calculated.
 // This is similar to the BD_VERSION==0x400, but the cost factors have changed.

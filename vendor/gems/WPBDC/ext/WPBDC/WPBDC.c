@@ -195,11 +195,14 @@ static struct ft_entry {
 
 #define INT_CONST_TABLE_ENTRY(Name) { #Name, Name }
 
+// Decouple judge's published contest year from system-wide constant.
+#define JUDGE_CONTEST_YEAR CONTEST_YEAR
+
 static struct ict_entry {
   char *name;
   int val;
 } int_const_table[] = {
-  INT_CONST_TABLE_ENTRY(CONTEST_YEAR),
+  INT_CONST_TABLE_ENTRY(JUDGE_CONTEST_YEAR),
   INT_CONST_TABLE_ENTRY(BRIDGE_OK),
   INT_CONST_TABLE_ENTRY(BRIDGE_MALFORMED),
   INT_CONST_TABLE_ENTRY(BRIDGE_WRONGVERSION),

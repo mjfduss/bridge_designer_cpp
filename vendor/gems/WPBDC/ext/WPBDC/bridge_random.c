@@ -191,7 +191,7 @@ int induce_failure(TBridge *dst, TBridge *src, unsigned seed)
 
 #define NEXT(I)	((((I) - 1 + 1) % dst->n_members) + 1)
 
-	for (member_index = NEXT(start_member_index); 
+	for (member_index = NEXT(start_member_index);
 		 member_index != start_member_index; 
 		 member_index = NEXT(member_index)) {
 
@@ -203,14 +203,15 @@ int induce_failure(TBridge *dst, TBridge *src, unsigned seed)
 				new_size = --dst->members[member_index].x_section.size;
 				setup_analysis(analysis, dst, 0, 0, 0);
 
-				//  Check for analysis problems.
-				if (analysis->error != NoAnalError)
-					return -2;
+                // Punt for this member on slenderness failure.
+                if (analysis->error != NoAnalError) {
+                    break;
+                }
 
 				// Check for failure and return if we've done it!
-				if (analysis->n_compressive_failures > 0 ||
-					analysis->n_tensile_failures > 0)
+				if (analysis->n_compressive_failures > 0 || analysis->n_tensile_failures > 0) {
 					return 0;
+				}
 			} while (new_size > 0);
 			// Couldn't do it with this member.  
 			// Restore and loop to try the next member.
@@ -219,7 +220,7 @@ int induce_failure(TBridge *dst, TBridge *src, unsigned seed)
 	}
 #undef NEXT
 	// Very very unlikely, but who knows?
-	return -3;
+	return -1;
 }
 
 // Make a randomized variant of the source bridge.  This is just

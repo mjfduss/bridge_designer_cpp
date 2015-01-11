@@ -125,3 +125,20 @@ bundle exec rake assets:clean
 heroku pgbackups:capture
 curl -o latest.dump `heroku pgbackups:url`
 pg_restore --verbose --clean --no-acl --no-owner -h localhost -U generessler -d wpbdc_development latest.dump
+
+# Make nice Mac installer
+Run target compile-mac-bundle in Netbeans
+Run target build-mac-installer in Netbeans
+Use Disk Utility to create a 500 Mb blank read-write DMG with name ending in 'rw'
+Open the image in Finder along with its Properties View
+Copy a 2-resolution TIFF of the background into the Finder
+Then use this copied image to set the Finder background
+Resize the Finder to fit
+Use a shell to add a leading dot to the image filename: mv /Volumes/<rw vol name>
+  Copy of image should disappear from finder, but background remains.
+Drag copy of App onto left plaquard and Applications alias to right.
+Reset font and spacing as needed.
+Unmount the rw image.
+Right click the rw image and "Open with..." Disk Utility.
+Convert to read-only compressed final version.
+DELETE THE RW IMAGE.  If you don't do this, when you click the read-only DMG, it will mount twice! (Weird but true.)

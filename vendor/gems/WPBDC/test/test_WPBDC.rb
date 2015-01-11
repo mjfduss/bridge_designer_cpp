@@ -3,8 +3,9 @@ require 'WPBDC'
 
 class WPBDCTest < Test::Unit::TestCase
 
-  YEAR = 2014
+  YEAR = WPBDC::CONTEST_YEAR
   N_VARIANTS = 10
+  TEST_DATA_PATH = '../../../../bridgedesigner'
 
   # 428	1052804100	42A	196560.3239129398
   HEAD_FMT = "i i s f".split(' ')
@@ -20,8 +21,9 @@ class WPBDCTest < Test::Unit::TestCase
     end
     # Diff the member data tables with respect to the judge's versions
     Dir.glob("test/eg/#{YEAR}/log/*.txt").each do |judge_fn|
-      bd_fn = judge_fn.sub(%r|^.*test/|, '/Users/generessler/Projects/wpbdc-wpbd/')
-      IO.readlines(judge_fn).zip(IO.readlines(bd_fn)).each_with_index do |pair, i|
+      bd_fn = judge_fn.sub(%r|^.*test/|, "#{TEST_DATA_PATH}/")
+      pairs = IO.readlines(judge_fn).zip(IO.readlines(bd_fn))
+      pairs.each_with_index do |pair, i|
         # TODO Should actually compare on slenderness failures
         next if pair.any? {|p| p =~ /Slenderness/ }
         line = i + 1

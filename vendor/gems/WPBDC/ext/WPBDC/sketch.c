@@ -88,7 +88,7 @@ void set_viewport(IMAGE *image,
 
 // Return a pointer to the RGB triple at the given row and column 
 // within the given image.  Row zero is at top of image.
-INLINE RGB_TRIPLE *rgb_triple_rc(IMAGE *image, UNSIGNED row, UNSIGNED col)
+static INLINE RGB_TRIPLE *rgb_triple_rc(IMAGE *image, UNSIGNED row, UNSIGNED col)
 {
 	assert(row < image->height);
 	assert(col < image->width);
@@ -96,7 +96,7 @@ INLINE RGB_TRIPLE *rgb_triple_rc(IMAGE *image, UNSIGNED row, UNSIGNED col)
 }
 
 // Same as above, but use x and y rather than row and column.
-INLINE RGB_TRIPLE *rgb_triple_xy(IMAGE *image, UNSIGNED x, UNSIGNED y)
+static INLINE RGB_TRIPLE *rgb_triple_xy(IMAGE *image, UNSIGNED x, UNSIGNED y)
 {
 	return rgb_triple_rc(image, image->height - 1 - y, x);
 }
@@ -177,14 +177,13 @@ void draw_rect_raw(IMAGE *image,
 	draw_line_raw(image, x1, y2, x1, y1, color);
 }
 
-
 //  Implementation of Cohen-Sutherland line clipping.
 #define LEFT	8
 #define TOP		4
 #define RIGHT	2
 #define BOTTOM	1
 
-INLINE unsigned clip_code(FLOAT x, FLOAT y,
+static INLINE unsigned clip_code(FLOAT x, FLOAT y,
 				   FLOAT x_left, FLOAT y_top, FLOAT x_right, FLOAT y_bottom)
 {
 	unsigned code;

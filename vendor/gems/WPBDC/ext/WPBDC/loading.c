@@ -118,7 +118,7 @@ void setup_loading(TLoading *loading,
 				load_instance->point_load[2 * joint_index]);
 		}
 	}
-#endif;
+#endif
 
 	if (geometry == local_geometry)
 		clear_geometry(geometry);

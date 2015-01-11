@@ -49,6 +49,7 @@ class Admin::ServerStatusesController < Admin::ApplicationController
 
     Affiliation.delete_all
     Best.delete_all
+    Certificate.delete_all
     Design.delete_all
     Member.delete_all
     Parent.delete_all

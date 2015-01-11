@@ -109,12 +109,10 @@ char *failed_variant(STRING *bridge_as_string, int seed)
 
     parse_bridge(bridge, bridge_as_string);
 
-    if (bridge->error == BridgeNoError) {
-        induce_failure(variant_bridge, bridge, seed);
+    rtn = 0;
+    if (bridge->error == BridgeNoError
+            && induce_failure(variant_bridge, bridge, seed) == 0) {
         rtn = unparse_bridge(variant_bridge);
-    }
-    else {
-        rtn = 0;
     }
     clear_bridge(bridge);
     clear_bridge(variant_bridge);
@@ -223,14 +221,14 @@ char *analysis_log(STRING *bridge_as_string)
 
 #if defined(NATIVE_TEST) && !defined(CPROTO)
 
-//#define WRITE_EXAMPLES
+#define WRITE_EXAMPLES
 
 #ifdef WRITE_EXAMPLES
-#define PREVIOUS_YEAR_DELTA 2
-#define EG_DIR  "../../test/eg/2012"
-#define NEW_EG_DIR  "../../test/eg/2014"
-#else
+#define PREVIOUS_YEAR_DELTA 1
 #define EG_DIR  "../../test/eg/2014"
+#define NEW_EG_DIR  "../../test/eg/2015"
+#else
+#define EG_DIR  "../../test/eg/2015"
 #endif
 
 #ifdef WINDOWS
@@ -453,9 +451,9 @@ int main(int argc, char* argv[])
             }
 
             // Write a failed version of this bridge for future testing.
-            printf("writing failed version\n");
             sprintf(fname, NEW_EG_DIR "/" "%s-failed%s", name, ext);
             if (stat(fname, stat_buf) != 0 && induce_failure(copy, bridge, 0) == 0) {
+                printf("writing failed version\n");
                 text = unparse_bridge(copy);
                 copy_str->ptr = text;
                 copy_str->size = strlen(text);
@@ -469,6 +467,9 @@ int main(int argc, char* argv[])
                 fclose(f);
                 clear_bridge(copy);
                 n_examples_written++;
+            }
+            else {
+                printf("attempt to write broken bridge %s failed (either already exists or could not break)\n", fname);
             }
         }
         continue;
