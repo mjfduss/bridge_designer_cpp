@@ -54,7 +54,7 @@ class Admin::BulkNoticesController < Admin::ApplicationController
         elsif params.nonblank? :to_semi_finalists
           send_to(Team.where(:status => '2'), msg)
         elsif params.nonblank? :to_all
-          send_to(Team.all, msg)
+          send_to(Team, msg)
         end
       end
     end
