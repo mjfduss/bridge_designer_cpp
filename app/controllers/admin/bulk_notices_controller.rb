@@ -54,7 +54,7 @@ class Admin::BulkNoticesController < Admin::ApplicationController
         elsif params.nonblank? :to_semi_finalists
           send_to(Team.where(:status => '2'), msg)
         elsif params.nonblank? :to_all
-          send_to(Team.all, msg)
+          send_to(Team, msg)
         end
       end
     end
@@ -66,7 +66,8 @@ class Admin::BulkNoticesController < Admin::ApplicationController
   def send_to(teams, msg)
     n = 0
     teams.find_each do |team|
-      BulkNotice.delay.to_team(team, msg)
+      # BulkNotice.delay.to_team(team, msg)
+      logger.debug("Sending to #{team.name}")
       n += 1
     end
     flash.now[:alert] = "Sent #{pluralize(n, 'email message')}."
@@ -81,4 +82,3 @@ class Admin::BulkNoticesController < Admin::ApplicationController
     flash.now[:alert] = "Sent #{pluralize(n, 'email message')}."
   end
 end
-

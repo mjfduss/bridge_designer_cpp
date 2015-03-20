@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140316000317) do
+ActiveRecord::Schema.define(:version => 20150223015231) do
 
   create_table "administrators", :force => true do |t|
     t.string   "name",            :limit => 16
@@ -53,12 +53,10 @@ ActiveRecord::Schema.define(:version => 20140316000317) do
     t.integer  "design_id",        :null => false
     t.integer  "standing",         :null => false
     t.integer  "basis",            :null => false
-    t.integer  "group_id"
-    t.integer  "group_standing"
-    t.integer  "group_basis"
     t.date     "awarded_on",       :null => false
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.text     "group_info"
   end
 
   add_index "certificates", ["local_contest_id"], :name => "index_certificates_on_local_contest_id"
@@ -185,6 +183,7 @@ ActiveRecord::Schema.define(:version => 20140316000317) do
     t.integer  "team_id",                      :default => 0,     :null => false
     t.string   "country",        :limit => 40, :default => "USA"
     t.integer  "rank",                         :default => 0,     :null => false
+    t.integer  "group_id"
   end
 
   add_index "members", ["team_id"], :name => "index_members_on_team_id"
@@ -265,7 +264,6 @@ ActiveRecord::Schema.define(:version => 20140316000317) do
     t.string   "category",        :limit => 4
     t.datetime "reg_completed"
     t.string   "status",          :limit => 1,  :default => "-", :null => false
-    t.integer  "group_id"
   end
 
   add_index "teams", ["email"], :name => "index_teams_on_email"

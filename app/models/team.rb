@@ -1,4 +1,5 @@
 require 'pippa'
+require 'set'
 
 class Team < ActiveRecord::Base
 
@@ -29,7 +30,6 @@ class Team < ActiveRecord::Base
   has_many :bests, :dependent => :destroy
   has_many :password_resets, :dependent => :destroy
   has_many :certificates, :dependent => :destroy
-  belongs_to :group
 
   scope :ordered_by_name, :order => "name_key ASC"
 
@@ -150,13 +150,13 @@ class Team < ActiveRecord::Base
     max_group_id = Group.maximum(:id)
     return 0 unless max_group_id
     Team.count_by_sql([
-      "SELECT count(DISTINCT COALESCE(t.group_id, t.id + #{max_group_id + 1})) " +
-          'FROM teams t INNER JOIN bests b ' +
-          'ON t.id = b.team_id ' +
+        "SELECT count(DISTINCT COALESCE(m.group_id, t.id + #{max_group_id + 1})) " +
+          'FROM teams t ' +
+          'INNER JOIN bests b ON t.id = b.team_id ' +
+          'INNER JOIN members m ON t.id = m.team_id ' +
           'WHERE t.category = ? ' +
           "AND t.status IN ('-', 'a', '2') " +
-          'AND b.scenario IS NULL ',
-      category])
+          'AND b.scenario IS NULL', category])
   end
 
   # Get the teams in a local contest correctly sorted by score.
@@ -170,7 +170,7 @@ class Team < ActiveRecord::Base
       joins(:bests, :affiliations => :local_contest).
       # This is dangerous code.  We want "not rejected, but can't get it until Rails 4"
       where(:status => STATUS_UNREJECTED,
-            :bests => { :scenario => WPBDC.local_contest_code_to_id(code) || nil },
+            :bests => { :scenario => WPBDC.local_contest_code_to_id(code) },
             :local_contests => { :code => code }).
       order('bests.score ASC, bests.sequence ASC')
     relation = relation.offset((page - 1) * per_page).limit(per_page) if page
@@ -192,32 +192,49 @@ class Team < ActiveRecord::Base
       name_likeness.blank? ? '%' : name_likeness, categories, statuses).order('name_key ASC').limit(limit.to_i)
   end
 
-  MAX_RANKED_IN_GROUP = 1
-
   def self.each_team_receiving_qualifying_certificate(category, &block)
     # This returns a hash from group id to count of unrejected teams in group.
-    group_bases = joins(:bests).
-        where(:bests => { :scenario => nil}, :category => category, :status => STATUS_UNREJECTED).
-        where("group_id is not null").group(:group_id).count
+    # Count distinct team id's, grouping group_id's of members, using only unrejected teams that have submitted.
+    group_bases = joins(:bests, :members).
+        where(:bests => { :scenario => nil }, :category => category, :status => STATUS_UNREJECTED).
+        where("group_id is not null").group(:group_id).count(:distinct => true)
+    # Work around a Rails group_by bug: keys that ought to be numeric are strings.
+    group_bases  = Hash[group_bases.map { |k, v| [k.to_i, v] } ]
     team_ids = joins(:bests).
-        where(:bests => { :scenario => nil}, :category => category, :status => STATUS_UNREJECTED).
+        where(:bests => { :scenario => nil }, :category => category, :status => STATUS_UNREJECTED).
         order('bests.score ASC, bests.sequence ASC').pluck(:id)
     rank = 0
     group_counts = Hash.new(0)
-    team_ids.each do |id|
-      team = Team.find(id)
-      gid = team.group_id
-      team.rank = if gid.nil? || (group_counts[gid] += 1) <= MAX_RANKED_IN_GROUP
-                    rank += 1
-                  else
-                    rank
-                  end
-      if gid
-        yield team, group_counts[gid], group_bases[gid]
-      else
-        yield team, nil, nil
+
+    #team_ids.each do |id|
+    #  team = Team.find(id)
+
+    includes(:members).joins(:bests).
+      where(:bests => { :scenario => nil }, :category => category, :status => STATUS_UNREJECTED).
+      order('bests.score ASC, bests.sequence ASC').find_each do |team|
+
+      group_ids = team.members.map(&:group_id)
+
+      # Update the group counts, which also are captured as group ranks.
+      group_ids.uniq.each do |gid|
+        group_counts[gid] += 1 if gid
       end
+
+      # If either of the team members are in a group and there's already a ranked team in at
+      # least one, this team gets the same rank as the predecessor, else it gets the next.
+      team.rank = if group_ids.any? {|gid| gid && group_counts[gid] > 1 }
+                    rank
+                  else
+                    rank += 1
+                  end
+
+      # The second yielded value is a list of [group_id, standing, basis] triples parallel to the members list.
+      # A non-group member will produce [nil, 0, 0]
+      yield team, group_ids.map{|gid| [gid, group_counts[gid].to_i, group_bases[gid].to_i]}
     end
+
+    Rails.logger.error("Qualifying round certificate basis error: #{group_bases.to_set ^ group_counts.to_set}") \
+      if group_bases != group_counts
   end
 
   def self.assign_top_ranks(teams, truncate_at_rank = -1)
@@ -225,27 +242,35 @@ class Team < ActiveRecord::Base
     rankable = 0  # Could be ranked if accepted.
     group_counts = Hash.new(0)
     teams.each_with_index do |team, index|
-      g = team.group
-      team.rank = case team.status
-        when 'a', '2'
-          if g.nil? || (group_counts[g.id] += 1) <= MAX_RANKED_IN_GROUP
-            rank += 1
-          else
-            :o
+      group_ids = team.members.map(&:group_id).uniq
+      team.rank =
+          case team.status
+            when 'a', '2'
+              # Count this team in its group(s)
+              group_ids.each {|gid| group_counts[gid] += 1 }
+              # Decide whether to rank it: all members must be non-group or first in group.
+              # :o for "Hidden by first in group"
+              if group_ids.any? {|gid| gid && group_counts[gid] > 1 }
+                :o
+              else
+                rank += 1
+              end
+            when '-', 'r'
+              # :o for "Would be hidden even if accepted"
+              # :x for "Would be visible if this alone were accepted";
+              if group_ids.any? {|gid| gid && group_counts[gid] > 0 }
+                :o
+              else
+                rankable += 1
+                :x
+              end
+            else
+              Rails.logger.warn "Bad status #{team.status}."
+              rankable += 1
+              :x
           end
-        when '-', 'r'
-          # :x for "Would be visible if this alone were accepted"; :o for "Would be hidden even if accepted"
-          if g.nil? || group_counts[g.id] <= MAX_RANKED_IN_GROUP
-            rankable += 1
-            :x
-          else
-            :o
-          end
-        else # Should never happen.
-          rankable += 1
-          :x
-      end
-      return [teams.replace(teams[0..index]), rank] if rank == truncate_at_rank || rankable == truncate_at_rank
+      return [teams.replace(teams[0..index]), rank] if
+          rank == truncate_at_rank || rankable == truncate_at_rank
     end
     [teams, rank]
   end
@@ -562,3 +587,5 @@ class Team < ActiveRecord::Base
   end
 
 end
+
+# Team.joins(:bests, :members).where(:bests => { :scenario => nil }, :category => 'h', :status => ['a', '-', '2']).where("group_id is not null").group(:group_id).count(:distinct => true)

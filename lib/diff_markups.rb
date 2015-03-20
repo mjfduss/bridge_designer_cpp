@@ -13,9 +13,9 @@ module DiffMarkups
     # Find a family name prefix that can be formed by only adding to the team name, not deleting. This
     # means breaking out of the sequence traversal if a '-' is found, i.e. the sequence is okay.
     fn = fns.find do |n|
+      # The rather ad hoc prefix length we settled on was the longer of 5 or 1/4 of characters.
       not Diff::LCS::traverse_sequences(n[0...[4, n.length / 4].max], tn) {|e| break true if e.action == '-' }
     end
-    # Return unmarked team name key unless we found a family name with a problem.
     return fn ? markup(fn, tn).join('').html_safe : nil
   end
 

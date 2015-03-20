@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ "$#" -eq "0" ]; then
+ echo "Usage: $(basename $0) [options] dumpfile.pg"
+else
+ pg_restore --verbose --clean --no-acl --no-owner -h localhost -U gene -d wpbdc_development "$@"
+fi

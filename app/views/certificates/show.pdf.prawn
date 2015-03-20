@@ -51,7 +51,7 @@ prawn_document(:page_layout => :landscape, :force_download => false) do |pdf|
           pdf.text 'Certificate Of Achievement', :align => :center
         end
 
-        sep = 0.15.in
+        sep = 0.13.in
 
         pdf.move_down sep
         pdf.image File.join(dir, 'ribbon.png'), :scale => 0.3, :at => [7.4.in, pdf.cursor] if @semifinalist
@@ -78,11 +78,11 @@ prawn_document(:page_layout => :landscape, :force_download => false) do |pdf|
         pdf.text "For attaining a standing of #{number_with_delimiter(@standing, :delimiter => ',')} of " +
           "#{number_with_delimiter(@basis, :delimiter => ',')} teams", :align => :center
 
-        if @group
+        @group_info.each do |info|
           pdf.move_down 0.5 * sep
-          pdf.text "And #{number_with_delimiter(@group_standing, :delimiter => ',')} of " +
-            "#{number_with_delimiter(@group_basis, :delimiter => ',')} " +
-            "teams from #{@group.description}", :align => :center
+          pdf.text "And #{number_with_delimiter(info.standing, :delimiter => ',')} of " +
+            "#{number_with_delimiter(info.basis, :delimiter => ',')} " +
+            "teams from #{info.group.description}", :align => :center
         end
 
         pdf.move_down 0.5 * sep

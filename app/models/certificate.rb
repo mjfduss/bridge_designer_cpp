@@ -1,9 +1,31 @@
 class Certificate < ActiveRecord::Base
 
+  class PerGroupInfo
+    attr_reader :group_id, :standing, :basis
+
+    def initialize(group_id, standing, basis)
+      @group_id = group_id
+      @standing = [standing, basis].min
+      @basis = basis
+    end
+
+    def group
+      Group.find_by_id(@group_id)
+    end
+
+    # A relative place quotient in (0.0 .. 1.0]
+    def placement
+      Float(standing) / basis
+    end
+  end
+
+  # Avoid a separate table just to store group info for certificates...
+  # This is an array of PerGroupInfo
+  serialize :group_info, Array
+
   belongs_to :design
   belongs_to :local_contest, :counter_cache => true
   belongs_to :team
-  belongs_to :group
   # validates_uniqueness_of :team_id, :scope => :local_contest_id
 
   def self.revoke_for_qualifiers(category)
@@ -14,15 +36,18 @@ class Certificate < ActiveRecord::Base
     Certificate.revoke_for_qualifiers(category)
     basis = Team.get_basis(category)
     awarded_on = Date.today
-    Team.each_team_receiving_qualifying_certificate(category) do |team, group_standing, group_basis|
-      Certificate.create do |c|
+    Team.each_team_receiving_qualifying_certificate(category) do |team, group_standing_and_basis|
+      Certificate.create! do |c|
         c.team = team
         c.design = team.best_qualifying_design
         c.standing = team.rank
         c.basis = [basis, c.standing].max
-        c.group = team.group
-        c.group_standing = group_standing
-        c.group_basis = group_basis
+        # Squeeze out null groups, duplicates, placements less than half. Sort best placement first.
+        # TODO: Should we drop low placements, say less than half?
+        c.group_info = group_standing_and_basis.select{|x| x[0]}.uniq.
+            map{|t| PerGroupInfo.new(*t)}.
+            # select{|g| g.placement >= 0.5 }.
+            sort_by(&:placement)
         c.awarded_on = awarded_on
       end
     end
@@ -44,6 +69,7 @@ class Certificate < ActiveRecord::Base
       basis = Team.get_local_contest_basis(lc.code)
       page = 1
       loop do
+        # TODO: Implement a non-paginated get to eliminate this hack.
         teams = Team.get_ranked_local_contest_teams(lc.code, page, 1000)
         teams.each do |team|
           Certificate.create do |c|
@@ -52,7 +78,7 @@ class Certificate < ActiveRecord::Base
             c.design = team.best_qualifying_design
             c.standing = team.rank
             # Since we aren't locking the team table, really bad timing could
-            # cause the standing to be more than the basis.  Patch that here.
+            # cause a race where the standing is more than the basis.  Patch that here.
             c.basis = [basis, c.standing].max
             c.awarded_on = awarded_on
           end

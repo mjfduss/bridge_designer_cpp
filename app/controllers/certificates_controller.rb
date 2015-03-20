@@ -6,11 +6,7 @@ class CertificatesController < ApplicationController
       @team = certificate.team
       @standing = certificate.standing
       @basis = certificate.basis
-      if certificate.group_id
-        @group = certificate.group
-        @group_standing = certificate.group_standing
-        @group_basis = certificate.group_basis
-      end
+      @group_info = certificate.group_info # Array of Certificate::PerGroupInfo
       @awarded_on = certificate.awarded_on
       @local_contest = certificate.local_contest
       @semifinalist = certificate.team.semifinalist? && !@local_contest
