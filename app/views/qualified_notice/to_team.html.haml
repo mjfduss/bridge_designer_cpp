@@ -1,7 +1,9 @@
 %div{:style => 'font-weight:bold;'}Greetings Team '#{@team.name}', #{@team.members.pluck(:first_name).to_sentence},
 %p
-  We're happy to inform you that your team has been qualified in the Engineering Encounters Bridge Design
-  Contest for #{WPBDC::CONTEST_YEAR}. This means that your team can be listed in official standings.
+  Congratulations!  You made the
+  %a{ :href => 'http://bridgecontest.org'}
+    #{WPBDC::CONTEST_YEAR} Bridge Design Contest
+  scoreboard today.  Be sure to check back often to see where you stand as the contest continues.
 %p
   Good luck in the contest!
 %p
