@@ -462,15 +462,21 @@ button once. You'll be asked if you're sure you wish to
 proceed. Deletions cannot be undone, so be sure. The active schedule
 cannot be deleted.
 
-\subsection{Qualogin}
-A contraction for ``Qualifying round login," select this option to
-obtain a team login and registration page even if the contest is
-closed for logins according to the active schedule. In this
-pseudo-qualifying round, you can register teams and submit designs
+\subsection{Fake login}
+Select this option to
+obtain a team login and registration page for either the qualifying or
+semifinal round even if the contest is otherwise
+closed for logins according to the active schedule.  Until the qualifying
+round is over, the login will be as for qualifying round. Afterward, it
+will be for semifinals. In this
+pseudo round, you can register teams and submit designs
 until the administrator session is terminated by logging out or
-closing the browser. All pages in a Qualogin will have the banner
-\ui{\color{red}{*** Admin Qualogin ***}} as a reminder that the
-schedule is being ignored.
+closing the browser. All pages in a Fake session will have the banner
+\ui{\color{red}{*** Admin Session: Qualifying round in progress}}
+until the real qualifying round over, when it will become
+\ui{\color{red}{*** Admin Session: Semifinals in progress
+while also open for free play ***}}. This is a reminder that the
+normal schedule is being ignored because an administrator is logged in.
 
 \subsection{Logout}
 This menu item terminates the Administrator's session with the CAI.
@@ -983,6 +989,6 @@ contestants. Captchas would reduce this threat.
 Example certificates of achievement are included on the following pages. The first is for
 a local contest. The second is for the national qualifying round, provided by a team that
 was part of a group.
-\includepdf[angle=90]{localcontestcertificate.pdf}
-\includepdf[angle=90]{qualifierscertificate.pdf}
+\includepdf{localcontestcertificate.pdf}
+\includepdf{qualifierscertificate.pdf}
 \end{document}  

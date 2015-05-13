@@ -8,8 +8,8 @@
     /[if lt IE 9]
       = javascript_include_tag 'html5fix'
   %body
-    - if session[:admin_id]
-      %h1.trouble *** Admin Qualogin ***
+    - if session.has_key?(:admin_id)
+      %h1.trouble *** Admin Session: #{Schedule::DESCRIPTIONS[@schedule_state]} ***
     - if content_for?(:dialog)
       .dialog.stdwidth
         .dialoghead

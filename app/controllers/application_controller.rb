@@ -20,8 +20,14 @@ class ApplicationController < ActionController::Base
   def load_schedule
     @schedule = Schedule.fetch_cache
     # We look up the state and store it for the controller run so it can't change in the middle!
-    # If we have an admin session, we are always in qualifiers for test uploads.
-    @schedule_state = session[:admin_id] ? Schedule::STATE_QUALS : @schedule.state
+    # If we have an admin session, we are in quals or semis ()after quals are over) for test uploads.
+    @schedule_state = if !session.has_key?(:admin_id)
+                        @schedule.state
+                      elsif @schedule.state >= Schedule::STATE_QUALS_CLOSED
+                        Schedule::STATE_SEMIS
+                      else
+                        Schedule::STATE_QUALS
+                      end
   end
 
   def kill_session(msg)
