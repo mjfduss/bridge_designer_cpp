@@ -48,6 +48,7 @@ heroku config:add TZ=America/New_York
 
 # Build and test judge
 # Update version and date in WPBDC.gemspec
+# (Not sure how to get this to run without version update once install is complete.)
 rake # runs tests
 gem build WPBDC.gemspec
 rm WPBDC-<old.version>.gem

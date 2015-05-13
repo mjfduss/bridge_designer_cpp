@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '1.9.3'
 
 gem 'rails', '~> 3.2'
-gem 'WPBDC', '2015.3.5'
+gem 'WPBDC', '2015.3.7'
 gem 'pippa', '~> 0.3'
 gem 'lulu', '~> 0.0'
 gem 'jquery-rails', '~> 2.1'
@@ -40,18 +40,3 @@ group :assets do
   gem 'coffee-rails', '3.2.2'
   gem 'uglifier', '1.2.7'
 end
-
-# group :production do
-# end
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
