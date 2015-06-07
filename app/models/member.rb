@@ -13,6 +13,7 @@ class Member < ActiveRecord::Base
   attr_accessor :completed
   
   belongs_to :team
+  belongs_to :group
   has_one :parent
 
   validates :first_name, :presence => true, :length => { :maximum => 40 }

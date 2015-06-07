@@ -4,22 +4,35 @@
   %tr
     %td{ :rowspan => 2 + rows.length, :class => team.status_style_id }= "[#{team.rank.to_s}]"
     %td.review_head{ :colspan => 2 }
-      - markup = DiffMarkups.team_name_check_markup(team.name_key, team.members.map(&:last_name))
-      - if markup
-        %span.bold.questionable= markup
-      - else
-        = team.name_key
-      [#{Standing.rank(team) || 'x'}]:
-      = select_tag("#{team.id}_group", options_for_select(team_review_group_list_data(@groups), team.group_id || '-'))
-      = hidden_field_tag "#{team.id}_group_in", (team.group_id || '-')
-      = sep
-      - TablesHelper::STATUS_PAIRS[0..-2].each do |label, param| # -2 omits Hidden
-        - unless param == '2' && team.category == 'i' # skip semifinal selector for teams that aren't eligible
-          = radio_button_tag "#{team.id}_status", param, param == team.status
-          = label
-      = hidden_field_tag "#{team.id}_status_in", team.status
-      = sep
-      %a{ :class => 'review', :href => '#top' }= "[top]"
+      %table
+        %tr
+          %td
+            - markup = DiffMarkups.team_name_check_markup(team.name_key, team.members.map(&:last_name))
+            - if markup
+              %span.bold.questionable= markup
+            - else
+              = team.name_key
+            [#{Standing.rank(team) || 'x'}]
+          %td
+            - captain = team.captain
+            - captain_group = captain.group_id || '-'
+            = select_tag("#{captain.id}_group",
+                options_for_select(team_review_group_list_data(@groups), captain_group))
+            = hidden_field_tag "#{captain.id}_group_in", captain_group
+            - unless team.non_captains.empty?
+              - member = team.non_captains[0]
+              - member_group = member.group_id || '-'
+              = select_tag("#{member.id}_group",
+                  options_for_select(team_review_group_list_data(@groups), member_group))
+              = hidden_field_tag "#{member.id}_group_in", member_group
+            %br
+            - TablesHelper::STATUS_PAIRS[0..-2].each do |label, param| # -2 omits Hidden
+              - unless param == '2' && team.category == 'i' # skip semifinal selector for teams that aren't eligible
+                = radio_button_tag "#{team.id}_status", param, param == team.status
+                = label
+                = hidden_field_tag "#{team.id}_status_in", team.status
+          %td
+            %a{ :class => 'review', :href => '#top' }= "[top]"
   - for row in rows
     %tr{ :class => cycle('plain', 'stripe') }
       - for col in row

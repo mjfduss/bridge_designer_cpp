@@ -64,7 +64,8 @@ class Admin::BulkNoticesController < Admin::ApplicationController
   def send_to(teams, msg)
     n = 0
     teams.find_each do |team|
-      BulkNotice.delay.to_team(team, msg)
+      # BulkNotice.delay.to_team(team, msg)
+      logger.debug("Sending to #{team.name}")
       n += 1
     end
     flash.now[:alert] = "Sent #{pluralize(n, 'email message')}."
