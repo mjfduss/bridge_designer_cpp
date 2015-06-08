@@ -64,8 +64,8 @@ Automatic schedules are new. In the old CAI, the milestone dates and
 times of contest rounds could be established only at the server
 console. Now they can be set in the CAI.
 
-Team groups are a new feature to support the ``one winner per school"
-rule.
+Team member groups are a new feature to support the ``one winner per
+school" rule.
 
 Manual disabling of logins is another new facility that has moved from
 the console to the CAI web interface, available to any Administrator
@@ -78,11 +78,11 @@ number of administrator login names so that a different persistent
 configuration can be saved for each.
 
 The new CAI does not require setting up new, different accounts for
-semi-final teams.  Instead, semi-finalists are merely marked in the
+semi-final teams. Instead, semi-finalists are merely marked in the
 Team Review portion of the CAI.
 
 In the new system, any team can participate in up to four local
-contests at any time.  These can be either 4-character (all-scenario)
+contests at any time. These can be either 4-character (all-scenario)
 or 6-character (scenario-specific) contests without regard for the
 current contest round. The old system allowed only 4-character
 contests during the Qualifying Round. That restriction is
@@ -103,14 +103,17 @@ to be accepted per team.
 
 Bulk email is now performed by the contest server. This is necessary
 to gain the benefit of a registered bulk mail service that has much
-less chance of being blocked by spam detectors.  A new ``rich text"
-editor in the CAI allows messages with standard text formatting.  The
+less chance of being blocked by spam detectors. A new ``rich text"
+editor in the CAI allows messages with standard text formatting. The
 rich text editor also allows documents with images. At present,
 however, these will not work for bulk email.
 
 Downloadable Certificates of Achievement that acknowledge and
 celebrate the standing that each team earns in the contest are also
 new.
+
+Rejected teams can change their team names in the contact information
+form. Re-registering after a bad team name choice is no longer required.
 
 Other changes are for usability. 
 \begin{itemize}
@@ -120,6 +123,8 @@ Other changes are for usability.
   strikeouts and color coding in a manner similar to Microsoft Word revision marks. 
 \item The local contest manager now protects against inadvertently choosing a local 
   contest code that is already in use.
+\item Team password resets are now handled by teams themselves via email. Administrators
+are no longer involved in this process.
 \end{itemize}
 
 \subsection{We need you}
@@ -133,22 +138,22 @@ Administrator efficiently.
 
 \subsection{Administrators}
 An Administrator is a person entrusted with contest administration and
-decision authority.  Each Administrator has a user id and password for
+decision authority. Each Administrator has a user id and password for
 validating his or her identity. The password is initialized with an
 easy-to-guess value when the system is created. Therefore, each
 Administrator must immediately log in to change his or her password to
 a personal, difficult-to-guess value. The main purpose of
-Administrator accounts is to store persistent information about the
+Administrator accounts is to store persistent information about each
 Administrator's preferences.
 
 Additionally, the separate logins allow individual activity to be
-tracked in the server logs.  With the old Administrator, determining
+tracked in the server logs. With the old Administrator, determining
 who performed a given Administrator function---occasionally
 useful---was difficult.
 
 There is nothing to prevent more than one Administrator from logging
 in and making changes during the same period. This has always been
-true.  External communication among Administrators is needed to
+true. External communication among Administrators is needed to
 prevent confusion when one Administrator's view changes due to work
 done by another at a different location.
 
@@ -176,19 +181,22 @@ receiving prizes. Open competitors are in it for fun only.
 
 Long-time contest participants will remember that categories once
 included the four ASCE zones. Also, the old CAI presented
-Semi-finalists as a category.  Neither is currently true.
+Semi-finalists as a category. Neither is currently true.
 
 \subsection{Team status}
-The status of a contest Team consists of four values.  Each has an
+The status of a contest Team consists of four values. Each has an
 associated color to denote it in the CAI.
 \begin{description}
 \item[Unreviewed (gray)] The team has successfully registered and
   uploaded at least one design, but no Administrator has yet reviewed
   or advanced it to one of the three reviewed states that follow.
 \item[Rejected (red)] The team has been disqualified by an
-  Administrator.  Logins are permitted, but the Team Home Page
-  contains only a message and Log Out link. No further uploads are
-  possible.
+  Administrator. Logins are permitted, but the Team Home Page
+  contains only a message and links to change contact information
+  or Log Out. No further uploads are possible.
+  The contact information form for rejected teams includes an
+  opportunity to change the team name so that a new
+  registration is not needed when rejection is for bad team names.
 \item[Accepted (green)] The team has been reviewed and deemed suitable
   to continue in the competition. It can appear in official standings
   if its best design has a high standing.
@@ -216,7 +224,7 @@ or so. Rejected teams do not appear.
 
 Local contests have been run by teachers, home-school parent groups,
 principals, superintendents, college professors, states, and foreign
-countries.  The person who wishes to run the local contest emails an
+countries. The person who wishes to run the local contest emails an
 Administrator to obtain a code. He or she is responsible to
 communicate this code to the local contest competitors, who enter it
 in their team registration information pages. Soon after successfully
@@ -224,22 +232,25 @@ submitting a design (of the correct design scenario for a 6-character
 contest), the team will appear in the local contest standings.
 
 \subsection{Team groups}
-In the new CAI, teams can be placed in named groups of arbitrary
-size. When official standings are generated, only one team per group
-will appear---the one with the highest standing among group members.
+\label{sec:groups}
+In the new CAI, team members can optionally be placed in named groups
+of arbitrary size. Therefore, each team is associated with zero, one,
+or two groups, depending on the groups of its members. When official
+standings are generated, a team will appear only if it has the best
+design in each of its associated groups.
 
 \subsection{Certificates}
 \label{sec:certificates}
-The CAI is capable of producing Certificates of Achievement for the
+The CAI can produce Certificates of Achievement for the
 qualifying round (including a ribbon for semifinalists) and for each
-local contest.  Up to five certificates may be awared to each
+local contest. Up to five certificates may be awarded to each
 team---one for the qualifying round and another for each of up to four
 local contests.
 
 These appear as links on the team home page. Clicking the respective
 link produces a PDF document in a fresh browser tab. Each certificate
-is suitable for high quality printing and display in an 8x10 inch
-frame.
+is suitable for high quality printing and display in an $8\times 10$
+inch frame.
 
 Certificates must be explicitly posted by an administrator for each
 local contest and for the qualifying round. They may also be revoked
@@ -250,10 +261,13 @@ Most attributes of certificates are \emph{frozen} at the time the
 administrator creates them. They do not change even if the team
 submits improved bridges or other teams with higher standings are
 rejected. Frozen attributes include the standing and \emph{basis}
-(total number of competitors) for the local contest or qualifying
-round for the respective kind of certificates. For the qualifying
-round, the standing within the team's group (if any) is frozen and
-also the basis within the group.
+(total number of competitors for the local contest or qualifying
+round, depending on certificate type). For the qualifying
+round, the group and standing within the team's group (if any) is
+frozen and also the basis within that group.
+
+If the Administrator re-creates certificates, frozen values are
+updated.
 
 Semifinalist ribbons not frozen. Updates to the semifinalist status of
 a team are reflected immediately in the qualifying round certificate.
@@ -264,10 +278,10 @@ Section~\ref{sec:examplecertificates}.
 \subsection{Data likenesses}
 For several functions of the CAI, the user can enter a pattern known
 as a \emph{likeness} to search for contest database records. A
-likeness is just text. When the likeness \emph{matches} other text in
+likeness is just text. When the likeness \emph{matches} text in
 the database, the data record (for a team, local contest, group, etc.)
 containing the text is reported as a search result. Otherwise it is
-not.  Likenesses are powerful because they assign special meaning to
+not. Likenesses are powerful because they assign special meaning to
 two characters: percent (\texttt{\%}) and underscore
 (\texttt{\_}). These obey the rules shown in
 Table~\ref{tbl:likeness}.\
@@ -300,7 +314,7 @@ right. The general pattern of CAI use is to initiate a function by
 making a selection in the menu pane and then continue it by reading
 and interacting with the display pane. When the menu item includes a
 select box, merely changing the selection often invokes the selected
-function.  When this doesn't happen, or you wish to re-display the
+function. When this doesn't happen, or you wish to re-display the
 current selection, perhaps after selecting new options, press the
 \ui{Go} button for the function.
 
@@ -310,13 +324,13 @@ bottom of the menu.
 
 \subsection{Review and standings cutoff}
 Various CAI functions present lists of contest team records as review
-boxes and standings. The maximum
-number of records displayed is set in this option.
+boxes and standings. The maximum number of records displayed is set
+in this option.
  
 \subsection{Visible attributes}
-Various CAI functions present \emph{review boxes}, one per team.  (See
+Various CAI functions present \emph{review boxes}, one per team. (See
 section \ref{sec:review_boxes}.) The boxes contain items of current
-team information called \emph{attributes}.  The visibility of each
+team information called \emph{attributes}. The visibility of each
 attribute may be switched on and off with the \ui{Visible attributes}
 selector. On Windows computers, hold the Control key down while
 selecting and de-selecting attributes with the mouse. On Apple
@@ -339,12 +353,12 @@ The \ui{Visible teams} selector determines which teams are shown in
 the functions that retrieve lists of view boxes. The selector items
 \ui{Unreviewed}, \ui{Accepted}, \ui{Rejected}, and \ui{Semi-final}
 cause teams in the respective statuses to be shown when the item is
-selected and not shown when de-selected.  The \ui{Hidden} item refers
+selected and not shown when de-selected. The \ui{Hidden} item refers
 to teams that are in an \ui{Accepted} status but have no rank in
-official standings because some other team in the same group has a
-better score. On Windows computers, hold the Control key down while
-selecting and de-selecting items with the mouse. On Apple computers,
-hold down the Command key.
+official standings because the team's best design is not at the
+top of at least one member's group. On Windows computers, hold the
+Control key down while selecting and de-selecting items with the mouse.
+On Apple computers, hold down the Command key.
 
 \section{Maintenance functions}
 The top row of menu links consist of functions to check, control and
@@ -356,23 +370,23 @@ the Administrator to change his or her CAI password.
 
 \subsection{Server}
 Selecting this menu item fills the display pane with information about
-the current state of the contest servers (there are three of them).
+the current state of the contest servers (there are five of them).
 
 It also contains an experimental interface for clearing the contest
-database.  For security reaons, this function is currently not
+database. For security reaons, this function is currently not
 operational.
 
 \subsection{Schedule}
 This menu item causes the display pane to be filled with the
 \emph{schedule manager}. The schedule manager controls what users see
 at the contest login page and, after they are logged in, what they are
-able to do.  It does so indirectly by allowing the administrator to
+able to do. It does so indirectly by allowing the administrator to
 specify a set of key date-times and other bits of information.
 Overall, the manager has four related purposes.
 \begin{itemize}
 \item Starting and stopping the various rounds of the contest.
-\item Posting or revoking Certificates of Achievement (see Section~\ref{sec:certificates}) 
-  for the qualifying round.
+\item Posting and revoking Certificates of Achievement
+(see Section~\ref{sec:certificates}) for the qualifying round.
 \item Re-enabling logins after they are automatically turned off
 as the qualifying round ends.
 \item Temporarily disabling and re-enabling all logins with a banner 
@@ -390,9 +404,9 @@ return. After all rounds are complete, the banner exhorts teams to
 submit designs for fun and return for next year's qualifying round.
 
 Any number of schedules may be prepared in advance using the
-\emph{schedule workspace}.  The workspace displays the values of one
+\emph{schedule workspace}. The workspace displays the values of one
 schedule---either a new one that is being created or an existing one
-that is being updated.  Buttons at the bottom of the manager have
+that is being updated. Buttons at the bottom of the manager have
 functions described in the following paragraphs.
 \begin{fulltable}
 \centering
@@ -435,7 +449,7 @@ only the first will be retrieved.
 
 \subsubsection{The active schedule and disabling logins}
 At most one schedule can be active. If no schedule is active, then
-logins are disabled.  Activate any schedule by getting it into the
+logins are disabled. Activate any schedule by getting it into the
 workspace, checking the \ui{Active} box, and pressing \ui{update}. The
 change is immediately effective.
 
@@ -445,16 +459,18 @@ desired changes, and press \ui{Update}. The change is immediately
 effective.
 
 \subsubsection{Certificates for the Qualifying Round}
-Buttons to post and revoke Certificates of Achievement (see
-Section~\ref{sec:certificates}) are presented in the schedule
-workspace. Pressing them initiates background processing that
-eventually creates, re-creates, or deletes certificates for all
-qualifying round teams that have submitted at least one design.
+Buttons to post and revoke Certificates of Achievement
+for the qualifying round (see Section~\ref{sec:certificates})
+are presented in the schedule workspace. Pressing them initiates
+background processing that eventually creates, re-creates, or deletes
+certificates for all qualifying round teams that have submitted at
+least one design.
 
 These buttons are positioned visually between the qualifying round end
 date-time and the "Tally Complete" check box because posting of
 qualifying round certificates is most logically done during the period
-that the system is closed for qualifying round results tallying.
+that the system is closed for qualifying round results tallying. However,
+they can be used at any time.
 
 \subsubsection{Delete selected schedules}
 To delete schedules, select all their review boxes and press this
@@ -466,13 +482,13 @@ cannot be deleted.
 Select this option to
 obtain a team login and registration page for either the qualifying or
 semifinal round even if the contest is otherwise
-closed for logins according to the active schedule.  Until the qualifying
+closed for logins according to the active schedule. Until the qualifying
 round is over, the login will be as for qualifying round. Afterward, it
 will be for semifinals. In this
 pseudo round, you can register teams and submit designs
 until the administrator session is terminated by logging out or
 closing the browser. All pages in a Fake session will have the banner
-\ui{\color{red}{*** Admin Session: Qualifying round in progress}}
+\ui{\color{red}{*** Admin Session: Qualifying round in progress ***}}
 until the real qualifying round over, when it will become
 \ui{\color{red}{*** Admin Session: Semifinals in progress
 while also open for free play ***}}. This is a reminder that the
@@ -502,19 +518,18 @@ review box header contains a $[\hbox{\ui{top}}]$ link to scroll back
 to the index. The mark is an \ui{x} if the team's status is unreviewed
 or rejected. Otherwise the team has a status of accepted or
 semi-final. In these cases, the mark will be the numerical standing of
-the team nationally in its category.
-
-The sole exception occurs when the team is in the same group as a team
-with a better score. In this case the mark is an \ui{o}.
+the team nationally in its category unless the best design of a team
+is not at the top of at least one of its members' groups. In this case,
+the mark is an \ui{o}. See Section~\ref{sec:groups} for more on groups.
 
 \subsection{Processing}
 Immediately below the index is a button marked \ui{Process}. After
-you've completed a review by changing status and group settings as
+a review is completed by changing status and group settings as
 described below in section~\ref{sec:heading}, press this button to
 record them in the database.
 
 Any number of changes will be recorded by a single press of the
-button.  They take effect immediately. For example, teams that are
+button. They take effect immediately. For example, teams that are
 rejected will no longer be able to submit designs, and their home
 pages will show a message explaining that they've been disqualified.
 
@@ -557,14 +572,17 @@ between the two ways standings are computed, official standings are
 often better (that is, the ranking number is smaller) than unofficial
 ones.
 
-\paragraph{Group selector}
-This control lists all team groups in the contest. (The current list
-of groups is maintained by another CAI function.)  To add a team to a
-group, merely change its selector from \ui{No group selected} to one
+\paragraph{Group selectors}
+Groups are explained in Section~\ref{sec:groups}.
+These two controls are used to assign team members to groups.
+They present all groups in the contest as a menu.
+(See Section~\ref{sec:administeringgroups}, Administering groups.)
+To add a team member to a
+group, merely change the corresponding selector
+from \ui{No group selected} to one
 of the other choices. You can reverse this at any time by re-choosing
-\ui{No group selected}. In either case, don't forget to press
-\ui{Process} to record your changes. Among all teams in a group, only
-the one with the best design will appear in official standings.
+\ui{No group selected}. Don't forget to press
+\ui{Process} to record your changes.
 
 \paragraph{Status selector}
 The current status of the team may be changed by selecting the
@@ -582,7 +600,7 @@ author.
 
 \paragraph{Top link}
 This is just a link that causes the display pane to scroll all the way
-to the top.  Normal uses are to reach the index in order to skip to a
+to the top. Normal uses are to reach the index in order to skip to a
 different team's record and to display the \ui{Process} button so that
 status or group selector changes can be recorded in the database.
 
@@ -601,11 +619,13 @@ with a few additions as follows:
   the team so far.
 \item[Best design] A small sketch of the best bridge submitted by the
   team with links to a corresponding \emph{structural analysis table}
-  and \emph{bridge file download}.  The table format is identical to
+  and \emph{bridge file download}. The table format is identical to
   the West Point Bridge Designer's. Bridge file downloads may be
   opened by the Bridge Designer.
+\item[Best semifinal design] Same as above, but for the best
+  semifinal design of the team, if any.
 \end{description}
-As mentioned above, for technical reasons, the review display will
+For technical reasons, the review display will
 take considerably longer to compute (perhaps a full second on the
 server side) if the \ui{Local contests} and/or \ui{Best design}
 attributes are visible. Consider turning them off if not needed.
@@ -644,19 +664,19 @@ The preview \ui{Options} selector has the following items:
   submissions by making the scores of the leaders obvious. This is an
   emergency safety mechanism for reducing load on contest servers.
 \item[Not available] An empty standings list stating that scores are
-  not available is produced.  The intent of this option is to
+  not available is produced. The intent of this option is to
   temporarily make standings unavailable in cases of a scoring
   irregularity.
 \end{description} 
 Additionally, the \ui{Difference} check box controls whether the
 review version of standings includes ``difference marks" showing
-changes with respect to the currently posted standings.  These are
+changes with respect to the currently posted standings. These are
 explained in the paragraph below.
 
 \subsection{Difference marks}
 Difference marks are color codes and strikeouts that show parts of the
 review standings that are insertions or deletions with respect to the
-previous one. Insertions are highlighted in green.  Deletions are
+previous one. Insertions are highlighted in green. Deletions are
 highlighted in red and also ``struck out" with a single horizontal
 rule. Thus the first standings of the contest will be entirely
 highlighted in green. Difference marks are \emph{never} visible in
@@ -671,7 +691,7 @@ these standings, making them instantly visible to all users of the
 Bridge Contest site. There is no way to retract published standings.
 ``Not available" standings, described above, may be published after
 erroneously published standings to immediately hide them from
-view. Alternately, fix the error and post new standings.  After
+view. Alternately, fix the error and post new standings. After
 posting, the display pane contains the new standings with no
 difference marks.
 
@@ -685,16 +705,16 @@ category of standings shown.
 This menu selection searches the contest database for any team name
 described by its \emph{likeness}. Review boxes are displayed with a
 \ui{Process} button. One important purpose of this function is to
-disqualify a team in a local contest that otherwise would never appear
+reject a team in a local contest that otherwise would never appear
 in a top teams review. Local contest POCs sometimes make such
-requests. Disqualified teams are omitted in local contest standings.
+requests. Rejected teams are omitted in local contest standings.
 
 The ``any team" search may optionally be restricted to one desired
 category by selecting it in the \ui{Category} box.
 
 \section{Administering local contests}
 This menu selection opens the \emph{local contest manager} in the
-display pane.  The top portion of the manager consists of a
+display pane. The top portion of the manager consists of a
 \emph{workspace}. The workspace can contain either an existing record
 or a new record that is being created but has not yet been saved in
 the contest database. If the workspace currently holds an existing
@@ -705,7 +725,7 @@ The organization of the workspace is new. Because its state is always
 clear, the new CAI can avoid inadvertently writing over an existing
 local contest with a new one. An attempt to save a new local contest
 with the same code as an existing one will produce an error
-message. This overcomes a problem in the old CAI.
+message.
 
 The bottom portion of the local contest manager display is a list of
 local contest review boxes sorted according to local contest code.
@@ -749,8 +769,8 @@ When the workspace contains a local contest with a valid email
 address, two additional controls are visible---a \ui{Send email}
 button and a \ui{Select document} list. Their purpose is to send a
 standard instructional email to the local contest point of contact
-explaining how their local contest code is to be used. To accomplish
-this, select a document and press the button.
+explaining how their local contest code is to be used. To send email,
+select a document and press the button.
 
 Preparation of local contest email documents is described in
 section~\ref{sec:documentmanagement}.
@@ -770,9 +790,9 @@ must re-enter the local contest code in their registration pages.
 \subsubsection{Posting and revoking certificates}
 To post certificates for one or more local contests, select their
 review boxes and press the Post button once. You'll be asked if you're
-sure you wish to proceed.  Certificates are produced for each local
+sure you wish to proceed. Certificates are produced for each local
 contest team that has submitted at least one bridge and that is not in
-the Rejected status.  A standard email notification is automatically
+the Rejected status. A standard email notification is automatically
 sent to the local contest Point of Contact when certificates are
 posted.
 
@@ -780,6 +800,7 @@ Revocation is similar. Merely press the Revoke button. No email
 message is sent to the Point of Contact in this case.
 
 \section{Administering groups}
+\label{sec:administeringgroups}
 Use the \ui{Groups} menu item to display the \emph{Group manager}. It
 works in a manner identical to the local contest manager with the
 minor exception that a group has only one data field---its
@@ -789,9 +810,9 @@ the group manager.
 
 \section{Finding local contest teams}
 Use this menu option to fill the display pane with review information
-for all the teams in a specific local contest.  Enter a valid code in
+for all the teams in a specific local contest. Enter a valid code in
 the \ui{Local contest code} field of the menu and press \ui{Go}. This
-field does not accept a likeness.  Review and change status in the
+field does not accept a likeness. Review and change status in the
 usual manner and download spreadsheet data for the displayed
 information.
 
@@ -800,7 +821,7 @@ information.
 Select this menu item to fill the display screen with the
 \emph{document manager}. This part of the CAI maintains any number of
 documents that the system can send as bulk email and use as Semi-final
-Round Instructions.  Each document is stored by a Subject, which must
+Round Instructions. Each document is stored by a Subject, which must
 be unique. The Subject is used as the subject line in bulk email.
 
 \subsection{Creating and editing documents}
@@ -811,7 +832,7 @@ text. Refer to the previous paragraphs for instructions on operating
 the group manager.
 
 The current document manager allows pictures to be inserted in
-documents.  This feature should be used only for Semi-final Round
+documents. This feature should be used only for Semi-final Round
 Instructions. It will not work correctly for bulk email. This issue
 could be resolved in the future.
 
@@ -862,12 +883,17 @@ Sending bulk notices as email requires four steps:
   \item \ui{Reminder requestors}. Sends to all qualifying round reminder requestors.
   \item \ui{Local contest}. Sends to all participants in the specified local contest.
   \item \ui{Semi-finalists}. Sends to all teams designated as semi-finalists.
-  \item \ui{All teams}. Sends to all teams in the database.
   \end{itemize}
 \end{itemize}
-Sending will begin almost automatically, but completing the job may
-take minutes or hours for tens of thousands of messages. There is no
-way to interrupt sending once it has begun.
+The previously available option to send email to all contest participants has been
+removed. The registration subsystem does not require teams to validate their email
+addresses. Therefore, the fraction of bad email addresses in the contest database
+is usualy over ten percent. This is too high to honor our agreement with the
+contest's email service.
+
+Sending will begin almost immediately, but completing the job will take
+time proportional to the number of messages sent: roughly one second for
+two messages under most conditions. This happens
 
 Sending a test message to verify the appearance and content of every
 bulk message is highly recommended!
@@ -881,14 +907,14 @@ examplar. The purpose of the boxes is to enable potential contestants
 to request an email when the next contest qualifying round begins.
 
 Reminder request box contents change automatically with the contest
-schedule.  The email field and button are visible from the time a new
+schedule. The email field and button are visible from the time a new
 AY schedule is made active until the qualifying round starts. During
 other periods, an appropriate message is displayed asking the user to
 return for next year's qualifying round.
 
 \subsection{Clearing reminders}
 The bulk notice manager includes a button to clear the database of
-reminder requests.  Normally, this will be used as soon as reminders
+reminder requests. Normally, this will be used as soon as reminders
 have been sent. Clearing reminders cannot be undone.
 
 \section{Other CAI details}
@@ -917,7 +943,7 @@ only. Therefore it is impossible to tell a team its password. A
 standard password reset mechanism has been added. There is a ``Forgot
 your team name or password?'' link just below the contest login
 box. Selecting it produces a request for the team to provide the email
-it entered at registration.  All teams associated with this address
+it entered at registration. All teams associated with this address
 are included in a single password reset message with a ``Log in'' link
 for each. Since the team email is available in the CAI, an
 administrator can use it to request a reset message on behalf of the
@@ -945,12 +971,12 @@ Local contest \texttt{ABCD} & /standings/local/abcd
 
 \subsection{Local contest scoreboards}
 Local contest scoreboards are updated periodically, currently every
-one-half hour.  This is subject to change.
+one-half hour. This is subject to change.
 
 \subsection{Maps of US participants}
 For purposes of reporting, simple maps depicting the geographic
-distribution of participanes are prepared at intervals of six hours by
-the system.  They are available in several sizess shown in
+distribution of participants are prepared at intervals of six hours by
+the system. They are available in several sizes shown in
 Table~\ref{tbl:maps}.\
 \begin{table}
 \centering
@@ -975,12 +1001,12 @@ feature.
 
 \subsection{Pictures}
 The document editor supports pictures, but these won't currently work
-if used in email messages.  This could be fixed.
+if used in email messages. This could be fixed.
 
 \subsection{Captchas for password resets}
 A malicious user could cause trouble with our email service provider
 by automatically sending many password reset emails to one or more
-contestants. Captchas would reduce this threat.  
+contestants. Captchas would reduce this threat. 
 
 \appendix
 
