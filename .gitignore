@@ -33,6 +33,8 @@
 /doc/**
 !manual.tex
 !manual.pdf
+!localcontestcertificate.pdf
+!qualifierscertificate.pdf
 
 # Ignore other unneeded files.
 *.swp
