@@ -11,8 +11,8 @@
 /public/standings/**
 /public/admin/**
 
-# Don't vc the mail account info
-/config/initializers/mail.rb
+# Don't vc private config info
+config/environments/*_private.rb
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

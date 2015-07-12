@@ -40,4 +40,7 @@ Wpbdc::Application.configure do
 
   # Redis setup.  Here we are connecting to server on my machine. Change for Heroku.
   ENV["REDISTOGO_URL"] = 'redis://localhost:6379'
+
+  require_relative 'development_private'
+  do_private_configuration(config)
 end

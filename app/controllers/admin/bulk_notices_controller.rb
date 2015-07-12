@@ -10,6 +10,24 @@ class Admin::BulkNoticesController < Admin::ApplicationController
     end
   end
 
+  # Fake classes work around Delayed job's requirement that ActiveRecord
+  # args to delayed methods be saved.
+  class FakeMember
+    attr_accessor :first_name
+    def initialize(first_name)
+      self.first_name = first_name
+    end
+  end
+
+  class FakeTeam
+    attr_accessor :name, :email, :members
+    def initialize(name, email, *members)
+      self.name = name
+      self.email = email
+      self.members = members
+    end
+  end
+
   def edit
     @request = Request.new
   end
@@ -35,10 +53,8 @@ class Admin::BulkNoticesController < Admin::ApplicationController
         msg = HtmlDocument.find(@request.message_body_id)
         if params.nonblank? :to_test_email
           if @request.test_email =~ Team::VALID_EMAIL_ADDRESS
-            team = Team.new(:name => 'Test Team', :email => @request.test_email)
-            team.members << Member.new(:first_name => 'Jane')
-            # Delayed job does not work with this skeleton team.
-            BulkNotice.to_team(team, msg).deliver
+            team = FakeTeam.new('Test Team', @request.test_email, FakeMember.new('Jane'))
+            BulkNotice.delay.to_team(team, msg)
             flash.now[:alert] = "Test email was sent to #{team.email}."
           else
             flash.now[:alert] = 'Test email address is invalid.'
