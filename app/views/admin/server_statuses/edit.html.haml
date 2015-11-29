@@ -56,6 +56,9 @@
   %tr
     %td Semi-final scenario:
     %td= WPBDC::SEMIFINAL_SCENARIO_ID
+  %tr
+    %td Current scenario histogram:
+    %td= link_to 'Download', admin_cost_histogram_path(:format => 'csv')
 %hr
 %h1 Clear contest database
 = render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }

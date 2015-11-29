@@ -56,21 +56,31 @@ class Design < ActiveRecord::Base
     end
   end
 
-  def self.cost_histogram
+  def self.cost_histogram_as_string
     n = 0
     hash = Hash.new { |hash, key| hash[key] = SortedSet.new }
     find_each do |design|
       hash[design.scenario].add(design.score)
       n += 1
     end
-    print "\"Scenario code\",\"Count\",\"Min\",\"25th Percentile\",\"50th Percentile\",\"75th Percentile\",\"Max\"\n"
+    rtn = "\"Scenario code\",\"Count\",\"Min\",\"25th Percentile\",\"50th Percentile\",\"75th Percentile\",\"Max\"\n"
     hash.sort_by {|scenario, scores| scores.first }.each do |scenario, scores|
       a = scores.to_a
-      print "\"#{scenario}\",#{a.size},#{a[0]}"
-      print ",#{percentile(a, 25)},#{percentile(a, 50)},#{percentile(a, 75)}" if a.size >= 4
-      print ",#{a[-1]}\n"
+      rtn << "\"#{scenario}\",#{a.size},#{a[0]}"
+      if a.size >= 4
+        rtn << ",#{percentile(a, 25)},#{percentile(a, 50)},#{percentile(a, 75)}"
+      else
+        rtn << ',,,'
+      end
+      rtn << ",#{a[-1]}\n"
     end
-    n
+    [rtn, n]
+  end
+
+  def self.cost_histogram
+    histogram, basis = cost_histogram_as_string
+    print histogram
+    basis
   end
 
   private

@@ -20,6 +20,7 @@ Wpbdc::Application.routes.draw do
     resource :schedule, :only => [ :edit, :update ]
     resource :html_documents, :only => [ :edit, :update  ]
     resource :bulk_notice, :only => [ :edit, :update ]
+    resource :cost_histogram, :only => [ :show ]
   end
   get '/ckeditor_assets/pictures/:id/:style_basename.:extension' => 'admin/html_documents#show'
   resource :session, :only => [ :new, :create, :destroy ]
