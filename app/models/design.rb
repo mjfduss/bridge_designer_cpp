@@ -63,6 +63,7 @@ class Design < ActiveRecord::Base
       hash[design.scenario].add(design.score)
       n += 1
     end
+    print "\"Scenario code\",\"Count\",\"Min\",\"25th Percentile\",\"50th Percentile\",\"75th Percentile\",\"Max\"\n"
     hash.sort_by {|scenario, scores| scores.first }.each do |scenario, scores|
       a = scores.to_a
       print "\"#{scenario}\",#{a.size},#{a[0]}"
