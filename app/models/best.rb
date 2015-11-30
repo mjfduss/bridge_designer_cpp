@@ -22,6 +22,16 @@ class Best < ActiveRecord::Base
     ordered_by_standing.joins(:team).where(:scenario => nil, :teams => { :status => 'a' })
   end
 
+  # Return a hash from local contest code to best entry for that contest (nil if none).
+  # The keys of the hash are in alpha order of local contest code.
+  def self.all_local_contests_for_team(team)
+    # We could do this with a fancy outer join, but Arel will only give us the Best's, so another
+    # query would be needed anyway to get the local contests. This seems simpler.
+    lc_code_to_scenario = Hash[team.local_contests.pluck(:code).map {|code| [code, WPBDC.local_contest_code_to_id(code)]}]
+    scenario_to_best = Hash[Best.where(:team_id => team, :scenario => lc_code_to_scenario.values.uniq).map{|b| [b.scenario, b]}]
+    lc_code_to_scenario.merge(lc_code_to_scenario) {|c, s| scenario_to_best[s]}
+  end
+
   def self.rebuild
     org_count = Best.count
     Best.delete_all
@@ -41,10 +51,11 @@ class Best < ActiveRecord::Base
                            :sequence => best_design.sequence} if
             best_for_team.nil? ||
               best.score < best_for_team[:score] ||
-              (best.score == best_for_team[:score] || best.sequence < best_for_team[:sequence])
+              (best.score == best_for_team[:score] && best.sequence < best_for_team[:sequence])
         end
       end
 
+      # Add overall best (across all scenarios)
       if best_for_team
         Best.create do |best|
           best.team = best_for_team[:team]

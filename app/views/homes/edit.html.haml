@@ -27,7 +27,7 @@
                 - when 'i'
                   %li.status_list Registered in Open Competition.
                 - else
-                  %li.status_list Hmmm... I don't know your team's category.
+                  %li.status_list Hmmm... We don't know your team's category.
               - if @is_semis_session
                 %li.status_list You made the Semi-Finals. Congratulations!
                 - if @best_for_scenario
@@ -36,9 +36,11 @@
                   %li.status_list You have not yet submitted a Semi-Finals design.
               - else
                 -unless @team.local_contests.empty?
-                  %li.status_list== Your local contests: #{local_contest_list(@team)}
+                  %li.status_list
+                    Your local contest participation:
+                    = render :partial => 'local_contests_table', :locals => { :data => Best.all_local_contests_for_team(@team) }
                 - if @best
-                  %li.status_list== Your current best design's cost is #{to_cost(@best)}.
+                  %li.status_list== Your overall best design's cost is #{to_cost(@best)}.
                 - else
                   %li.status_list You have not yet submitted a design. Go for it!
           .para.vsep
@@ -140,7 +142,7 @@
     %hr
     .para.bold Menu options
     %table
-      - unless @team.rejected? or @team.semifinalist?
+      - unless @team.rejected? or (@team.semifinalist? and @is_semis_session)
         %tr
           %td{ :class => 'link_menu'}= render :partial => "shared/submit_link",
                                               :locals => { :name => 'update_contact', :text => "Update contact information" }

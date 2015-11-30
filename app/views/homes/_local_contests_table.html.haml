@@ -1,0 +1,8 @@
+%table.local_contest
+  %tr
+    %th.local_contest Code
+    %th.local_contest Best Cost
+  - data.each do |lc_code, best|
+    %tr
+      %td.local_contest= lc_code
+      %td.local_contest= best ? to_cost(best.score) : 'Submit your first bridge!'

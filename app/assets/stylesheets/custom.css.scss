@@ -39,6 +39,15 @@ table, th, td {
   margin: 0px 0px 0px 0px;
 }
 
+table.local_contest {
+  margin: 4px 4px 4px 4px;
+  padding: 4px 4px 4px 4px;
+}
+
+td.local_contest, th.local_contest {
+  padding: 2px 6px 2px 6px
+}
+
 input {
   font-family: sans-serif;
 }
