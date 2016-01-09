@@ -60,23 +60,9 @@
     %td Current scenario histogram:
     %td= link_to 'Download', admin_cost_histogram_path(:format => 'csv')
 %hr
-%h1 Clear contest database
-= render :partial => 'shared/flash', :locals => { :flash => flash, :errors => [] }
-.para
-  Use the button below with extreme care.  Once cleared,
-  the database can be restored only from backups.  This
-  may lose several hours of contest submissions.
-
-= form_tag({:controller => :server_statuses, :action => :update }, :method => :put) do
-  .para
-    Type the word
-    %span.bold #{Admin::ServerStatusesController::VERIFICATION}
-    in the box below.
-  = text_field_tag('verification')
-  .para Type your password in the box below.
-  = password_field_tag('password')
-  .para
-  = submit_tag('Clear database now',
-    :confirm => 'I am ABSOLUTELY SURE that I want to clear the entire database!')
-
-
+%h1 Build info
+%table
+  - Bundler.load.specs.sort_by{|s| s.name}.map{|s| [s.name, s.version.to_s] }.each do |gem, version|
+    %tr
+      %td= gem
+      %td= version
