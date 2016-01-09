@@ -24,8 +24,8 @@
 // External interface.
 #include "judge.h"
 
-#if BD_VERSION != 0x415c
-#error Wrong BD_VERSION. Should be 0x415c.
+#if BD_VERSION != 0x416c
+#error Wrong BD_VERSION. Should be 0x416c.
 #endif
 
 // Extension stubs --------------------------------------------------------------
@@ -225,10 +225,10 @@ char *analysis_log(STRING *bridge_as_string)
 
 #ifdef WRITE_EXAMPLES
 #define PREVIOUS_YEAR_DELTA 1
-#define EG_DIR  "../../test/eg/2014"
-#define NEW_EG_DIR  "../../test/eg/2015"
-#else
 #define EG_DIR  "../../test/eg/2015"
+#define NEW_EG_DIR  "../../test/eg/2016"
+#else
+#define EG_DIR  "../../test/eg/2016"
 #endif
 
 #ifdef WINDOWS

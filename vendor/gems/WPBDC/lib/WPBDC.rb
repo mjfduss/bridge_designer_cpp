@@ -4,7 +4,7 @@ module WPBDC
 
   # Publish the contest year for the rest of the system.  This allows us
   # to decouple the judge contest year from the system during transition periods.
-  CONTEST_YEAR = 2015
+  CONTEST_YEAR = 2016
 
   # A useful constant for finding test data.
   PATH = File.dirname(__FILE__)

@@ -10,7 +10,7 @@
 #include "rubydefs.h"
 #include "sketch.h"
 
-#define CONTEST_YEAR 2015
+#define CONTEST_YEAR 2016
 #define YEAR_TO_VERSION(Y) (((((Y) % 100) / 10) << 8) | (((Y) % 10) << 4) | 0x400c)
 #define BD_VERSION YEAR_TO_VERSION(CONTEST_YEAR)
 
@@ -18,8 +18,8 @@
 #define NULL_SEMIFINAL_SCENARIO_ID "0000000000"
 
 // When you set this, you _must_ change the scenario table so its record is in sorted order!
-#define SEMIFINAL_SCENARIO_ID "4110416080"
-//#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
+//#define SEMIFINAL_SCENARIO_ID "4110416080"
+#define SEMIFINAL_SCENARIO_ID NULL_SEMIFINAL_SCENARIO_ID
 
 // Status returns from analyze().
 #define BRIDGE_OK           0

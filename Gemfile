@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '1.9.3'
 
 gem 'rails', '~> 3.2'
-gem 'WPBDC', '2015.3.7'
+gem 'WPBDC', '~> 2016.0'
 gem 'pippa', '~> 0.3'
 gem 'lulu', '~> 0.0'
 gem 'jquery-rails', '~> 2.1'

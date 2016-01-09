@@ -299,7 +299,7 @@ typedef struct params_t {
 			124,										/* TFloat rear_axle_load; */		\
 		},																					\
 	},																						\
-	500,										/* TFloat connection_cost; */				\
+	400,										/* TFloat connection_cost; */				\
 	1000,										/* TFloat ordering_fee; */					\
 	{	/* TMaterial materials[NMaterials];	*/												\
 		{																					\

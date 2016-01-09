@@ -13,6 +13,11 @@ class WPBDCTest < Test::Unit::TestCase
   TABLE_FMT = "i s s s f f f f s f f f s".split(' ')
 
   def test_analysis_text_table_generation
+    begin
+      Dir.mkdir("test/eg/#{YEAR}/log")
+    rescue
+      puts "Test log directory already present."
+    end
     Dir.glob("test/eg/#{YEAR}/*.bdc").each do |ifn|
       bridge = open(ifn, "rb") { |f| f.read }
       WPBDC.endecrypt(bridge)
