@@ -55,23 +55,23 @@
         .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
         .para
           The #{WPBDC::CONTEST_YEAR} Qualifying Round ended #{@schedule.end_quals.to_s(:nice)} and
-          preparation for the Semi-final Round is in progress.
-        .vsep.hi If you're on a Semi-final team, congratulations!
+          preparation for the Final Round is in progress.
+        .vsep.hi If you're on a Finals team, congratulations!
         .para
-          You can log in to check your Semi-final Home
+          You can log in to check your Finals Home
           page beginning #{@schedule.start_semis_prereg.to_s(:nice)}. The round begins #{@schedule.start_semis.to_s(:nice)}.
       - when Schedule::STATE_SEMIS_PREREG
         .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
-        .vsep.hi Semi-final teams, congratulations! Please log in to check your Semi-final Home Page.
-        .para The Semi-final round begins #{@schedule.start_semis.to_s(:nice)}.
+        .vsep.hi Finals teams, congratulations! Please log in to check your Finals Home Page.
+        .para The Final round begins #{@schedule.start_semis.to_s(:nice)}.
       - when Schedule::STATE_SEMIS
         .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
-        .vsep.hi Semi-finals are in progress!  Stay tuned for results!
-        .para The Semi-final round began #{@schedule.start_semis.to_s(:nice)} and ends #{@schedule.end_semis.to_s(:nice)}.
+        .vsep.hi Finals are in progress!  Stay tuned for results!
+        .para The Final round began #{@schedule.start_semis.to_s(:nice)} and ends #{@schedule.end_semis.to_s(:nice)}.
       - when Schedule::STATE_POST_FREE
         .vsep.hi We're open unofficially for anyone who wants to test their skill and for local contests.
         .para
-          The #{WPBDC::CONTEST_YEAR} Qualifying and Semifinal Rounds ended #{@schedule.end_semis.to_s(:nice)}.
+          The #{WPBDC::CONTEST_YEAR} Qualifying and Final rounds ended #{@schedule.end_semis.to_s(:nice)}.
           You can check the Contest Results tab to see how they turned out!
   - unless [Schedule::STATE_CLOSED, Schedule::STATE_INITIAL_CLOSED, Schedule::STATE_QUALS_CLOSED].include? @schedule_state
     .indent

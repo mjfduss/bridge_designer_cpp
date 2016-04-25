@@ -156,7 +156,7 @@ module TablesHelper
         ['High School', 'h'],
         ['Middle School', 'm'],
         ['Open Competition', 'i'],
-        ['Semi-Finalists', '2'],
+        ['Finalists', '2'],
       ]
 
     STANDINGS_OPTIONS_PAIRS =
@@ -205,8 +205,8 @@ module TablesHelper
         ['Local contests', 'local_contests'],
         ['Best qualifying score', 'best_qualifying_score'],
         ['Best qualifying design', 'best_qualifying_design'],
-        ['Best semifinal score', 'best_semifinal_score'],
-        ['Best semifinal design', 'best_semifinal_design']
+        ['Best finals score', 'best_semifinal_score'],
+        ['Best finals design', 'best_semifinal_design']
       ]
 
     TEAM_ATTRIBUTE_DEFAULTS =
@@ -222,7 +222,7 @@ module TablesHelper
         ['Unreviewed', '-'],
         ['Rejected', 'r'],
         ['Accepted', 'a'],
-        ['Semi-Final', '2'],
+        ['Final', '2'],
         ['Hidden',   'h'],  # No radio button for this!
       ]
 

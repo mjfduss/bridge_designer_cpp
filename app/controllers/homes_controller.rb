@@ -60,7 +60,7 @@ class HomesController < ApplicationController
       WPBDC.endecrypt(bridge)
       @analysis = WPBDC.analyze(bridge)
 
-      # Catch uploads of the wrong scenario during semi-finals.
+      # Catch uploads of the wrong scenario during finals.
       if @is_semis_session && @analysis[:scenario] != WPBDC::SEMIFINAL_SCENARIO_ID
         @result = :not_semis_scenario
       elsif !@is_semis_session && @analysis[:scenario] == WPBDC::SEMIFINAL_SCENARIO_ID
@@ -80,7 +80,7 @@ class HomesController < ApplicationController
 
               if @best_for_scenario.nil? || @analysis[:score] < @best_for_scenario
 
-                # For semi-finals update messages.
+                # For finals update messages.
                 @old_best_for_scenario = @best_for_scenario
                 @best_for_scenario = @analysis[:score]
 

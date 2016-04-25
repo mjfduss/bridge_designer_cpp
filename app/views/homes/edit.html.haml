@@ -1,7 +1,7 @@
 .pagewidth
   .banner
     - if @is_semis_session
-      Semi-Finals Home Page for Team #{@team.name}
+      Finals Home Page for Team #{@team.name}
     -else
       Home Page for Team #{@team.name}
   = form_for @design, :url => home_path, :method => :put  do |f|
@@ -29,11 +29,11 @@
                 - else
                   %li.status_list Hmmm... We don't know your team's category.
               - if @is_semis_session
-                %li.status_list You made the Semi-Finals. Congratulations!
+                %li.status_list You made the Finals. Congratulations!
                 - if @best_for_scenario
-                  %li.status_list== Your current best Semi-Finals design cost is #{to_cost(@best_for_scenario)}.
+                  %li.status_list== Your current best Finals design cost is #{to_cost(@best_for_scenario)}.
                 - else
-                  %li.status_list You have not yet submitted a Semi-Finals design.
+                  %li.status_list You have not yet submitted a Finals design.
               - else
                 -unless @team.local_contests.empty?
                   %li.status_list
@@ -49,10 +49,10 @@
             - elsif @schedule_state == Schedule::STATE_QUALS_PREREG
               .para.bold When the Qualifying Round begins #{@schedule.start_quals.to_s(:nice)}, you'll be able to submit your bridge designs right here!
             - elsif @is_semis_session && @schedule_state == Schedule::STATE_SEMIS_PREREG
-              .para.bold When the Semi-Final Round begins #{@schedule.start_semis.to_s(:nice)}, you'll be able to submit your bridge designs right here!
+              .para.bold When the Final Round begins #{@schedule.start_semis.to_s(:nice)}, you'll be able to submit your bridge designs right here!
             - else
               - if @is_semis_session
-                .para.bold Submit a Semi-Finals design (scenario code #{WPBDC::SEMIFINAL_SCENARIO_ID}):
+                .para.bold Submit a Finals design (scenario code #{WPBDC::SEMIFINAL_SCENARIO_ID}):
               - else
                 .para.bold Submit a design (West Point Bridge Designer #{WPBDC::CONTEST_YEAR} only):
               .para= f.file_field :bridge
@@ -70,8 +70,8 @@
                 - case @result
                   - when :not_semis_scenario
                     %li{ :class => 'msg_list' }
-                      The design you uploaded was not a Semi-Finals scenario!  Please re-read
-                      the Semi-Finals Instructions. Ensure you are using the West Point Bridge
+                      The design you uploaded was not a Finals scenario!  Please re-read
+                      the Finals Instructions. Ensure you are using the West Point Bridge
                       Designer #{WPBDC::CONTEST_YEAR} and that you've entered the correct 10-digit
                       scenario code:
                       %span.bold #{WPBDC::SEMIFINAL_SCENARIO_ID}.
@@ -86,9 +86,9 @@
                       %li{ :class => 'msg_list' } Your team must submit a design to have a standing!
                   - when :new_best
                     - if @is_semis_session
-                      %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best)} is a new Semi-Finals best for your team.
+                      %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best)} is a new Finals best for your team.
                       - if @old_best
-                        %li{ :class => 'msg_list' } It improves on your old Semi-Finals best of #{to_cost(@old_best)}.
+                        %li{ :class => 'msg_list' } It improves on your old Finals best of #{to_cost(@old_best)}.
                     - else
                       - if @old_best
                         %li{ :class => 'msg_list' } Well done! You improved your old best #{to_cost(@old_best)} to #{to_cost(@best)}.
@@ -98,9 +98,9 @@
                         %li{ :class => 'msg_list' } Your new standing is #{@standing} out of #{@out_of} teams.
                   - when :not_new_best
                     - if @is_semis_session
-                      %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best_for_scenario)} is a new Semi-Finals best for your team.
+                      %li{ :class => 'msg_list' } Great! The cost #{to_cost(@best_for_scenario)} is a new Finals best for your team.
                       - if @old_best_for_scenario
-                        %li{ :class => 'msg_list' } It improves on your old Semi-Finals best of #{to_cost(@old_best_for_scenario)}.
+                        %li{ :class => 'msg_list' } It improves on your old Finals best of #{to_cost(@old_best_for_scenario)}.
                     - else
                       %li{ :class => 'msg_list' } Not bad! The cost #{to_cost(@analysis[:score])} is a new best for scenario #{@analysis[:scenario_number]}.
                       - if @old_best_for_scenario
@@ -108,7 +108,7 @@
                       %li{ :class => 'msg_list' } But your team's overall best remains the same.
                   - when :no_improvement
                     - if @is_semis_session
-                      %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for the Semi-Finals.
+                      %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for the Finals.
                     - else
                       %li{ :class => 'msg_list' } Oh, well! This bridge doesn't improve your best cost for scenario #{@analysis[:scenario_number]}.
                     %li{ :class => 'msg_list' } The old cost of #{to_cost(@best_for_scenario)} is better than the new one, #{to_cost(@analysis[:score])}.

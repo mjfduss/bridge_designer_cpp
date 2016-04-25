@@ -9,7 +9,7 @@ class SemiFinalInstructionsController < ApplicationController
   def update
     @team = Team.find(session[:team_id])
     if @team.status != '2'
-      kill_session 'Your Team has no Semi-Finals Home Page!'
+      kill_session 'Your Team has no Finals Home Page!'
     elsif params[:semis_home]
       session[:is_semis_session] = true
       redirect_to :controller => :homes, :action => :edit

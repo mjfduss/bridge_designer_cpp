@@ -28,13 +28,13 @@ class Schedule < ActiveRecord::Base
         schedule.errors[:end_quals] << 'Qualifying round must end later than it starts'
       end
       unless schedule.start_semis_prereg > schedule.end_quals
-        schedule.errors[:start_semis_prereg] << 'Semifinal login check must start after qualifiers end'
+        schedule.errors[:start_semis_prereg] << 'Finals login check must start after qualifiers end'
       end
       unless schedule.start_semis >= schedule.start_semis_prereg
-        schedule.errors[:start_semis] << 'Semifinals must start after login checks'
+        schedule.errors[:start_semis] << 'Finals must start after login checks'
       end
       unless schedule.end_semis >= schedule.start_semis
-        schedule.errors[:end_semis] << 'Semifinals must end later than they start'
+        schedule.errors[:end_semis] << 'Finals must end later than they start'
       end
     end
   end
@@ -58,9 +58,9 @@ class Schedule < ActiveRecord::Base
     'Early registration for qualifying round',
     'Qualifying round in progress',
     'Tallying results of qualifying round',
-    'Open for free play between qualifying round and semis',
-    'Semifinal login checks while also open for free play',
-    'Semifinals in progress while also open for free play',
+    'Open for free play between Qualifying round and Finals',
+    'Finals login checks while also open for free play',
+    'Finals in progress while also open for free play',
     'Open for free play, contest year complete',
   ]
 
@@ -123,19 +123,19 @@ class Schedule < ActiveRecord::Base
   end
 
   def start_semis_prereg_formatted
-    [ 'Start semi logins', start_semis_prereg ]
+    [ 'Start Finals logins', start_semis_prereg ]
   end
 
   def semis_instructions_formatted
-    [ 'Semis instructions page', semis_instructions.file_name ]
+    [ 'Finals instructions page', semis_instructions.file_name ]
   end
 
   def start_semis_formatted
-    [ 'Start semis', start_semis ]
+    [ 'Start Finals', start_semis ]
   end
 
   def end_semis_formatted
-    [ 'End semis', end_semis ]
+    [ 'End Finals', end_semis ]
   end
 
   private

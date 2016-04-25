@@ -39,16 +39,16 @@
         = f.label(:quals_tally_complete, "Tally complete:" )
         = f.check_box(:quals_tally_complete)
     %tr
-      %td= f.label(:start_semis_prereg, 'Start semi login check:')
+      %td= f.label(:start_semis_prereg, 'Start finals login check:')
       %td= f.datetime_select :start_semis_prereg, :minute_step => 5
     %tr
-      %td= f.label(:semis_instructions_id, 'Semifinals instructions:')
+      %td= f.label(:semis_instructions_id, 'Finals instructions:')
       %td= f.collection_select(:semis_instructions_id, HtmlDocument.order('subject ASC'), :id, :subject, :include_blank => 'Select Document')
     %tr
-      %td= f.label(:start_semis, 'Start semifinals:')
+      %td= f.label(:start_semis, 'Start Finals:')
       %td= f.datetime_select :start_semis, :minute_step => 5
     %tr
-      %td= f.label(:end_semis, 'End semifinals:')
+      %td= f.label(:end_semis, 'End Finals:')
       %td= f.datetime_select :end_semis, :minute_step => 5
     %tr
       %td{:colspan => 2}

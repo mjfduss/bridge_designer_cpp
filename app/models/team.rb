@@ -492,8 +492,8 @@ class Team < ActiveRecord::Base
       :local_contests => 'Local contests',
       :best_qualifying_score => 'Best qualifying score',
       :best_qualifying_design => 'Best qualifying design',
-      :best_semifinal_score => 'Best semifinal score',
-      :best_semifinal_design => 'Best semifinal design',
+      :best_semifinal_score => 'Best finals score',
+      :best_semifinal_design => 'Best finals design',
   }
   def status_formatted;                 TablesHelper::STATUS_MAP[status] || NONE end
   def team_name_formatted;              name end

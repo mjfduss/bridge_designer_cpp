@@ -11,7 +11,8 @@ class StandingsController < ApplicationController
     'middleschool' => 'm',
     'highschool' => 'h',
     'open' => 'i',
-    'semifinal' => '2'
+    'semifinal' => '2',
+    'final' => '2'
   }
   CATEGORY_TO_ROUTE_ID = ROUTE_ID_TO_CATEGORY.invert
 

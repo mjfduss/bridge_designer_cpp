@@ -42,9 +42,9 @@ class ApplicationController < ActionController::Base
     if Schedule::STATES_CLOSED_FOR_LOGIN.include? @schedule_state
       kill_session 'The Contest is currently closed.'
     elsif session[:is_semis_session] && @schedule_state < Schedule::STATE_SEMIS_PREREG
-      kill_session "We've logged you out because Semi-Finals are not yet in progress!"
+      kill_session "We've logged you out because Finals are not yet in progress!"
     elsif session[:is_semis_session] && @schedule_state > Schedule::STATE_SEMIS
-      kill_session "We've logged you out because Semi-Finals are over!"
+      kill_session "We've logged you out because Finals are over!"
     end
   end
 
