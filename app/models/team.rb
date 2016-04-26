@@ -205,14 +205,9 @@ class Team < ActiveRecord::Base
         order('bests.score ASC, bests.sequence ASC').pluck(:id)
     rank = 0
     group_counts = Hash.new(0)
-
-    #team_ids.each do |id|
-    #  team = Team.find(id)
-
-    includes(:members).joins(:bests).
-      where(:bests => { :scenario => nil }, :category => category, :status => STATUS_UNREJECTED).
-      order('bests.score ASC, bests.sequence ASC').find_each do |team|
-
+    # Note should fetch teams in batches, but beware find_each and find() both ignore order!
+    team_ids.each do |id|
+      team = Team.includes(:members).find(id)
       group_ids = team.members.map(&:group_id)
 
       # Update the group counts, which also are captured as group ranks.
