@@ -147,6 +147,11 @@ class Team < ActiveRecord::Base
   end
 
   def self.get_basis(category)
+    last_team = nil
+    each_team_receiving_qualifying_certificate(category) {|team| last_team = team }
+    return last_team ? last_team.rank : 0
+=begin
+    # This doesn't quite handle split member teams correctly.
     max_group_id = Group.maximum(:id)
     return 0 unless max_group_id
     Team.count_by_sql([
@@ -157,6 +162,7 @@ class Team < ActiveRecord::Base
           'WHERE t.category = ? ' +
           "AND t.status IN ('-', 'a', '2') " +
           'AND b.scenario IS NULL', category])
+=end
   end
 
   # Get the teams in a local contest correctly sorted by score.
@@ -205,9 +211,9 @@ class Team < ActiveRecord::Base
         order('bests.score ASC, bests.sequence ASC').pluck(:id)
     rank = 0
     group_counts = Hash.new(0)
-    # Note should fetch teams in batches, but beware find_each and find() both ignore order!
+    # TODO should fetch teams in batches, but beware find_each and find() both ignore order!
     team_ids.each do |id|
-      team = Team.includes(:members).find(id)
+      team = includes(:members).find(id)
       group_ids = team.members.map(&:group_id)
 
       # Update the group counts, which also are captured as group ranks.
@@ -215,7 +221,7 @@ class Team < ActiveRecord::Base
         group_counts[gid] += 1 if gid
       end
 
-      # If either of the team members are in a group and there's already a ranked team in at
+      # If either of the team members is in a group and there's already a ranked team in at
       # least one, this team gets the same rank as the predecessor, else it gets the next.
       team.rank = if group_ids.any? {|gid| gid && group_counts[gid] > 1 }
                     rank
