@@ -12,8 +12,9 @@
               %span.bold.questionable= markup
             - else
               = team.name_key
-            - cert = Certificate.where(:team_id => team.id, :local_contest_id => nil).first
-            [#{Standing.rank(team) || 'x'}, #{cert ? cert.standing : 'x'}]
+            -# cert = Certificate.where(:team_id => team.id, :local_contest_id => nil).first
+            -# [#{Standing.rank(team) || 'x'}, #{cert ? cert.standing : 'x'}]
+            [#{Standing.rank(team) || 'x'}]
           %td
             - captain = team.captain
             - captain_group = captain.group_id || '-'
