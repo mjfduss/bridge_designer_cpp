@@ -114,7 +114,7 @@ td.hidden {
   @extend td.unreviewed;
   background-color: $hidden;
 }
-td.semifinal {
+td.final {
   @extend td.unreviewed;
   background-color: $semifinal;
 }
