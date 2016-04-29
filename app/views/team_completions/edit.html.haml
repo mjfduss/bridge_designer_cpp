@@ -6,7 +6,8 @@
         - if @team.status == 'r'
           = f.label :name, 'Team info for'
           = f.text_field :name, :size => 16
-          (you may change your team name while disqualified)
+          != oops_on(@team, [:name, :name_key])
+          (your team name can be changed while disqualified)
         - else
           Team info for #{@team.name}
       .para.small.subdued
@@ -60,7 +61,7 @@
         %strong Local contest codes (optional):
       .para.small.subdued
         Enter up to four 4- or 6-character codes provided by local contest sponsors in your area:
-        %br 
+        %br
       .para
         - unless @team.local_contests.empty?
           Your current codes:&nbsp;&nbsp;

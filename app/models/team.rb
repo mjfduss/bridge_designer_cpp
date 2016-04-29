@@ -211,27 +211,30 @@ class Team < ActiveRecord::Base
         order('bests.score ASC, bests.sequence ASC').pluck(:id)
     rank = 0
     group_counts = Hash.new(0)
-    # TODO should fetch teams in batches, but beware find_each and find() both ignore order!
-    team_ids.each do |id|
-      team = includes(:members).find(id)
-      group_ids = team.members.map(&:group_id)
+    team_ids.each_slice(100) do |ids|
+      # Build an id->team hash because find doesn't preserve order on list input.
+      id_to_team = Hash[includes(:members).find(ids).map{|t| [t.id, t] }]
+      ids.each do |id|
+        team = id_to_team[id]
+        group_ids = team.members.map(&:group_id)
 
-      # Update the group counts, which also are captured as group ranks.
-      group_ids.uniq.each do |gid|
-        group_counts[gid] += 1 if gid
+        # Update the group counts, which also are captured as group ranks.
+        group_ids.uniq.each do |gid|
+          group_counts[gid] += 1 if gid
+        end
+
+        # If either of the team members is in a group and there's already a ranked team in at
+        # least one, this team gets the same rank as the predecessor, else it gets the next.
+        team.rank = if group_ids.any? {|gid| gid && group_counts[gid] > 1 }
+                      rank
+                    else
+                      rank += 1
+                    end
+
+        # The second yielded value is a list of [group_id, standing, basis] triples parallel to the members list.
+        # A non-group member will produce [nil, 0, 0]
+        yield team, group_ids.map{|gid| [gid, group_counts[gid].to_i, group_bases[gid].to_i]}
       end
-
-      # If either of the team members is in a group and there's already a ranked team in at
-      # least one, this team gets the same rank as the predecessor, else it gets the next.
-      team.rank = if group_ids.any? {|gid| gid && group_counts[gid] > 1 }
-                    rank
-                  else
-                    rank += 1
-                  end
-
-      # The second yielded value is a list of [group_id, standing, basis] triples parallel to the members list.
-      # A non-group member will produce [nil, 0, 0]
-      yield team, group_ids.map{|gid| [gid, group_counts[gid].to_i, group_bases[gid].to_i]}
     end
 
     Rails.logger.error("Qualifying round certificate basis error: #{group_bases.to_set ^ group_counts.to_set}") \
