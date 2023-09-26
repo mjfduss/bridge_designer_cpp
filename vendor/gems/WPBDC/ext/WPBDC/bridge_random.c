@@ -239,7 +239,7 @@ void vary(TBridge *dst, TBridge *src, unsigned seed)
 
 	copy_bridge(dst, src);
 
-	Newz(170, new_joint_to_old, dst->n_joints + 1, unsigned);
+	Newz(170, new_joint_to_old, dst->n_joints + 1, sizeof(unsigned));
 	for (joint_index = 1; joint_index <= dst->n_joints; joint_index++)
 		new_joint_to_old[joint_index] = joint_index;
 
@@ -253,7 +253,7 @@ void vary(TBridge *dst, TBridge *src, unsigned seed)
 	}
 
 	// Compute inverse map.
-	Newz(180, old_joint_to_new, dst->n_joints + 1, unsigned);
+	Newz(180, old_joint_to_new, dst->n_joints + 1, sizeof(unsigned));
 	for (joint_index = 1; joint_index <= dst->n_joints; joint_index++)
 		old_joint_to_new[new_joint_to_old[joint_index]] = joint_index;
 

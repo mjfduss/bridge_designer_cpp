@@ -23,10 +23,10 @@
 	o  Most fill in routines begin by calling clear_foo and then allocate (malloc or calloc)
 		fresh internal storage for the object, e.g. for joint and member vectors in a TBridge.
  */
-
-// Need rubyish memory allocators.
-#include "rubydefs.h"
-
+// Memory Allocation used throughout
+#include "memdefs.h"
+// Standard C library for file handling
+#include "stdio.h"
 // External interface
 #include "judge.h"
 
@@ -40,7 +40,7 @@
 #define NewStrSz(x,v,s,sz)			\
 	do {							\
 		sz = strlen(s)+1;			\
-		New(x, v, sz, char);		\
+		New(x, v, sz/*, char*/);		\
 		memcpy(v, s, sz);			\
 	} while (0)
 

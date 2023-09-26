@@ -98,7 +98,7 @@ void setup_params (TParams *params)
 	memcpy(params->n_sizes, constant_n_sizes, sizeof(constant_n_sizes));
 	for (section_index = 0; section_index < NSections; section_index++) {
 
-		Newz(200, params->shapes[section_index], params->n_sizes[section_index], TShape);
+		Newz(200, params->shapes[section_index], params->n_sizes[section_index], sizeof(TShape));
 
 		for (size_index = 0; size_index < params->n_sizes[section_index]; size_index++) {
 

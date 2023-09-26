@@ -49,9 +49,9 @@ void setup_loading(TLoading *loading,
 	}
 
 	loading->n_load_instances = bridge->load_scenario.n_loaded_joints + 1;
-	Newz(240, loading->load_instances, loading->n_load_instances + 1, TLoadInstance);
+	Newz(240, loading->load_instances, loading->n_load_instances + 1, sizeof(TLoadInstance));
 	for (load_instance_index = 1; load_instance_index <= loading->n_load_instances; load_instance_index++) {
-		Newz(250, loading->load_instances[load_instance_index].point_load, n_equations + 1, TFloat);
+		Newz(250, loading->load_instances[load_instance_index].point_load, n_equations + 1, sizeof(TFloat));
 	}
 
 	// Apply self-weight.

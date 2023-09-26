@@ -25,9 +25,9 @@ void setup_geometry(TGeometry *geometry, TBridge *bridge)
 
 	clear_geometry(geometry);
 
-	Newz(210, geometry->length, bridge->n_members + 1, TFloat);
-	Newz(220, geometry->cos_x,  bridge->n_members + 1, TFloat);
-	Newz(230, geometry->cos_y,  bridge->n_members + 1, TFloat);
+	Newz(210, geometry->length, bridge->n_members + 1, sizeof(TFloat));
+	Newz(220, geometry->cos_x,  bridge->n_members + 1, sizeof(TFloat));
+	Newz(230, geometry->cos_y,  bridge->n_members + 1, sizeof(TFloat));
 
 	// Convert grid coords to physical world coords.
 #define World(Grid)	((Grid) * bridge->load_scenario.grid_size)

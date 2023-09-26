@@ -1,3 +1,4 @@
+#include "internal.h"
 /* analysis.c */
 void init_analysis(TAnalysis *anal);
 void clear_analysis(TAnalysis *anal);

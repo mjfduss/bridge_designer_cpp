@@ -32,7 +32,7 @@ void setup_image(IMAGE *image, UNSIGNED width, UNSIGNED height, RGB_TRIPLE *colo
 	UNSIGNED i;
 
 	clear_image(image);
-	New(2001, image->data, width * height, RGB_TRIPLE);
+	New(2001, image->data, width * height/*, RGB_TRIPLE*/);
 	if (!image->data)
 		image->width = image->height = 0;
 	else {
@@ -292,7 +292,7 @@ static png_voidp png_malloc_callback(png_structp png_reader_or_writer, png_size_
 {
 	BYTE *ptr;
 
-	New(1010, ptr, size, BYTE);
+	New(1010, ptr, size/*, BYTE*/);
 	return (png_voidp)ptr;
 }
 
@@ -314,14 +314,14 @@ static void png_write_callback(png_structp png_writer, png_bytep data, png_size_
 	if (compressed_image->size - compressed_image->filled < length) {
 		if (compressed_image->size == 0) {
 			new_size = INIT_COMPRESSED_IMAGE_SIZE;
-			New(1020, compressed_image->data, new_size, BYTE);
+			New(1020, compressed_image->data, new_size/*, BYTE*/);
 		}
 		else
 			new_size = compressed_image->size;
 		while (new_size - compressed_image->filled < length)
 			new_size *= 2;
 		if (new_size > compressed_image->size) {
-			Renew(compressed_image->data, new_size, BYTE);
+			Renew(compressed_image->data, new_size/*, BYTE*/);
 			compressed_image->size = new_size;
 		}
 	}

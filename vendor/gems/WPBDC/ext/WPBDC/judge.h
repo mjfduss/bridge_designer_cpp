@@ -7,7 +7,6 @@
  * Bridge Design Contest web site.  Ruby-visible constants and functions.
  */
 
-#include "rubydefs.h"
 #include "sketch.h"
 
 #define CONTEST_YEAR 2016

@@ -191,7 +191,7 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 		n_prescribed_joints++;
 
 	// Allocate and fill prescribed joint vector.
-	Newz(92, prescribed_joints, n_prescribed_joints, TJoint); 
+	Newz(92, prescribed_joints, n_prescribed_joints, sizeof(TJoint)); 
 	x = y = 0;
 	for (joint_index = 0; joint_index < load_scenario->n_loaded_joints; joint_index++) {
 		prescribed_joints[joint_index].number = joint_index + 1;
@@ -248,7 +248,7 @@ void copy_load_scenario(TLoadScenario *dst, TLoadScenario *src)
 	*dst = *src;
 
 	// Need fresh storage for prescribed joints.
-	Newz(93, dst->prescribed_joints, dst->n_prescribed_joints, TJoint);
+	Newz(93, dst->prescribed_joints, dst->n_prescribed_joints, sizeof(TJoint));
 	memcpy(dst->prescribed_joints, src->prescribed_joints, dst->n_prescribed_joints * sizeof(TJoint));
 }
 

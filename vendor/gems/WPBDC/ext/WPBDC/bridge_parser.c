@@ -283,7 +283,7 @@ void parse_bridge(TBridge *bridge, STRING *str)
 	unsigned i, line_no;
 	unsigned char *mutable_copy, *p;
 
-	New(95, mutable_copy, str->size + 1, unsigned char);
+	New(95, mutable_copy, str->size + 1/*, unsigned char*/);
 	memcpy(mutable_copy, str->ptr, str->size);
 
 	// Check for illegal characters.
@@ -491,7 +491,7 @@ void parse_unpacked_bridge_destructive(TBridge *bridge, char *str)
 	bridge->n_members = n_members;
 
 	// Joint array is 1-based for easy transposition of Basic code in analysis.
-	Newz(120, bridge->joints, n_joints + 1, TJoint);
+	Newz(120, bridge->joints, n_joints + 1, sizeof(TJoint));
 	joint_index = 1;
 	for (start_line_no = ++line_no; line_no < start_line_no + n_joints; line_no++) {
 		line = get_line(str, &str);
@@ -524,7 +524,7 @@ void parse_unpacked_bridge_destructive(TBridge *bridge, char *str)
 	}
 
 	// Member array is 1-based for easy transposition of Basic code in analysis.
-	Newz(130, bridge->members, n_members + 1, TMember);
+	Newz(130, bridge->members, n_members + 1, sizeof(TMember));
 	member_index = 1;
 	for (start_line_no = line_no; line_no < start_line_no + n_members; line_no++) {
 		line = get_line(str, &str);
@@ -723,7 +723,7 @@ void parse_packed_bridge_destructive(TBridge *bridge, char *str)
 
 	// Fields 4 through 4 + n_joints - 1: Joint coordinates
 	// Joint array is 1-based for easy transposition of Basic code in analysis.
-	Newz(120, bridge->joints, n_joints + 1, TJoint);
+	Newz(120, bridge->joints, n_joints + 1, sizeof(TJoint));
 	for (joint_index = 1; joint_index <= n_joints; joint_index++) {
 		mark = next;
 		x = scan_int(next, JOINT_COORD_LEN, &next);
@@ -751,7 +751,7 @@ void parse_packed_bridge_destructive(TBridge *bridge, char *str)
 	}
 
 	// Member array is 1-based for easy transposition of Basic code in analysis.
-	Newz(130, bridge->members, n_members + 1, TMember);
+	Newz(130, bridge->members, n_members + 1, sizeof(TMember));
 	for (member_index = 1; member_index <= n_members; member_index++) {
 		mark = next;
 		start_joint = scan_unsigned(next, MEMBER_JOINT_LEN,    &next);
@@ -881,7 +881,7 @@ char *unparse_packed_bridge(TBridge *bridge)
 		return 0;
 
 	// Allocate an initial return buffer.
-	New(140, rtn, rtn_size, char);
+	New(140, rtn, rtn_size/*, char*/);
 	p = rtn;
 
 #define Append(S)	do {							\
@@ -890,7 +890,7 @@ char *unparse_packed_bridge(TBridge *bridge)
 		if (++p >= rtn + rtn_size) {				\
 			unsigned p_ofs = p - rtn;				\
 			rtn_size *= 2;							\
-			Renew(rtn, rtn_size, char);				\
+			Renew(rtn, rtn_size/*, char*/);				\
 			p = rtn + p_ofs;						\
 		}											\
 	} while (0)
@@ -983,7 +983,7 @@ char *unparse_unpacked_bridge(TBridge *bridge)
 		return 0;
 
 	// Allocate an initial return buffer.
-	New(140, rtn, rtn_size, char);
+	New(140, rtn, rtn_size/*, char*/);
 	p = rtn;
 
 #define Append(S)	do {							\
@@ -992,7 +992,7 @@ char *unparse_unpacked_bridge(TBridge *bridge)
 		if (++p >= rtn + rtn_size) {				\
 			unsigned p_ofs = p - rtn;				\
 			rtn_size *= 2;							\
-			Renew(rtn, rtn_size, char);				\
+			Renew(rtn, rtn_size/*, char*/);				\
 			p = rtn + p_ofs;						\
 		}											\
 	} while (0)
@@ -1062,7 +1062,7 @@ void pack_bridge(STRING *in_str, STRING *out_str,
 
 	init_bridge(bridge);
 
-	New(97, mutable_copy, in_str->size + 1, char);
+	New(97, mutable_copy, in_str->size + 1/*, char*/);
 	memcpy(mutable_copy, in_str->ptr, in_str->size);
 	mutable_copy[in_str->size] = '\0';
 
@@ -1093,7 +1093,7 @@ void unpack_bridge(STRING *in_str, STRING *out_str,
 
 	init_bridge(bridge);
 
-	New(97, mutable_copy, in_str->size + 1, char);
+	New(97, mutable_copy, in_str->size + 1/*, char*/);
 	memcpy(mutable_copy, in_str->ptr, in_str->size);
 	mutable_copy[in_str->size] = '\0';
 

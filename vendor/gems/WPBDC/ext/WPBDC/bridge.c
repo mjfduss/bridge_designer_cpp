@@ -87,10 +87,10 @@ void copy_bridge(TBridge *dst, TBridge *src)
 	NewStr(147, dst->project_id, src->project_id);
 	dst->n_design_iterations = src->n_design_iterations;
 	dst->n_joints = src->n_joints;
-	New(150, dst->joints, dst->n_joints + 1, TJoint);
+	New(150, dst->joints, dst->n_joints + 1/*, TJoint*/);
 	memcpy(dst->joints, src->joints, (dst->n_joints + 1) * sizeof(TJoint));
 	dst->n_members = src->n_members;
-	New(160, dst->members, dst->n_members + 1, TMember);
+	New(160, dst->members, dst->n_members + 1/*, TMember*/);
 	memcpy(dst->members, src->members, (dst->n_members + 1) * sizeof(TMember));
 	dst->label_pos = src->label_pos;
 	copy_load_scenario(&dst->load_scenario, &src->load_scenario);
@@ -121,7 +121,7 @@ void canonicalize(TBridge *dst, TBridge *src)
 
 	copy_bridge(dst, src);
 
-	Newz(170, new_joint_to_old, dst->n_joints + 1, unsigned);
+	Newz(170, new_joint_to_old, dst->n_joints + 1, sizeof(unsigned));
 	for (joint_index = 1; joint_index <= dst->n_joints; joint_index++)
 		new_joint_to_old[joint_index] = joint_index;
 
@@ -147,7 +147,7 @@ void canonicalize(TBridge *dst, TBridge *src)
 	}
 
 	// Compute inverse map.
-	Newz(180, old_joint_to_new, dst->n_joints + 1, unsigned);
+	Newz(180, old_joint_to_new, dst->n_joints + 1, sizeof(unsigned));
 	for (joint_index = 1; joint_index <= dst->n_joints; joint_index++)
 		old_joint_to_new[new_joint_to_old[joint_index]] = joint_index;
 

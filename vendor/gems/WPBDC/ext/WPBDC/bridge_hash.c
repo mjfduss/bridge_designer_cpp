@@ -81,12 +81,12 @@ int hash_bridge(TBridge *bridge, char *hash)
 	unsigned int *v;
 	unsigned int h[HASH_SIZE / sizeof(unsigned int)];
 
-	New(190, v, v_size, unsigned int);
+	New(190, v, v_size/*, unsigned int*/);
 
 #define Add(Val)	do {													\
 		if (p >= v_size) {													\
 			v_size *= 2;													\
-			Renew(v, v_size, unsigned int);								    \
+			Renew(v, v_size/*, unsigned int*/);								    \
 		}																	\
 		v[p++] = (Val);														\
 	} while (0)

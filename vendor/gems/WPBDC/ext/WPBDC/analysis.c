@@ -76,8 +76,8 @@ void setup_analysis(TAnalysis *anal,
 	}
 
 	// Since calloc returns zero'ed memory, these are automagically false.
-	Newz(260, anal->x_restraint, bridge->n_joints + 1, TBool);
-	Newz(270, anal->y_restraint, bridge->n_joints + 1, TBool);
+	Newz(260, anal->x_restraint, bridge->n_joints + 1, sizeof(TBool));
+	Newz(270, anal->y_restraint, bridge->n_joints + 1, sizeof(TBool));
 
 	// Apply restraints.
 
@@ -127,7 +127,7 @@ void setup_analysis(TAnalysis *anal,
 		joint_index++;
 	}
 
-	Newz(280, anal->stiffness, n_equations * n_equations, TFloat);
+	Newz(280, anal->stiffness, n_equations * n_equations, sizeof(TFloat));
 
 	// Go through this hassle to save some memory for cache coherency.
 	#define Stiffness(I, J) (anal->stiffness[((I)-1) * n_equations + ((J)-1)])
@@ -216,8 +216,8 @@ void setup_analysis(TAnalysis *anal,
 		Stiffness(equation_index, equation_index) = pivr;
 	}
 
-	Newz(290, anal->displacement, n_equations * loading->n_load_instances, TFloat);
-	Newz(300, anal->member_force, bridge->n_members * loading->n_load_instances, TFloat);
+	Newz(290, anal->displacement, n_equations * loading->n_load_instances, sizeof(TFloat));
+	Newz(300, anal->member_force, bridge->n_members * loading->n_load_instances, sizeof(TFloat));
 
 #define Displacement(I, J)	(anal->displacement[((I)-1) * loading->n_load_instances + ((J)-1)])
 #define MemberForce(I, J)	(anal->member_force[((I)-1) * loading->n_load_instances + ((J)-1)])
@@ -266,7 +266,7 @@ void setup_analysis(TAnalysis *anal,
 
 	// Compute member strengths.
 
-	Newz(310, anal->member_strength, bridge->n_members + 1, TMemberStrength);
+	Newz(310, anal->member_strength, bridge->n_members + 1, sizeof(TMemberStrength));
 
 	for (member_index = 1; member_index <= bridge->n_members;  member_index++) {
 		TXSection *xs = &bridge->members[member_index].x_section;
@@ -307,7 +307,7 @@ void setup_analysis(TAnalysis *anal,
 
 	// Summarize results.
 
-	Newz(320, anal->max_forces, bridge->n_members + 1, TMaxForces);
+	Newz(320, anal->max_forces, bridge->n_members + 1, sizeof(TMaxForces));
 
 	anal->n_compressive_failures = 0;
 	anal->n_tensile_failures = 0;
@@ -405,8 +405,8 @@ void do_analyze(STRING *bridge_as_string,
 
 	// Fill in result data structure.
 	result->version = bridge->version;
-	strncpy(result->scenario_id, bridge->scenario_descriptor.id, SCENARIO_ID_SIZE);
-	strncpy(result->scenario_number, bridge->scenario_descriptor.number, SCENARIO_NUMBER_SIZE);
+	strcpy(result->scenario_id, bridge->scenario_descriptor.id/*, SCENARIO_ID_SIZE*/);
+	strcpy(result->scenario_number, bridge->scenario_descriptor.number/*, SCENARIO_NUMBER_SIZE*/);
 	result->test_status = bridge->test_status;
 	result->error = bridge->error;
 
@@ -472,7 +472,8 @@ char *analysis_to_html(TAnalysis *analysis,
 		if (++p >= rtn + rtn_size) {				\
 			unsigned p_ofs = p - rtn;				\
 			rtn_size *= 2;							\
-			Renew(rtn, rtn_size, char); 			\
+			Renew(rtn, rtn_size);					\
+			rtn = realloc(rtn, rtn_size);			\
 			p = rtn + p_ofs;						\
 		}											\
 	} while (0)
@@ -495,7 +496,7 @@ char *analysis_to_html(TAnalysis *analysis,
 	// result is optional
 
 	// Allocate an initial return buffer.
-	New(140, rtn, rtn_size, char);
+	New(140, rtn, rtn_size);
 	p = rtn;
 
 	if (analysis->error) {
@@ -631,7 +632,7 @@ char *analysis_to_text(TAnalysis *analysis,
 	// result is optional
 
 	// Allocate an initial return buffer.
-	New(145, rtn, rtn_size, char);
+	New(145, rtn, rtn_size);
 	p = rtn;
 
 	if (analysis->error) {
