@@ -1,0 +1,2 @@
+#! /bin/bash
+gcc -g -DTEST_PRINT analysis.c bridge.c bridge_cost.c bridge_hash.c bridge_parser.c bridge_random.c bridge_sketch.c geometry.c judge.c loading.c params.c scenario.c sketch.c api.c -L/usr/local/lib -lpng -lm -o api

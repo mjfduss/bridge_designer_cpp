@@ -23,11 +23,11 @@
 
 // External interface.
 #include "judge.h"
-
+/*
 #if BD_VERSION != 0x416c
 #error Wrong BD_VERSION. Should be 0x416c.
 #endif
-
+*/
 // Extension stubs --------------------------------------------------------------
 
 // These are the routines called by the Ruby interface code.

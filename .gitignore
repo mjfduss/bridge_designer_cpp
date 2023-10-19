@@ -1,3 +1,6 @@
+# Ignore duplicate test files
+/_custom/bridge_files
+
 # Ignore bundler config
 /.bundle
 
