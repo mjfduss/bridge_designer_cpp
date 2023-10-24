@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "internal.h"
 
-
 // Scenario descriptors
 
 // Note the index values are used in the hash function, so don't
@@ -15,12 +14,12 @@
 
 static int to_upper_case(int c)
 {
-  return ('a' <= c && c <= 'z') ? c + ('A' - 'a') : c;
+	return ('a' <= c && c <= 'z') ? c + ('A' - 'a') : c;
 }
 
 static TBool scenario_numbers_equal(char *a, char *b)
 {
-  return a[0] == b[0] && a[1] == b[1] && to_upper_case(a[2]) == to_upper_case(b[2]);
+	return a[0] == b[0] && a[1] == b[1] && to_upper_case(a[2]) == to_upper_case(b[2]);
 }
 
 // Input must be a string of length at least 3.
@@ -29,7 +28,7 @@ char *local_contest_number_to_id(char *number)
 	unsigned i;
 
 	for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++)
-	    if (scenario_numbers_equal(scenario_descriptor_tbl[i].number, number))
+		if (scenario_numbers_equal(scenario_descriptor_tbl[i].number, number))
 			return scenario_descriptor_tbl[i].id;
 	return NULL;
 }
@@ -41,42 +40,44 @@ int lookup_scenario_descriptor(TScenarioDescriptor *desc, char *id)
 	int hi = STATIC_ARRAY_SIZE(scenario_descriptor_tbl) - 1;
 	int cmp, mid;
 
-    /*  NOT THREAD SAFE.  DO BY HAND!
+	/*  NOT THREAD SAFE.  DO BY HAND!
 
-    // Bubble the semifinal scenario to the right position one time.
+	// Bubble the semifinal scenario to the right position one time.
 	static int initialized_p = 0;
 	int i;
-    if (!initialized_p) {
-        initialized_p = 1;
-        TScenarioDescriptor semifinal_descriptor = scenario_descriptor_tbl[0];
-        for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl) - 1; i++) {
-            if (strncmp(scenario_descriptor_tbl[i + 1].id, semifinal_descriptor.id, SCENARIO_ID_SIZE) < 0)
-                scenario_descriptor_tbl[i] = scenario_descriptor_tbl[i + 1];
-            else
-                break;
-        }
-        scenario_descriptor_tbl[i] = semifinal_descriptor;
-    }
-    */
+	if (!initialized_p) {
+		initialized_p = 1;
+		TScenarioDescriptor semifinal_descriptor = scenario_descriptor_tbl[0];
+		for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl) - 1; i++) {
+			if (strncmp(scenario_descriptor_tbl[i + 1].id, semifinal_descriptor.id, SCENARIO_ID_SIZE) < 0)
+				scenario_descriptor_tbl[i] = scenario_descriptor_tbl[i + 1];
+			else
+				break;
+		}
+		scenario_descriptor_tbl[i] = semifinal_descriptor;
+	}
+	*/
 
-    // Don't bother searching for the null semifinal scenario.
-    if (strncmp(id, NULL_SEMIFINAL_SCENARIO_ID, SCENARIO_ID_SIZE) != 0) {
+	// Don't bother searching for the null semifinal scenario.
+	if (strncmp(id, NULL_SEMIFINAL_SCENARIO_ID, SCENARIO_ID_SIZE) != 0)
+	{
 
-        while (lo <= hi) {
-            mid = (unsigned)(lo + hi) >> 1;
-            cmp = strncmp(id, scenario_descriptor_tbl[mid].id, SCENARIO_ID_SIZE);
-            if (cmp < 0)
-                hi = mid - 1;
-            else if (cmp > 0)
-                lo = mid + 1;
-            else {
-                if (desc)
-                    *desc = scenario_descriptor_tbl[mid];
-                return mid;
-            }
-        }
-
-    }
+		while (lo <= hi)
+		{
+			mid = (unsigned)(lo + hi) >> 1;
+			cmp = strncmp(id, scenario_descriptor_tbl[mid].id, SCENARIO_ID_SIZE);
+			if (cmp < 0)
+				hi = mid - 1;
+			else if (cmp > 0)
+				lo = mid + 1;
+			else
+			{
+				if (desc)
+					*desc = scenario_descriptor_tbl[mid];
+				return mid;
+			}
+		}
+	}
 	if (desc)
 		*desc = null_desc;
 	return -1;
@@ -99,10 +100,10 @@ void clear_load_scenario(TLoadScenario *load_scenario)
 	init_load_scenario(load_scenario);
 }
 
-#define UNSIGNED_FROM_CHAR(C)	((C) - '0')
+#define UNSIGNED_FROM_CHAR(C) ((C) - '0')
 #define UNSIGNED_FROM_2_CHARS(P) (10 * UNSIGNED_FROM_CHAR((P)[0]) + UNSIGNED_FROM_CHAR((P)[1]))
 
-// Fill contents of load scenario given a scenario index.  
+// Fill contents of load scenario given a scenario index.
 // For V3 and V4, this amounts to looking the load scenario up in a table.
 // For V4 (contest), we compute the load scenario from the index digits!
 void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc)
@@ -116,7 +117,8 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	clear_load_scenario(load_scenario);
 
 	// Check that scenario index isn't null.
-	if (desc->index < 0) {
+	if (desc->index < 0)
+	{
 		load_scenario->error = LoadScenarioIndexRange;
 		return;
 	}
@@ -133,7 +135,8 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 		load_scenario->support_type |= INTERMEDIATE_SUPPORT;
 
 	// digit 8 => (0 = simple, 1 = arch, 2 = cable left, 3 = cable both)
-	switch (desc->id[7]) {
+	switch (desc->id[7])
+	{
 	case '0':
 		break;
 	case '1':
@@ -154,14 +157,14 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	load_scenario->under_meters = UNSIGNED_FROM_2_CHARS(&desc->id[5]);
 
 	// digits 4 and 5 => meters over span
-	load_scenario->over_meters =  UNSIGNED_FROM_2_CHARS(&desc->id[3]);
+	load_scenario->over_meters = UNSIGNED_FROM_2_CHARS(&desc->id[3]);
 
 	// digits 2 and 3 => number of bridge panels
 	load_scenario->n_panels = UNSIGNED_FROM_2_CHARS(&desc->id[1]);
 
 	// digit 1 is the load case, 1-based
-	load_scenario->load_case = UNSIGNED_FROM_CHAR(desc->id[0]) - 1;  // -1 correction for 0-based load_case table
-	
+	load_scenario->load_case = UNSIGNED_FROM_CHAR(desc->id[0]) - 1; // -1 correction for 0-based load_case table
+
 	// There is no scaling of image in the 2004 version either, but geometry sizes changed.
 	load_scenario->grid_size = 0.25;
 	panel_size = 16;
@@ -176,8 +179,7 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	n_prescribed_joints = load_scenario->n_loaded_joints;
 
 	// Add one prescribed joint for the intermediate support, if any.
-	if ( (load_scenario->support_type & INTERMEDIATE_SUPPORT) 
-			&& !(load_scenario->support_type & HI_NOT_LO))
+	if ((load_scenario->support_type & INTERMEDIATE_SUPPORT) && !(load_scenario->support_type & HI_NOT_LO))
 		n_prescribed_joints++;
 
 	// Another two for the arch base, if we have an arch.
@@ -185,15 +187,16 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 		n_prescribed_joints += 2;
 
 	// And another one or two for cable anchorages if they're present.
-	if (load_scenario->support_type & CABLE_SUPPORT_LEFT) 
+	if (load_scenario->support_type & CABLE_SUPPORT_LEFT)
 		n_prescribed_joints++;
-	if (load_scenario->support_type & CABLE_SUPPORT_RIGHT) 
+	if (load_scenario->support_type & CABLE_SUPPORT_RIGHT)
 		n_prescribed_joints++;
 
 	// Allocate and fill prescribed joint vector.
-	Newz(92, prescribed_joints, n_prescribed_joints, sizeof(TJoint)); 
+	Newz(92, prescribed_joints, n_prescribed_joints, sizeof(TJoint));
 	x = y = 0;
-	for (joint_index = 0; joint_index < load_scenario->n_loaded_joints; joint_index++) {
+	for (joint_index = 0; joint_index < load_scenario->n_loaded_joints; joint_index++)
+	{
 		prescribed_joints[joint_index].number = joint_index + 1;
 		prescribed_joints[joint_index].x = x;
 		prescribed_joints[joint_index].y = y;
@@ -201,8 +204,8 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	}
 
 	// Loop leaves joint_index pointing at next joint.  Add the low intermediate support, if any.
-	if ( (load_scenario->support_type & INTERMEDIATE_SUPPORT) 
-			&& !(load_scenario->support_type & HI_NOT_LO) ) {
+	if ((load_scenario->support_type & INTERMEDIATE_SUPPORT) && !(load_scenario->support_type & HI_NOT_LO))
+	{
 		prescribed_joints[joint_index].number = joint_index + 1;
 		prescribed_joints[joint_index].x = (load_scenario->intermediate_support_joint_no - 1) * panel_size;
 		prescribed_joints[joint_index].y = -(TCoordinate)load_scenario->under_grids;
@@ -210,7 +213,8 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	}
 
 	// Add the arch base supports, if any.
-	if (load_scenario->support_type & ARCH_SUPPORT) {
+	if (load_scenario->support_type & ARCH_SUPPORT)
+	{
 		prescribed_joints[joint_index].number = joint_index + 1;
 		prescribed_joints[joint_index].x = 0;
 		prescribed_joints[joint_index].y = -(TCoordinate)load_scenario->under_grids;
@@ -222,13 +226,15 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	}
 
 	// Add the cable anchorages, if any.
-	if (load_scenario->support_type & CABLE_SUPPORT_LEFT) {
+	if (load_scenario->support_type & CABLE_SUPPORT_LEFT)
+	{
 		prescribed_joints[joint_index].number = joint_index + 1;
 		prescribed_joints[joint_index].x = -CABLE_ANCHORAGE_X_OFFSET;
 		prescribed_joints[joint_index].y = 0;
 		joint_index++;
 	}
-	if (load_scenario->support_type & CABLE_SUPPORT_RIGHT) {
+	if (load_scenario->support_type & CABLE_SUPPORT_RIGHT)
+	{
 		prescribed_joints[joint_index].number = joint_index + 1;
 		prescribed_joints[joint_index].x = prescribed_joints[load_scenario->n_loaded_joints - 1].x + CABLE_ANCHORAGE_X_OFFSET;
 		prescribed_joints[joint_index].y = 0;
@@ -238,6 +244,24 @@ void setup_load_scenario(TLoadScenario *load_scenario, TScenarioDescriptor *desc
 	assert(joint_index == n_prescribed_joints);
 	load_scenario->n_prescribed_joints = n_prescribed_joints;
 	load_scenario->prescribed_joints = prescribed_joints;
+}
+
+// Fill contents of bridge joints and members from its load scenario
+void fill_bridge_from_load_scenario(TBridge *bridge)
+{
+
+	// Loaded joints are prescribed.
+	bridge->n_joints = bridge->load_scenario.n_prescribed_joints;
+	// Allocate and fill bridge joints based on prescribed joint vector.
+	int max = bridge->n_joints;
+	int joint_index;
+	Newz(94, bridge->joints, max + 1, sizeof(TJoint));
+	for (joint_index = 0; joint_index < max; joint_index++)
+	{
+		bridge->joints[joint_index + 1].number = bridge->load_scenario.prescribed_joints[joint_index].number;
+		bridge->joints[joint_index + 1].x = bridge->load_scenario.prescribed_joints[joint_index].x;
+		bridge->joints[joint_index + 1].y = bridge->load_scenario.prescribed_joints[joint_index].y;
+	}
 }
 
 void copy_load_scenario(TLoadScenario *dst, TLoadScenario *src)
@@ -255,7 +279,7 @@ void copy_load_scenario(TLoadScenario *dst, TLoadScenario *src)
 int test_scenario_table(void)
 {
 	unsigned i, n;
-	char invalid_scenario_ids[][SCENARIO_ID_SIZE + 1] = { 
+	char invalid_scenario_ids[][SCENARIO_ID_SIZE + 1] = {
 		"----------",
 		"0000000500",
 		"1000000000",
@@ -268,35 +292,42 @@ int test_scenario_table(void)
 
 	// Check lookup function for bridges.
 	printf("scenario lookup check (find good indices): ");
-	for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++) {
+	for (i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++)
+	{
 		printf("%d ", i);
 		if (strncmp(scenario_descriptor_tbl[i].id, NULL_SEMIFINAL_SCENARIO_ID, SCENARIO_ID_SIZE) == 0)
-		    continue;
-		if (lookup_scenario_descriptor(desc, scenario_descriptor_tbl[i].id) < 0) {
-			printf("\nfailed to find scenario id %s (position %d)\n", 
-				scenario_descriptor_tbl[i].id, i);
+			continue;
+		if (lookup_scenario_descriptor(desc, scenario_descriptor_tbl[i].id) < 0)
+		{
+			printf("\nfailed to find scenario id %s (position %d)\n",
+				   scenario_descriptor_tbl[i].id, i);
 			return 1;
 		}
 		setup_load_scenario(load_scenario, desc);
-		if (load_scenario->error != LoadScenarioNoError) {
-			printf("\nfailed to initialize load scenario for id %s (position %d)\n", 
-				scenario_descriptor_tbl[i].id, i);
+		if (load_scenario->error != LoadScenarioNoError)
+		{
+			printf("\nfailed to initialize load scenario for id %s (position %d)\n",
+				   scenario_descriptor_tbl[i].id, i);
 			return 1;
 		}
 		clear_load_scenario(load_scenario);
 	}
 
 	printf("ok\nscenario lookup check (reject bad indices): ");
-	for (i = 0; i < STATIC_ARRAY_SIZE(invalid_scenario_ids); i++) {
+	for (i = 0; i < STATIC_ARRAY_SIZE(invalid_scenario_ids); i++)
+	{
 		printf("%d ", i);
-		if (lookup_scenario_descriptor(NULL, invalid_scenario_ids[i]) >= 0) {
+		if (lookup_scenario_descriptor(NULL, invalid_scenario_ids[i]) >= 0)
+		{
 			printf("\nfound invalid code %s (position %d)\n", invalid_scenario_ids[i], i);
 			return 2;
 		}
 	}
 	printf("ok\ncable anchorage scenarios: ");
-	for (n = i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++) {
-		if (scenario_descriptor_tbl[i].id[7] > '1') {
+	for (n = i = 0; i < STATIC_ARRAY_SIZE(scenario_descriptor_tbl); i++)
+	{
+		if (scenario_descriptor_tbl[i].id[7] > '1')
+		{
 			printf(" (%s) %s\n", scenario_descriptor_tbl[i].number, scenario_descriptor_tbl[i].id);
 			n++;
 		}

@@ -1,3 +1,3 @@
 #include "internal.h"
 
-void initialze_new_bridge();
+int initialze_new_bridge();
